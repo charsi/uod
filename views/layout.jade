@@ -1,7 +1,22 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+	head
+		title= title
+
+		//mobile optimized
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+
+		//css
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+		//bootstrap
+		link(rel='stylesheet', href='/bower_components/material-design-lite/material.min.css')
+		script(src='/bower_components/material-design-lite/material.min.js')
+		link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
+		//script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+		//script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
+		//link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
+		//link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
+	body
+		block content
+		

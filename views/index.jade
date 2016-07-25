@@ -1,5 +1,14 @@
 extends layout
 
 block content
-  h1= title
-  p This is the home page
+	h1= title		
+	form
+		.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+			input.mdl-textfield__input(type="text",  id="locationFromInput")
+			label.mdl-textfield__label(for="locationFromInput") From
+		p
+		.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+			input.mdl-textfield__input(type="text",  id="locationToInput")
+			label.mdl-textfield__label(for="locationToInput") To
+		p
+		button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect submit
