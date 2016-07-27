@@ -1,37 +1,42 @@
 extends layout
 
 block content
-	h1= title		
-	//form(action= '/result', method='POST')
-	.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-		input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from")
-		label(class="mdl-textfield__label", for="locationFromInput") From
-	br
-	.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-		input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to")
-		label(class="mdl-textfield__label", for="locationToInput") To
-	br
-	button(class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect", id="submitButton") submit
-	br
-	br
-	.result
-	br
-	br
-	iframe(id="routeMap", width="600", height="400", src="https://www.google.com/maps/embed/v1/directions?mode=driving&origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
-	br
-	br
-	footer.mdl-mini-footer
-		.mdl-mini-footer__left-section
-			.mdl-logo ||
-			ul.mdl-mini-footer__link-list
-				li
-					a(href='/disclaimer') Disclaimer
-				li
-					a(href='#') Changelog
-				li
-					a v0.1
-	
-	script(type='text/javascript').		
+	.mdl-layout.mdl-js-layout
+		body(class="mdl-color--grey-100", style="padding:0px;")
+			.mdl-grid(Style="max-width:600px;")
+				.mdl-cell.mdl-cell--12-col
+					h2= title
+				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv", style="padding:10px;")
+					//form(action= '/result', method='POST')
+					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
+						input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from")
+						label(class="mdl-textfield__label", for="locationFromInput") From
+					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
+						input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to")
+						label(class="mdl-textfield__label", for="locationToInput") To
+					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="submitButton") Submit
+					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar", style="margin-top:10px") 
+				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultDiv", style="padding:10px;")
+					.result
+					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="backButton") Back
+				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr", style="padding:10px;")
+					iframe(id="routeMap", width="100%", height="400", src="https://www.google.com/maps/embed/v1/directions?mode=driving&origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
+		footer(class="mdl-mini-footer")
+			.mdl-mini-footer__left-section
+				.mdl-logo ||
+				ul.mdl-mini-footer__link-list
+					li
+						a(href='/disclaimer') Disclaimer
+					li
+						a(href='#') Changelog
+					li
+						a v0.1
+					
+	script(type='text/javascript').
+		$("#progressBar").hide();
+		$("#resultDiv").hide();
+		$("#locationToInput").val("");
+		$("#locationFromInput").val("");		
 		class locationInfo {
 			constructor(start_latitude, start_longitude, end_latitude, end_longitude){
 				this.start_latitude = start_latitude;
@@ -69,7 +74,6 @@ block content
 			currentLocationInfo.start_longitude = place.geometry.location.lng();
 			refreshMap();
 			console.log(currentLocationInfo);
-			clearPreviousResults();
 		}
 		
 		function fillToAddress() {
@@ -78,7 +82,6 @@ block content
 			currentLocationInfo.end_longitude = place.geometry.location.lng();
 			refreshMap();
 			console.log(currentLocationInfo);
-			clearPreviousResults();
 		}
 		
 		function refreshMap(){
@@ -93,10 +96,6 @@ block content
 			$("#routeMap").attr('src',mapSrcStr);
 		}
 		
-		function clearPreviousResults(){
-			var resultDiv = $('div.result');
-			resultDiv.empty();
-		}
 		
 		// Bias the autocomplete object to the user's geographical location,
 		// as supplied by the browser's 'navigator.geolocation' object.
@@ -117,14 +116,30 @@ block content
 		}
 		
 		$("#submitButton").click(function(){
-				$.post("/result", currentLocationInfo, function(data) {
+			$("#submitButton").prop('disabled', true);
+			$("#locationToInput").prop('disabled', true);
+			$("#locationFromInput").prop('disabled', true);
+			$("#progressBar").show();
+			$.post("/result", currentLocationInfo, function(data) {
 				console.log(data);
 				$ee = $('div.result');
 				$ee.prop('disabled', false);
 				$.each(data.prices, function(key, value){
-					$ee.append("<p>"+value.display_name+": "+value.estimate+"</p>"); 
+					$ee.append("<p>"+value.display_name+": "+value.estimate+"</p>");
+					$("#progressBar").hide();
+					$("#inputDiv").hide();
+					$("#resultDiv").show();
+					$("#submitButton").prop('disabled', false);
+					$("#locationToInput").prop('disabled', false);
+					$("#locationFromInput").prop('disabled', false);
 				});
 			});
+		});
+		
+		$("#backButton").click(function(){
+			$('div.result').empty();
+			$("#resultDiv").hide();
+			$("#inputDiv").show();
 		});
 	
 	script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
