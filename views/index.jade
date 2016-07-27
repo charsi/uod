@@ -2,13 +2,103 @@ extends layout
 
 block content
 	h1= title		
-	form
-		.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-			input.mdl-textfield__input(type="text",  id="locationFromInput")
-			label.mdl-textfield__label(for="locationFromInput") From
-		p
-		.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-			input.mdl-textfield__input(type="text",  id="locationToInput")
-			label.mdl-textfield__label(for="locationToInput") To
-		p
-		button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect submit
+	//form(action= '/result', method='POST')
+	.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+		input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from")
+		label(class="mdl-textfield__label", for="locationFromInput") From
+	br
+	.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+		input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to")
+		label(class="mdl-textfield__label", for="locationToInput") To
+	br
+	button(class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect", id="submitButton") submit
+	br
+	footer.mdl-mini-footer
+		.mdl-mini-footer__left-section
+			.mdl-logo ||
+			ul.mdl-mini-footer__link-list
+				li
+					a(href='/disclaimer') Disclaimer
+				li
+					a(href='#') Changelog
+				li
+					a v0.1
+	iframe(src="//www.google.com/maps/embed/v1/directions?origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
+	script(type='text/javascript').
+		// This example displays an address form, using the autocomplete feature
+		// of the Google Places API to help users fill in the information.
+		
+		// This example requires the Places library. Include the libraries=places
+		// parameter when you first load the API. For example:
+		// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+		
+		class locationInfo {
+			constructor(start_latitude, start_longitude, end_latitude, end_longitude){
+				this.start_latitude = start_latitude;
+				this.start_longitude = start_longitude;
+				this.end_latitude = end_latitude;
+				this.end_longitude= end_longitude;
+			}
+		};
+		var currentLocationInfo = new locationInfo();
+		var autocompleteFrom;
+		var autocompleteTo;
+		
+		function initAutocomplete(){
+			// Create the autocomplete object, restricting the search to geographical
+			// location types.
+			autocompleteFrom = new google.maps.places.Autocomplete(
+				/** @type {!HTMLInputElement} */(document.getElementById('locationFromInput')),
+				{types: ['geocode']});
+			// When the user selects an address from the dropdown, populate the address
+			// fields in the form.
+			autocompleteFrom.addListener('place_changed', fillFromAddress);
+			
+			autocompleteTo = new google.maps.places.Autocomplete(
+				/** @type {!HTMLInputElement} */(document.getElementById('locationToInput')),
+				{types: ['geocode']});
+			// When the user selects an address from the dropdown, populate the address
+			// fields in the form.
+			autocompleteTo.addListener('place_changed', fillToAddress);
+		}
+		
+		function fillFromAddress() {
+		var place = autocompleteFrom.getPlace();
+		currentLocationInfo.start_latitude = place.geometry.location.lat();
+		currentLocationInfo.start_longitude = place.geometry.location.lng();
+		console.log(currentLocationInfo);
+		}
+		
+		function fillToAddress() {
+		var place = autocompleteTo.getPlace();
+		currentLocationInfo.end_latitude = place.geometry.location.lat();
+		currentLocationInfo.end_longitude = place.geometry.location.lng();
+		console.log(currentLocationInfo);
+		}
+		
+		// Bias the autocomplete object to the user's geographical location,
+		// as supplied by the browser's 'navigator.geolocation' object.
+		function geolocate() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+				var geolocation = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+				};
+				var circle = new google.maps.Circle({
+					center: geolocation,
+					radius: position.coords.accuracy
+				});
+				autocomplete.setBounds(circle.getBounds());
+				});
+			}
+		}
+		
+		$("#submitButton").click(function(){
+				$.post("/result", currentLocationInfo, function(data) {
+				console.log(data);
+			});
+		});
+		var myKey ='AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs';
+	script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
+		

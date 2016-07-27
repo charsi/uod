@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -56,3 +56,36 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+// Generic error handler used by all endpoints.
+function handleError(res, reason, message, code) {
+  console.log("ERROR: " + reason);
+  res.status(code || 500).json({"error": message});
+}
+
+/*  "/contacts"
+ *    GET: finds all contacts
+ *    POST: creates a new contact
+ */
+
+app.get("/contacts", function(req, res) {
+	console.log("ecdecedc");
+});
+
+app.post("/contacts", function(req, res) {
+});
+
+/*  "/contacts/:id"
+ *    GET: find contact by id
+ *    PUT: update contact by id
+ *    DELETE: deletes contact by id
+ */
+
+app.get("/contacts/:id", function(req, res) {
+});
+
+app.put("/contacts/:id", function(req, res) {
+});
+
+app.delete("/contacts/:id", function(req, res) {
+});
