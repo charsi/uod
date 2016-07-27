@@ -28,14 +28,7 @@ block content
 				li
 					a v0.1
 	
-	script(type='text/javascript').
-		// This example displays an address form, using the autocomplete feature
-		// of the Google Places API to help users fill in the information.
-		
-		// This example requires the Places library. Include the libraries=places
-		// parameter when you first load the API. For example:
-		// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-		
+	script(type='text/javascript').		
 		class locationInfo {
 			constructor(start_latitude, start_longitude, end_latitude, end_longitude){
 				this.start_latitude = start_latitude;
@@ -116,6 +109,6 @@ block content
 				console.log(data);
 			});
 		});
-		var myKey ='AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs';
+	
 	script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
 		
