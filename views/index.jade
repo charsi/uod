@@ -13,6 +13,10 @@ block content
 	br
 	button(class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect", id="submitButton") submit
 	br
+	br
+	iframe(id="routeMap", width="600", height="400", src="https://www.google.com/maps/embed/v1/directions?origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
+	br
+	br
 	footer.mdl-mini-footer
 		.mdl-mini-footer__left-section
 			.mdl-logo ||
@@ -23,7 +27,7 @@ block content
 					a(href='#') Changelog
 				li
 					a v0.1
-	iframe(src="//www.google.com/maps/embed/v1/directions?origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
+	
 	script(type='text/javascript').
 		// This example displays an address form, using the autocomplete feature
 		// of the Google Places API to help users fill in the information.
@@ -44,6 +48,7 @@ block content
 		var autocompleteFrom;
 		var autocompleteTo;
 		
+		
 		function initAutocomplete(){
 			// Create the autocomplete object, restricting the search to geographical
 			// location types.
@@ -63,17 +68,29 @@ block content
 		}
 		
 		function fillFromAddress() {
-		var place = autocompleteFrom.getPlace();
-		currentLocationInfo.start_latitude = place.geometry.location.lat();
-		currentLocationInfo.start_longitude = place.geometry.location.lng();
-		console.log(currentLocationInfo);
+			var place = autocompleteFrom.getPlace(); //getPlace function comes from google
+			currentLocationInfo.start_latitude = place.geometry.location.lat();
+			currentLocationInfo.start_longitude = place.geometry.location.lng();
+			refreshMap();
+			console.log(currentLocationInfo);
 		}
 		
 		function fillToAddress() {
-		var place = autocompleteTo.getPlace();
-		currentLocationInfo.end_latitude = place.geometry.location.lat();
-		currentLocationInfo.end_longitude = place.geometry.location.lng();
-		console.log(currentLocationInfo);
+			var place = autocompleteTo.getPlace();
+			currentLocationInfo.end_latitude = place.geometry.location.lat();
+			currentLocationInfo.end_longitude = place.geometry.location.lng();
+			refreshMap();
+			console.log(currentLocationInfo);
+		}
+		
+		function refreshMap(){
+			var fromStr = $("#locationFromInput").val();
+			var toStr = $("#locationToInput").val();
+			var mapSrcStr = $("#routeMap").attr('src');
+			var regex = new RegExp("(origin=)([^&]*)(&destination=)([^&]*)")
+			mapSrcStr = mapSrcStr.replace(regex,"$1"+fromStr+"$3"+toStr);
+			console.log(mapSrcStr);
+			$("#routeMap").attr('src',mapSrcStr);
 		}
 		
 		// Bias the autocomplete object to the user's geographical location,
