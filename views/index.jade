@@ -14,7 +14,10 @@ block content
 	button(class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect", id="submitButton") submit
 	br
 	br
-	iframe(id="routeMap", width="600", height="400", src="https://www.google.com/maps/embed/v1/directions?origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
+	.result
+	br
+	br
+	iframe(id="routeMap", width="600", height="400", src="https://www.google.com/maps/embed/v1/directions?mode=driving&origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
 	br
 	br
 	footer.mdl-mini-footer
@@ -66,6 +69,7 @@ block content
 			currentLocationInfo.start_longitude = place.geometry.location.lng();
 			refreshMap();
 			console.log(currentLocationInfo);
+			clearPreviousResults();
 		}
 		
 		function fillToAddress() {
@@ -74,16 +78,24 @@ block content
 			currentLocationInfo.end_longitude = place.geometry.location.lng();
 			refreshMap();
 			console.log(currentLocationInfo);
+			clearPreviousResults();
 		}
 		
 		function refreshMap(){
 			var fromStr = $("#locationFromInput").val();
 			var toStr = $("#locationToInput").val();
 			var mapSrcStr = $("#routeMap").attr('src');
+			//regex to break google map url into components
 			var regex = new RegExp("(origin=)([^&]*)(&destination=)([^&]*)")
+			//leave component 1, 3 as is. Replace the rest with location info.
 			mapSrcStr = mapSrcStr.replace(regex,"$1"+fromStr+"$3"+toStr);
 			console.log(mapSrcStr);
 			$("#routeMap").attr('src',mapSrcStr);
+		}
+		
+		function clearPreviousResults(){
+			var resultDiv = $('div.result');
+			resultDiv.empty();
 		}
 		
 		// Bias the autocomplete object to the user's geographical location,
@@ -107,6 +119,11 @@ block content
 		$("#submitButton").click(function(){
 				$.post("/result", currentLocationInfo, function(data) {
 				console.log(data);
+				$ee = $('div.result');
+				$ee.prop('disabled', false);
+				$.each(data.prices, function(key, value){
+					$ee.append("<p>"+value.display_name+": "+value.estimate+"</p>"); 
+				});
 			});
 		});
 	
