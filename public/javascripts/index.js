@@ -1,26 +1,37 @@
 "use strict";
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-$("#progressBar").hide();
-$("#resultDiv").hide();
-$("#locationToInput").val("");
-$("#locationFromInput").val("");
-
-var locationInfo = function locationInfo(start_latitude, start_longitude, end_latitude, end_longitude) {
-	_classCallCheck(this, locationInfo);
-
-	this.start_latitude = start_latitude;
-	this.start_longitude = start_longitude;
-	this.end_latitude = end_latitude;
-	this.end_longitude = end_longitude;
-};
-
-;
-var currentLocationInfo = new locationInfo();
+var autocomplete;
 var autocompleteFrom;
 var autocompleteTo;
+const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
+var mapSrcUrl = "https://www.google.com/maps/embed/v1/view?zoom=4&center=51.5089254,-0.107437&key="+key;
 
+
+var currentLocationInfo = {
+	start_latitude : "",
+	start_longitude : "",
+	end_latitude : "",
+	end_longitude : ""
+};
+
+resetEverything();
+refreshMap();
+
+function resetEverything(){
+	$("#progressBar").hide();
+	$("#resultDiv").fadeOut( "slow", function(){
+		$("#inputDiv").fadeIn( "slow" );
+	});
+	$("#locationToInput").val("");
+	$("#locationFromInput").val("");
+	$("#submitButton").prop('disabled', false);
+	$("#locationToInput").prop('disabled', false);
+	$("#locationFromInput").prop('disabled', false);
+	refreshMap();
+}
+
+// called from api script in the html
 function initAutocomplete() {
 	// Create the autocomplete object, restricting the search to geographical
 	// location types.
@@ -35,7 +46,9 @@ function initAutocomplete() {
 	// When the user selects an address from the dropdown, populate the address
 	// fields in the form.
 	autocompleteTo.addListener('place_changed', fillToAddress);
+	geolocate();
 }
+
 
 function fillFromAddress() {
 	var place = autocompleteFrom.getPlace(); //getPlace function comes from google
@@ -53,16 +66,54 @@ function fillToAddress() {
 	console.log(currentLocationInfo);
 }
 
+function fromLocationValid(){
+	if ( currentLocationInfo.start_latitude!="" &&
+		currentLocationInfo.start_longitude!="" &&
+		$('#locationFromInput').val() !=""
+		)
+	{
+		return true;
+	} else {
+		return false;
+	}	
+}
+
+function toLocationValid(){
+	if (currentLocationInfo.end_latitude!="" &&
+		currentLocationInfo.end_longitude!=""&&
+		$('#locationToInput').val() !=""
+		)
+	{
+		return true;
+	} else {
+		return false;
+	}	
+}
+
+
 function refreshMap() {
 	var fromStr = $("#locationFromInput").val();
 	var toStr = $("#locationToInput").val();
-	var mapSrcStr = $("#routeMap").attr('src');
-	//regex to break google map url into components
-	var regex = new RegExp("(origin=)([^&]*)(&destination=)([^&]*)");
-	//leave component 1, 3 as is. Replace the rest with location info.
-	mapSrcStr = mapSrcStr.replace(regex, "$1" + fromStr + "$3" + toStr);
-	console.log(mapSrcStr);
-	$("#routeMap").attr('src', mapSrcStr);
+	//if both locations are valid, create a route
+	if (fromLocationValid() && toLocationValid()){
+		//regex to break google map url into components
+		//var regex = new RegExp("(origin=)([^&]*)(&destination=)([^&]*)");
+		//replace the location info in the map url
+		//mapSrcUrl = mapSrcUrl.replace(regex, "$1" + fromStr + "$3" + toStr);
+		mapSrcUrl = "https://www.google.com/maps/embed/v1/directions?mode=driving&origin="+fromStr+"&destination="+toStr+"n&key="+key;
+	}
+	else if (fromLocationValid()) {
+		mapSrcUrl = "https://www.google.com/maps/embed/v1/place?key="+key+"&q="+fromStr;
+	}
+	else if (toLocationValid()) {
+		mapSrcUrl = "https://www.google.com/maps/embed/v1/place?key="+key+"&q="+toStr;
+	}
+	else {
+		
+	}
+	//update map url
+	$("#routeMap").attr('src', mapSrcUrl);
+	console.log(mapSrcUrl);
 }
 
 // Bias the autocomplete object to the user's geographical location,
@@ -78,15 +129,24 @@ function geolocate() {
 				center: geolocation,
 				radius: position.coords.accuracy
 			});
-			autocomplete.setBounds(circle.getBounds());
+			autocompleteFrom.setBounds(circle.getBounds());
+			autocompleteTo.setBounds(circle.getBounds());
+			mapSrcUrl = "https://www.google.com/maps/embed/v1/view?zoom=10s&center="+geolocation.lat+","+geolocation.lng+"&key="+key;
+			refreshMap();
 		});
 	}
 }
 
-$("#submitButton").click(function () {
+
+//freeze the input form and the submit button
+function freezeControls(){
 	$("#submitButton").prop('disabled', true);
 	$("#locationToInput").prop('disabled', true);
-	$("#locationFromInput").prop('disabled', true);
+	$("#locationFromInput").prop('disabled', true);	
+}
+
+$("#submitButton").click(function () {
+	freezeControls();
 	$("#progressBar").show();
 	$.post("/result", currentLocationInfo, function (data) {
 		console.log(data);
@@ -94,18 +154,15 @@ $("#submitButton").click(function () {
 		$ee.prop('disabled', false);
 		$.each(data.prices, function (key, value) {
 			$ee.append("<p>" + value.display_name + ": " + value.estimate + "</p>");
+			$("#inputDiv").fadeOut( "slow", function(){
+				$("#resultDiv").fadeIn( "slow" );
+			});
 			$("#progressBar").hide();
-			$("#inputDiv").hide();
-			$("#resultDiv").show();
-			$("#submitButton").prop('disabled', false);
-			$("#locationToInput").prop('disabled', false);
-			$("#locationFromInput").prop('disabled', false);
+			
 		});
 	});
 });
 
 $("#backButton").click(function () {
-	$('div.result').empty();
-	$("#resultDiv").hide();
-	$("#inputDiv").show();
+	resetEverything();
 });

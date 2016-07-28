@@ -6,6 +6,7 @@ block content
 			.mdl-grid(Style="max-width:600px;")
 				.mdl-cell.mdl-cell--12-col
 					h2= title
+					h6= "Cost of driving compared with realtime fare estimates from Uber."
 				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv", style="padding:10px;")
 					//form(action= '/result', method='POST')
 					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
@@ -18,9 +19,11 @@ block content
 					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar", style="margin-top:10px") 
 				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultDiv", style="padding:10px;")
 					.result
-					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="backButton") Back
+					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id="backButton")
+						i(class="material-icons") arrow_back
+						
 				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr", style="padding:10px;")
-					iframe(id="routeMap", width="100%", height="400", src="https://www.google.com/maps/embed/v1/directions?mode=driving&origin=Tate+Modern&destination=Tower+of+London&key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs")
+					iframe(id="routeMap", width="100%", height="400", src="")
 		footer(class="mdl-mini-footer")
 			.mdl-mini-footer__left-section
 				.mdl-logo ||
@@ -31,7 +34,10 @@ block content
 						a(href='#') Changelog
 					li
 						a v0.1
-		script(type='text/javascript', src='/javascripts/index.js')
+		
 	
+		script(type='text/javascript', src='/javascripts/index.js')
 		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
+		
+		
 		
