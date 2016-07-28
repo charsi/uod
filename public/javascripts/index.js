@@ -1,13 +1,18 @@
 "use strict";
 
 
-var autocomplete;
+// google autocomplete objects
 var autocompleteFrom;
 var autocompleteTo;
+
+// google api key
 const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
-var mapSrcUrl = "https://www.google.com/maps/embed/v1/view?zoom=4&center=51.5089254,-0.107437&key="+key;
 
+// set default map coordinates (London)
+// will be overriden by local coordinates if user shares location
+var mapLocalViewUrl = "https://www.google.com/maps/embed/v1/view?zoom=12&center=51.5089254,-0.107437&key="+key;
 
+// holder for geolocation coordinates returned by google
 var currentLocationInfo = {
 	start_latitude : "",
 	start_longitude : "",
@@ -15,10 +20,11 @@ var currentLocationInfo = {
 	end_longitude : ""
 };
 
+// reset incase the browser caches form entries
 resetEverything();
-refreshMap();
 
 function resetEverything(){
+	refreshMap();
 	$("#progressBar").hide();
 	$("#resultDiv").fadeOut( "slow", function(){
 		$("#inputDiv").fadeIn( "slow" );
@@ -28,7 +34,12 @@ function resetEverything(){
 	$("#submitButton").prop('disabled', false);
 	$("#locationToInput").prop('disabled', false);
 	$("#locationFromInput").prop('disabled', false);
-	refreshMap();
+	currentLocationInfo = {
+		start_latitude : "",
+		start_longitude : "",
+		end_latitude : "",
+		end_longitude : ""
+	};
 }
 
 // called from api script in the html
@@ -49,9 +60,10 @@ function initAutocomplete() {
 	geolocate();
 }
 
-
 function fillFromAddress() {
-	var place = autocompleteFrom.getPlace(); //getPlace function comes from google
+	// get the location coordinates (lat, lng) gtom google geolocation api
+	var place = autocompleteFrom.getPlace();
+	// store in location holder object
 	currentLocationInfo.start_latitude = place.geometry.location.lat();
 	currentLocationInfo.start_longitude = place.geometry.location.lng();
 	refreshMap();
@@ -59,13 +71,16 @@ function fillFromAddress() {
 }
 
 function fillToAddress() {
+	// get the location coordinates (lat, lng) gtom google geolocation api
 	var place = autocompleteTo.getPlace();
+	// store in location holder object
 	currentLocationInfo.end_latitude = place.geometry.location.lat();
 	currentLocationInfo.end_longitude = place.geometry.location.lng();
 	refreshMap();
 	console.log(currentLocationInfo);
 }
 
+// has a 'from' location been entered? is it valid?
 function fromLocationValid(){
 	if ( currentLocationInfo.start_latitude!="" &&
 		currentLocationInfo.start_longitude!="" &&
@@ -78,6 +93,7 @@ function fromLocationValid(){
 	}	
 }
 
+// has a 'to' location been entered? is it valid?
 function toLocationValid(){
 	if (currentLocationInfo.end_latitude!="" &&
 		currentLocationInfo.end_longitude!=""&&
@@ -90,8 +106,10 @@ function toLocationValid(){
 	}	
 }
 
-
+// show only to/from location or a route between them 
+// if both locations have been entered
 function refreshMap() {
+	var mapSrcUrl;
 	var fromStr = $("#locationFromInput").val();
 	var toStr = $("#locationToInput").val();
 	//if both locations are valid, create a route
@@ -109,9 +127,9 @@ function refreshMap() {
 		mapSrcUrl = "https://www.google.com/maps/embed/v1/place?key="+key+"&q="+toStr;
 	}
 	else {
-		
+		mapSrcUrl= mapLocalViewUrl;
 	}
-	//update map url
+	// apply updated map url
 	$("#routeMap").attr('src', mapSrcUrl);
 	console.log(mapSrcUrl);
 }
@@ -131,14 +149,15 @@ function geolocate() {
 			});
 			autocompleteFrom.setBounds(circle.getBounds());
 			autocompleteTo.setBounds(circle.getBounds());
-			mapSrcUrl = "https://www.google.com/maps/embed/v1/view?zoom=10s&center="+geolocation.lat+","+geolocation.lng+"&key="+key;
+			mapLocalViewUrl = "https://www.google.com/maps/embed/v1/view?zoom=10s&center="+geolocation.lat+","+geolocation.lng+"&key="+key;
 			refreshMap();
 		});
 	}
 }
 
 
-//freeze the input form and the submit button
+// freeze input fields and the submit button
+// while processing
 function freezeControls(){
 	$("#submitButton").prop('disabled', true);
 	$("#locationToInput").prop('disabled', true);
@@ -147,18 +166,21 @@ function freezeControls(){
 
 $("#submitButton").click(function () {
 	freezeControls();
+	// show a progress bar
 	$("#progressBar").show();
+	// send the entered location info to backend for processing 
 	$.post("/result", currentLocationInfo, function (data) {
 		console.log(data);
-		var $ee = $('div.result');
-		$ee.prop('disabled', false);
+		var $resultSubDiv = $('div.resultSubDiv');
+		$resultSubDiv.empty();
+		// enable div. Required after using empty()
+		$resultSubDiv.prop('disabled', false);
 		$.each(data.prices, function (key, value) {
-			$ee.append("<p>" + value.display_name + ": " + value.estimate + "</p>");
-			$("#inputDiv").fadeOut( "slow", function(){
-				$("#resultDiv").fadeIn( "slow" );
-			});
-			$("#progressBar").hide();
-			
+			$resultSubDiv.append("<p>" + value.display_name + ": " + value.estimate + "</p>");			
+		});
+		//fade in result div
+		$("#inputDiv").fadeOut( "slow", function(){
+			$("#resultDiv").fadeIn( "slow" );
 		});
 	});
 });
