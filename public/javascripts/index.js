@@ -194,6 +194,13 @@ $("#submitButton").click(function () {
 		$resultSubDiv.empty();
 		// enable div. Required after using empty()
 		$resultSubDiv.prop('disabled', false);
+		driveFactors.duration= data.prices[0].duration/60; // convert to kms
+		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
+		var petrolUsed = driveFactors.distance/driveFactors.milage;
+		var driveCost = petrolUsed*driveFactors.petrol_cost;
+		$resultSubDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
+		$resultSubDiv.append("<p><small>Duration: " + driveFactors.duration + " mins</small></p>");
+		$resultSubDiv.append("<p><small>-----------</small></p>");
 		$.each(data.prices, function (key, value) {
 			$resultSubDiv.append("<p>" + value.display_name + ": " + value.estimate + "</p>");			
 		});
@@ -202,12 +209,7 @@ $("#submitButton").click(function () {
 			$("#resultDiv").fadeIn( "slow" );
 		});
 		// start calculations for drive cost
-		driveFactors.duration= data.prices[0].duration/60; // convert to kms
-		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
-		var petrolUsed = driveFactors.distance/driveFactors.milage;
-		var driveCost = petrolUsed*driveFactors.petrol_cost;
-		$resultSubDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
-		$resultSubDiv.append("<p><small>Duration: " + driveFactors.duration + " mins</small></p>");
+		
 		$resultSubDiv.append("<p><strong>Cost of driving: ₹" + driveCost.toFixed(2) + "</strong></p>");
 	});
 });
