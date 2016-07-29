@@ -38,9 +38,9 @@ resetEverything();
 function resetEverything(){
 	refreshMap();
 	$("#progressBar").hide();
-	//$("#resultDiv").fadeOut( "slow", function(){
-	//	$("#inputDiv").fadeIn( "slow" );
-	//});
+	$("#resultDiv").fadeOut( "slow", function(){
+		$("#inputDiv").fadeIn( "slow" );
+	});
 	$("#locationToInput").val("");
 	$("#locationFromInput").val("");
 	$("#submitButton").prop('disabled', false);
