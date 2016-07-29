@@ -206,8 +206,8 @@ $("#submitButton").click(function () {
 		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
 		var petrolUsed = driveFactors.distance/driveFactors.milage;
 		var driveCost = petrolUsed*driveFactors.petrol_cost;
-		$resultSubDiv.append("<p>Distance: " + (driveFactors.distance).toFixed(2) + " kms</p>");
-		$resultSubDiv.append("<p>Duration: " + driveFactors.duration + " mins</p>");
+		$resultSubDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
+		$resultSubDiv.append("<p><small>Duration: " + driveFactors.duration + " mins</small></p>");
 		$resultSubDiv.append("<p><strong>Cost of driving: ₹" + driveCost.toFixed(2) + "</strong></p>");
 	});
 });
