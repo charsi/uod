@@ -8,7 +8,7 @@ var autocompleteTo;
 // google api key
 const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
 
-// set default map coordinates (London)
+// set default map coordinates (to London)
 // will be overriden by local coordinates if user shares location
 var mapLocalViewUrl = "https://www.google.com/maps/embed/v1/view?zoom=12&center=51.5089254,-0.107437&key="+key;
 
@@ -20,15 +20,27 @@ var currentLocationInfo = {
 	end_longitude : ""
 };
 
+// holder for factors involved in drive cost calculation
+var driveFactors = {
+	duration : 0.00,        // in minutes 
+	distance : 0.00,        // in kms
+	milage : 14.00,          // in kmpl
+	petrol_cost : 64.00,     // per litre, in local currency
+	traffic_multiplier : 1.00, // time with traffic/time without traffic
+	distUnits : "kms",    // or "miles"
+	milageUnits : "kmpl", // or "mpg"
+	currency : "INR"	
+};
+
 // reset incase the browser caches form entries
 resetEverything();
 
 function resetEverything(){
 	refreshMap();
 	$("#progressBar").hide();
-	$("#resultDiv").fadeOut( "slow", function(){
-		$("#inputDiv").fadeIn( "slow" );
-	});
+	//$("#resultDiv").fadeOut( "slow", function(){
+	//	$("#inputDiv").fadeIn( "slow" );
+	//});
 	$("#locationToInput").val("");
 	$("#locationFromInput").val("");
 	$("#submitButton").prop('disabled', false);
@@ -40,6 +52,8 @@ function resetEverything(){
 		end_latitude : "",
 		end_longitude : ""
 	};
+	driveFactors.duration = 0.00;
+	driveFactors.distance = 0.00;
 }
 
 // called from api script in the html
@@ -165,6 +179,10 @@ function freezeControls(){
 }
 
 $("#submitButton").click(function () {
+	if (!fromLocationValid() || !toLocationValid()){
+		// TO-DO: notify user something is wrong with the input
+		return;
+	}
 	freezeControls();
 	// show a progress bar
 	$("#progressBar").show();
@@ -172,6 +190,7 @@ $("#submitButton").click(function () {
 	$.post("/result", currentLocationInfo, function (data) {
 		console.log(data);
 		var $resultSubDiv = $('div.resultSubDiv');
+		// remove old result data
 		$resultSubDiv.empty();
 		// enable div. Required after using empty()
 		$resultSubDiv.prop('disabled', false);
@@ -182,6 +201,14 @@ $("#submitButton").click(function () {
 		$("#inputDiv").fadeOut( "slow", function(){
 			$("#resultDiv").fadeIn( "slow" );
 		});
+		// start calculations for drive cost
+		driveFactors.duration= data.prices[0].duration/60; // convert to kms
+		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
+		var petrolUsed = driveFactors.distance/driveFactors.milage;
+		var driveCost = petrolUsed*driveFactors.petrol_cost;
+		$resultSubDiv.append("<p>Distance: " + (driveFactors.distance).toFixed(2) + " kms</p>");
+		$resultSubDiv.append("<p>Duration: " + driveFactors.duration + " mins</p>");
+		$resultSubDiv.append("<p><strong>Cost of driving: ₹" + driveCost.toFixed(2) + "</strong></p>");
 	});
 });
 
