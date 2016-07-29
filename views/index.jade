@@ -17,12 +17,20 @@ block content
 						label(class="mdl-textfield__label", for="locationToInput") To
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="submitButton") Submit
 					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar", style="margin-top:10px") 
-				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultDiv", style="padding:10px;")
-					.mdl-cell.mdl-cell--12-col
+				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultGrid", style="padding:10px;")
+					.mdl-cell.mdl-cell--12-col(style="text-align:center;")
 						i(class="material-icons") place
 						a -------------------------------------------------------------->
-						i(class="material-icons",style="position: absolute;") place
-					.resultSubDiv.mdl-cell.mdl-cell--12-col
+						i(class="material-icons",style=" position: absolute;") place
+					.mdl-cell.mdl-cell--12-col(id="resultDiv", style="text-align:center;")
+					.mdl-cell.mdl-cell--6-col(style="border-right: solid #828282;")
+						h6(style="text-align:center;") 
+							strong UBER
+						div(id="uberResultSubDiv")
+					.mdl-cell.mdl-cell--6-col
+						h6(style="text-align:center;")
+							strong Driving
+						div(id="driveResultSubDiv")
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect mdl-cell mdl-cell--4-col", id="backButton")
 						i(class="material-icons") arrow_back	
 				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr", style="padding:10px;")

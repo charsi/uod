@@ -38,7 +38,7 @@ resetEverything();
 function resetEverything(){
 	refreshMap();
 	$("#progressBar").hide();
-	$("#resultDiv").fadeOut( "slow", function(){
+	$("#resultGrid").fadeOut( "slow", function(){
 		$("#inputDiv").fadeIn( "slow" );
 	});
 	$("#locationToInput").val("");
@@ -189,29 +189,31 @@ $("#submitButton").click(function () {
 	// send the entered location info to backend for processing 
 	$.post("/result", currentLocationInfo, function (data) {
 		console.log(data);
-		var $resultSubDiv = $('div.resultSubDiv');
+		var $uberResultSubDiv = $('#uberResultSubDiv');
+		var $driveResultSubDiv = $('#driveResultSubDiv');
+		var $resultDiv = $('#resultDiv');
 		// remove old result data
-		$resultSubDiv.empty();
+		$uberResultSubDiv.empty();
 		// enable div. Required after using empty()
-		$resultSubDiv.prop('disabled', false);
+		$uberResultSubDiv.prop('disabled', false);
 		driveFactors.duration= data.prices[0].duration/60; // convert to kms
 		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
 		var petrolUsed = driveFactors.distance/driveFactors.milage;
 		var driveCost = petrolUsed*driveFactors.petrol_cost;
-		$resultSubDiv.append("<p></p>");
-		$resultSubDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
-		$resultSubDiv.append("<p><small>Duration: " + driveFactors.duration + " mins</small></p>");
-		$resultSubDiv.append("<p><small>-----------</small></p>");
+		$resultDiv.append("<p></p>");
+		$resultDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
+		$resultDiv.append("<p><small>Duration: " + driveFactors.duration + " mins</small></p>");
+		$resultDiv.append("<hr>");
 		$.each(data.prices, function (key, value) {
-			$resultSubDiv.append("<p>" + value.display_name + ": " + value.estimate + "</p>");			
+			$uberResultSubDiv.append("<p>" + value.display_name + ": " + value.estimate + "</p>");			
 		});
 		//fade in result div
 		$("#inputDiv").fadeOut( "slow", function(){
-			$("#resultDiv").fadeIn( "slow" );
+			$("#resultGrid").fadeIn( "slow" );
 		});
 		// start calculations for drive cost
 		
-		$resultSubDiv.append("<p><strong>Cost of driving: ₹" + driveCost.toFixed(2) + "</strong></p>");
+		$driveResultSubDiv.append("<p>Cost of driving: ₹" + driveCost.toFixed(2) + "</p>");
 	});
 });
 
