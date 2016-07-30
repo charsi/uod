@@ -20,11 +20,13 @@ block content
 				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultGrid")
 					.mdl-cell.mdl-cell--12-col(id="resultHeader")
 						i(class="material-icons") place
-						a -------------------------------------------------------------->
+						a ----------------------------------------------------------->
 						i(class="material-icons") place
 					.mdl-cell.mdl-cell--3-col(id="fromDiv")
 					.mdl-cell.mdl-cell--6-col(id="resultDiv")
 					.mdl-cell.mdl-cell--3-col(id="toDiv")
+					.mdl-cell.mdl-cell--12-col
+						hr
 					.mdl-cell.mdl-cell--6-col(id="uberResultFrame")
 						//h6(style="text-align:center;") 
 							//strong UBER
@@ -35,8 +37,11 @@ block content
 							//strong Driving
 						img(id="driveIcon", src="images/driving_Icon.png")
 						div(id="driveResultSubDiv")
+						i(class="material-icons") local_gas_station
+						span(id="fuel") L @ ₹64 per Litre
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect mdl-cell mdl-cell--4-col", id="backButton")
-						i(class="material-icons") arrow_back	
+						i(class="material-icons") arrow_back
+						| Back
 				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr")
 					iframe(id="routeMap", width="100%", height="400", src="", frameborder="0")
 				.mdl-cell.mdl-cell--12-col

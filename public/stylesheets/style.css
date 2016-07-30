@@ -54,3 +54,11 @@ a {
 #resultDiv p {
     color: #666666;
 }
+
+.material-icons{
+	vertical-align: middle;
+}
+
+#time-icon{
+	font-size: 18px;
+}

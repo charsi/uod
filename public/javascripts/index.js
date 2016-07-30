@@ -198,20 +198,22 @@ $("#submitButton").click(function () {
 		var $uberResultSubDiv = $('#uberResultSubDiv');
 		var $driveResultSubDiv = $('#driveResultSubDiv');
 		var $resultDiv = $('#resultDiv');
-		// remove old result data
+		var $fromDiv= $("#fromDiv");
+		var $toDiv = $("#toDiv");
 		clearDiv($uberResultSubDiv);
 		clearDiv($driveResultSubDiv);
+		clearDiv($resultDiv);
+		clearDiv($toDiv);
 		clearDiv($resultDiv);
 		driveFactors.duration= data.prices[0].duration/60; // convert to kms
 		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
 		var petrolUsed = driveFactors.distance/driveFactors.milage;
 		var driveCost = petrolUsed*driveFactors.petrol_cost;
-		$("#fromDiv").append(fromStr);
-		$("#toDiv").append(toStr);
+		$fromDiv.append(fromStr);
+		$toDiv.append(toStr);
 		$resultDiv.append("<p></p>");
 		$resultDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
-		$resultDiv.append("<p><small>Duration: " + driveFactors.duration + " mins</small></p>");
-		$resultDiv.append("<hr>");
+		$resultDiv.append("<p><small><i class=\"material-icons\" id=\"time-icon\">access_time</i> " + driveFactors.duration + " mins</small></p>");
 		$uberResultSubDiv.append("<p>");
 		$.each(data.prices, function (key, value) {
 			$uberResultSubDiv.append( value.display_name + ": " + value.estimate + "<br>");			
@@ -226,6 +228,7 @@ $("#submitButton").click(function () {
 		$driveResultSubDiv.append("<p>");
 		$driveResultSubDiv.append("Cost of driving: ₹" + driveCost.toFixed(2));
 		$driveResultSubDiv.append("</p>");
+		 $('#fuel').prepend(petrolUsed.toFixed(2));
 	});
 });
 
