@@ -4,7 +4,8 @@
 // google autocomplete objects
 var autocompleteFrom;
 var autocompleteTo;
-
+var fromStr;
+var toStr;
 // google api key
 const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
 
@@ -124,8 +125,8 @@ function toLocationValid(){
 // if both locations have been entered
 function refreshMap() {
 	var mapSrcUrl;
-	var fromStr = $("#locationFromInput").val();
-	var toStr = $("#locationToInput").val();
+	fromStr = $("#locationFromInput").val();
+	toStr = $("#locationToInput").val();
 	//if both locations are valid, create a route
 	if (fromLocationValid() && toLocationValid()){
 		//regex to break google map url into components
@@ -178,6 +179,11 @@ function freezeControls(){
 	$("#locationFromInput").prop('disabled', true);	
 }
 
+function clearDiv(div){
+	div.empty();
+	div.prop('disabled', false);
+}
+
 $("#submitButton").click(function () {
 	if (!fromLocationValid() || !toLocationValid()){
 		// TO-DO: notify user something is wrong with the input
@@ -193,27 +199,33 @@ $("#submitButton").click(function () {
 		var $driveResultSubDiv = $('#driveResultSubDiv');
 		var $resultDiv = $('#resultDiv');
 		// remove old result data
-		$uberResultSubDiv.empty();
-		// enable div. Required after using empty()
-		$uberResultSubDiv.prop('disabled', false);
+		clearDiv($uberResultSubDiv);
+		clearDiv($driveResultSubDiv);
+		clearDiv($resultDiv);
 		driveFactors.duration= data.prices[0].duration/60; // convert to kms
 		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
 		var petrolUsed = driveFactors.distance/driveFactors.milage;
 		var driveCost = petrolUsed*driveFactors.petrol_cost;
+		$("#fromDiv").append(fromStr);
+		$("#toDiv").append(toStr);
 		$resultDiv.append("<p></p>");
 		$resultDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
 		$resultDiv.append("<p><small>Duration: " + driveFactors.duration + " mins</small></p>");
 		$resultDiv.append("<hr>");
+		$uberResultSubDiv.append("<p>");
 		$.each(data.prices, function (key, value) {
-			$uberResultSubDiv.append("<p>" + value.display_name + ": " + value.estimate + "</p>");			
+			$uberResultSubDiv.append( value.display_name + ": " + value.estimate + "<br>");			
 		});
+		$uberResultSubDiv.append("</p>");
 		//fade in result div
 		$("#inputDiv").fadeOut( "slow", function(){
 			$("#resultGrid").fadeIn( "slow" );
 		});
 		// start calculations for drive cost
 		
-		$driveResultSubDiv.append("<p>Cost of driving: ₹" + driveCost.toFixed(2) + "</p>");
+		$driveResultSubDiv.append("<p>");
+		$driveResultSubDiv.append("Cost of driving: ₹" + driveCost.toFixed(2));
+		$driveResultSubDiv.append("</p>");
 	});
 });
 

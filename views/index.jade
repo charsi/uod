@@ -2,12 +2,12 @@ extends layout
 
 block content
 	.mdl-layout.mdl-js-layout
-		body(class="mdl-color--grey-100", style="padding:0px;")
-			.mdl-grid(Style="max-width:600px;")
+		body(class="mdl-color--grey-100")
+			.mdl-grid(id="main_grid")
 				.mdl-cell.mdl-cell--12-col
 					h2= title
 					h6= "Cost of driving compared with realtime fare estimates from Uber."
-				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv", style="padding:10px;")
+				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv")
 					//form(action= '/result', method='POST')
 					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
 						input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from")
@@ -16,25 +16,29 @@ block content
 						input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to")
 						label(class="mdl-textfield__label", for="locationToInput") To
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="submitButton") Submit
-					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar", style="margin-top:10px") 
-				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultGrid", style="padding:10px;")
-					.mdl-cell.mdl-cell--12-col(style="text-align:center;")
+					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar") 
+				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultGrid")
+					.mdl-cell.mdl-cell--12-col(id="resultHeader")
 						i(class="material-icons") place
 						a -------------------------------------------------------------->
-						i(class="material-icons",style=" position: absolute;") place
-					.mdl-cell.mdl-cell--12-col(id="resultDiv", style="text-align:center;")
-					.mdl-cell.mdl-cell--6-col(style="border-right: solid #828282;")
-						h6(style="text-align:center;") 
-							strong UBER
+						i(class="material-icons") place
+					.mdl-cell.mdl-cell--3-col(id="fromDiv")
+					.mdl-cell.mdl-cell--6-col(id="resultDiv")
+					.mdl-cell.mdl-cell--3-col(id="toDiv")
+					.mdl-cell.mdl-cell--6-col(id="uberResultFrame")
+						//h6(style="text-align:center;") 
+							//strong UBER
+						img(id="uberIcon", src="images/uber_Icon.png")
 						div(id="uberResultSubDiv")
-					.mdl-cell.mdl-cell--6-col
-						h6(style="text-align:center;")
-							strong Driving
+					.mdl-cell.mdl-cell--6-col(id="driveResultFrame")
+						//h6(style="text-align:center;")
+							//strong Driving
+						img(id="driveIcon", src="images/driving_Icon.png")
 						div(id="driveResultSubDiv")
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect mdl-cell mdl-cell--4-col", id="backButton")
 						i(class="material-icons") arrow_back	
-				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr", style="padding:10px;")
-					iframe(id="routeMap", width="100%", height="400", src="", frameborder="0", allowfullscreen="", style="display:block;margin: 0  auto;")
+				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr")
+					iframe(id="routeMap", width="100%", height="400", src="", frameborder="0")
 				.mdl-cell.mdl-cell--12-col
 					footer(class="mdl-mini-footer")
 						.mdl-mini-footer__left-section
