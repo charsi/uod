@@ -53,7 +53,7 @@ a {
 	margin: 0  auto;
 }
 
-#resultDiv p {
+#fromDiv, #toDiv {
     color: #666666;
 }
 

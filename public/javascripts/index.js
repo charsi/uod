@@ -246,12 +246,12 @@ $("#submitButton").click(function () {
 		var html = '';
 		html+= '<h5 style="text-align : center;"><br><strong>' + data.prices[0].estimate+'</strong></h5>'
 		html+= '<p style="text-align : center;">via '+data.prices[0].display_name+'</p>';
-		html+= '<hr><small>Other options--</small><br>';
+		html+= '<hr><small>Other options</small><br>';
 		html+= '<table class="mdl-data-table mdl-js-data-table">';
 		$.each(data.prices, function (key, value) {
 			// check if result for same service has already been displayed.
 			// takes care of uber pool being returned twice in india.
-			if (value.display_name != serviceName && value.display_name !='UberTAXI') {
+			if (value.display_name != serviceName && value.estimate !='Metered') {
 				serviceName = value.display_name;
 				html+='<tr><td>'+value.display_name + '</td><td>' + value.estimate + '</td></tr>';
 			}			
@@ -263,9 +263,9 @@ $("#submitButton").click(function () {
 			$resultGrid.fadeIn( "slow" );
 		});
 		html = '';
-		html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.currency+driveCost.toFixed(0)+'</strong></h5>';
+		html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.currency+(driveCost*.9).toFixed(0)+'-'+(driveCost*1.1).toFixed(0)+'</strong></h5>';
 		$driveResultSubDiv.append(html);
-		$fuelSpan.append(petrolUsed.toFixed(2) + 'L (petrol)<br>@ '+driveFactors.currency+'64 per Litre');
+		$fuelSpan.append(petrolUsed.toFixed(2) + ' L (petrol)<br>@ '+driveFactors.currency+'64 per litre');
 	});
 });
 
