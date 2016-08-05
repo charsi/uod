@@ -1,0 +1,13 @@
+to do--
+-	IP based locale detection
+-	add fuel selector on input page (petrol-deisel)
+-	fuel database
+-	system for asking  visitors from new
+	countries the cost of fuel and saving it in the db
+-	on-map picking of to, from address (switch to js
+	API instead of iframe)
+-	settings panel on the result car with following
+	options --
+		- units switch
+		- modifying car milage and fuel cost
+		- compare against other uber products

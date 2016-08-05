@@ -15,9 +15,18 @@ block content
 					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
 						input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to")
 						label(class="mdl-textfield__label", for="locationToInput") To
+					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
+						p What kind of fuel does your car drink?
+						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="option-1")
+							input(type="radio", id="option-1", class="mdl-radio__button", name="options", value="1", checked)
+							span(class="mdl-radio__label") Petrol
+						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="option-2")
+							input(type="radio", id="option-2", class="mdl-radio__button", name="options", value="2")
+							span(class="mdl-radio__label") Diesel
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="submitButton") Submit
 					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar") 
 				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultGrid")
+					i(id="settings_icon", class="material-icons") settings
 					.mdl-cell.mdl-cell--12-col(id="resultHeader")
 						i(class="material-icons") place
 						a ----------------------------------------------------------->
@@ -38,7 +47,7 @@ block content
 						img(id="driveIcon", src="images/driving_Icon.png")
 						div(id="driveResultSubDiv")
 						i(class="material-icons") local_gas_station
-						span(id="fuel") L @ ₹64 per Litre
+						span(id="fuel")
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect mdl-cell mdl-cell--4-col", id="backButton")
 						i(class="material-icons") arrow_back
 						| Back
@@ -47,14 +56,11 @@ block content
 				.mdl-cell.mdl-cell--12-col
 					footer(class="mdl-mini-footer")
 						.mdl-mini-footer__left-section
-							.mdl-logo ||
+							.mdl-logo
+								a(href='/') uberordrive.com
 							ul.mdl-mini-footer__link-list
 								li
-									a(href='/disclaimer') Disclaimer
-								li
-									a(href='#') Changelog
-								li
-									a v0.1
+									a(href='/faq') FAQ
 		
 	
 		script(type='text/javascript', src='/javascripts/index.js')

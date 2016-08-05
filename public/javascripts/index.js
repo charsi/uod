@@ -4,8 +4,37 @@
 // google autocomplete objects
 var autocompleteFrom;
 var autocompleteTo;
+
 var fromStr;
 var toStr;
+var $uberResultSubDiv = $('#uberResultSubDiv');
+var $driveResultSubDiv = $('#driveResultSubDiv');
+var $resultDiv = $('#resultDiv');
+var $fromDiv= $("#fromDiv");
+var $toDiv = $("#toDiv");
+var $inputGrid = $("#inputDiv");
+var $resultGrid = $("#resultGrid");
+var $progressBar = $("#progressBar");
+var $fuelSpan = $("#fuel");
+
+var currency_symbols = {
+    'USD': '$', // US Dollar
+    'EUR': '€', // Euro
+    'CRC': '₡', // Costa Rican Colón
+    'GBP': '£', // British Pound Sterling
+    'ILS': '₪', // Israeli New Sheqel
+    'INR': '₹', // Indian Rupee
+    'JPY': '¥', // Japanese Yen
+    'KRW': '₩', // South Korean Won
+    'NGN': '₦', // Nigerian Naira
+    'PHP': '₱', // Philippine Peso
+    'PLN': 'zł', // Polish Zloty
+    'PYG': '₲', // Paraguayan Guarani
+    'THB': '฿', // Thai Baht
+    'UAH': '₴', // Ukrainian Hryvnia
+    'VND': '₫', // Vietnamese Dong
+};
+
 // google api key
 const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
 
@@ -30,7 +59,7 @@ var driveFactors = {
 	traffic_multiplier : 1.00, // time with traffic/time without traffic
 	distUnits : "kms",    // or "miles"
 	milageUnits : "kmpl", // or "mpg"
-	currency : "INR"	
+	currency : ''	
 };
 
 // reset incase the browser caches form entries
@@ -39,9 +68,8 @@ resetEverything();
 function resetEverything(){
 	refreshMap();
 	$("#progressBar").hide();
-	$("#resultGrid").fadeOut( "slow", function(){
-		$("#inputDiv").fadeIn( "slow" );
-	});
+	$resultGrid.fadeOut( "slow", function(){
+		$inputGrid.fadeIn( "slow" );
 	$("#locationToInput").val("");
 	$("#locationFromInput").val("");
 	$("#submitButton").prop('disabled', false);
@@ -55,6 +83,15 @@ function resetEverything(){
 	};
 	driveFactors.duration = 0.00;
 	driveFactors.distance = 0.00;
+	driveFactors.currency = '';
+	clearDiv($uberResultSubDiv);
+	clearDiv($driveResultSubDiv);
+	clearDiv($resultDiv);
+	clearDiv($fromDiv);
+	clearDiv($toDiv);
+	clearDiv($resultDiv);
+	clearDiv($fuelSpan);
+	});
 }
 
 // called from api script in the html
@@ -191,44 +228,44 @@ $("#submitButton").click(function () {
 	}
 	freezeControls();
 	// show a progress bar
-	$("#progressBar").show();
+	$progressBar.show();
 	// send the entered location info to backend for processing 
 	$.post("/result", currentLocationInfo, function (data) {
 		console.log(data);
-		var $uberResultSubDiv = $('#uberResultSubDiv');
-		var $driveResultSubDiv = $('#driveResultSubDiv');
-		var $resultDiv = $('#resultDiv');
-		var $fromDiv= $("#fromDiv");
-		var $toDiv = $("#toDiv");
-		clearDiv($uberResultSubDiv);
-		clearDiv($driveResultSubDiv);
-		clearDiv($resultDiv);
-		clearDiv($toDiv);
-		clearDiv($resultDiv);
 		driveFactors.duration= data.prices[0].duration/60; // convert to kms
 		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
+		// get currency symbol
+		driveFactors.currency = data.prices[0].estimate.match(/^\D*/);
 		var petrolUsed = driveFactors.distance/driveFactors.milage;
 		var driveCost = petrolUsed*driveFactors.petrol_cost;
 		$fromDiv.append(fromStr);
 		$toDiv.append(toStr);
-		$resultDiv.append("<p></p>");
-		$resultDiv.append("<p><small>Distance: " + (driveFactors.distance).toFixed(2) + " kms</small></p>");
-		$resultDiv.append("<p><small><i class=\"material-icons\" id=\"time-icon\">access_time</i> " + driveFactors.duration + " mins</small></p>");
-		$uberResultSubDiv.append("<p>");
+		$resultDiv.append('<p>Distance: '+(driveFactors.distance).toFixed(2)+' kms</p>'+
+			'<p><i class="material-icons" id="time-icon">access_time</i> ' + driveFactors.duration+' mins</p>');
+		var serviceName = data.prices[0].display_name;
+		var html = '';
+		html+= '<h5 style="text-align : center;"><br><strong>' + data.prices[0].estimate+'</strong></h5>'
+		html+= '<p style="text-align : center;">via '+data.prices[0].display_name+'</p>';
+		html+= '<hr><small>Other options--</small><br>';
+		html+= '<table class="mdl-data-table mdl-js-data-table">';
 		$.each(data.prices, function (key, value) {
-			$uberResultSubDiv.append( value.display_name + ": " + value.estimate + "<br>");			
+			// check if result for same service has already been displayed.
+			// takes care of uber pool being returned twice in india.
+			if (value.display_name != serviceName && value.display_name !='UberTAXI') {
+				serviceName = value.display_name;
+				html+='<tr><td>'+value.display_name + '</td><td>' + value.estimate + '</td></tr>';
+			}			
 		});
-		$uberResultSubDiv.append("</p>");
+		html+='</table>';
+		$uberResultSubDiv.append(html);
 		//fade in result div
-		$("#inputDiv").fadeOut( "slow", function(){
-			$("#resultGrid").fadeIn( "slow" );
+		$inputGrid.fadeOut( "slow", function(){
+			$resultGrid.fadeIn( "slow" );
 		});
-		// start calculations for drive cost
-		
-		$driveResultSubDiv.append("<p>");
-		$driveResultSubDiv.append("Cost of driving: ₹" + driveCost.toFixed(2));
-		$driveResultSubDiv.append("</p>");
-		 $('#fuel').prepend(petrolUsed.toFixed(2));
+		html = '';
+		html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.currency+driveCost.toFixed(0)+'</strong></h5>';
+		$driveResultSubDiv.append(html);
+		$fuelSpan.append(petrolUsed.toFixed(2) + 'L (petrol)<br>@ '+driveFactors.currency+'64 per Litre');
 	});
 });
 

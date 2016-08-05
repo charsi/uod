@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	.mdl-layout.mdl-js-layout
+		body(class="mdl-color--grey-100")
+		.mdl-grid(id="main_grid")
+			.mdl-cell.mdl-cell--12-col
+				h3 FAQ
+				p <strong>Is this site owned or operated by Uber?</strong><br>
+					|Nope.<br>The fare estimates come direct from uber. The site otherwise has no relationship to Uber whatsoever.
+				p <br><strong>How accurate is this thing?</strong><br>
+					|The driving estimate takes into account current traffic conditions but it might be off by +/- 10% because of a number of other factors that can affect the cost.<br>
+					|The estimates from uber are current and should closely match what you see in Uber's app. 
+			.mdl-cell.mdl-cell--12-col
+				a(href="/") Back
