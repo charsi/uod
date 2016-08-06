@@ -59,8 +59,25 @@ var driveFactors = {
 	traffic_multiplier : 1.00, // time with traffic/time without traffic
 	distUnits : "kms",    // or "miles"
 	milageUnits : "kmpl", // or "mpg"
-	currency : ''	
+	currency : '',
+	petrolUsed : 0.0,
+	driveCost : ''
 };
+
+function clearDriveFactors(){
+	driveFactors = {
+		duration : 0.00,        // in minutes 
+		distance : 0.00,        // in kms
+		milage : 14.00,          // in kmpl
+		petrol_cost : 64.00,     // per litre, in local currency
+		traffic_multiplier : 1.00, // time with traffic/time without traffic
+		distUnits : "kms",    // or "miles"
+		milageUnits : "kmpl", // or "mpg"
+		currency : '',
+		petrolUsed : 0.0,
+		driveCost : ''
+	};
+}
 
 // reset incase the browser caches form entries
 resetEverything();
@@ -81,9 +98,7 @@ function resetEverything(){
 		end_latitude : "",
 		end_longitude : ""
 	};
-	driveFactors.duration = 0.00;
-	driveFactors.distance = 0.00;
-	driveFactors.currency = '';
+	clearDriveFactors();
 	clearDiv($uberResultSubDiv);
 	clearDiv($driveResultSubDiv);
 	clearDiv($resultDiv);
@@ -221,6 +236,45 @@ function clearDiv(div){
 	div.prop('disabled', false);
 }
 
+function makeDriveCalculations(uberInfo){
+	driveFactors.duration= uberInfo.prices[0].duration/60; // convert to kms
+	driveFactors.distance= uberInfo.prices[0].distance*1.60934; // convert to kms
+	// get currency symbol
+	driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/);
+	driveFactors.petrolUsed = driveFactors.distance/driveFactors.milage;
+	var dc = driveFactors.petrolUsed*driveFactors.petrol_cost;
+	dc = driveFactors.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
+	driveFactors.driveCost = dc;
+}
+
+function refreshDriveInfo(){
+	var html = '';
+	html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.driveCost+'</strong></h5>';
+	$driveResultSubDiv.append(html);
+	$fuelSpan.append(driveFactors.petrolUsed.toFixed(2) + ' L (petrol)<br>@ '+driveFactors.currency+'64 per litre');
+	$resultDiv.append('<p>Distance: '+(driveFactors.distance).toFixed(2)+' kms</p>'+
+		'<p><i class="material-icons" id="time-icon">access_time</i> ' + driveFactors.duration+' mins</p>');
+}
+
+function createUberHtml(uberInfo){
+	var html = '';
+	html+= '<h5 style="text-align : center;"><br><strong>' + uberInfo.prices[0].estimate+'</strong></h5>'
+	html+= '<p style="text-align : center;">via '+uberInfo.prices[0].display_name+'</p>';
+	html+= '<hr><small>Other options</small><br>';
+	html+= '<table class="mdl-data-table mdl-js-data-table">';
+	var serviceName = uberInfo.prices[0].display_name;
+	$.each(uberInfo.prices, function (key, value) {
+		// check if result for same service has already been displayed.
+		// takes care of uber pool being returned twice in india.
+		if (value.display_name != serviceName && value.estimate !='Metered') {
+			serviceName = value.display_name;
+			html+='<tr><td>'+value.display_name + '</td><td>' + value.estimate + '</td></tr>';
+		}			
+	});
+	html+='</table>';
+	return html;
+}
+
 $("#submitButton").click(function () {
 	if (!fromLocationValid() || !toLocationValid()){
 		// TO-DO: notify user something is wrong with the input
@@ -231,41 +285,19 @@ $("#submitButton").click(function () {
 	$progressBar.show();
 	// send the entered location info to backend for processing 
 	$.post("/result", currentLocationInfo, function (data) {
-		console.log(data);
-		driveFactors.duration= data.prices[0].duration/60; // convert to kms
-		driveFactors.distance= data.prices[0].distance*1.60934; // convert to kms
-		// get currency symbol
-		driveFactors.currency = data.prices[0].estimate.match(/^\D*/);
-		var petrolUsed = driveFactors.distance/driveFactors.milage;
-		var driveCost = petrolUsed*driveFactors.petrol_cost;
+		// update from and to locations
 		$fromDiv.append(fromStr);
 		$toDiv.append(toStr);
-		$resultDiv.append('<p>Distance: '+(driveFactors.distance).toFixed(2)+' kms</p>'+
-			'<p><i class="material-icons" id="time-icon">access_time</i> ' + driveFactors.duration+' mins</p>');
-		var serviceName = data.prices[0].display_name;
-		var html = '';
-		html+= '<h5 style="text-align : center;"><br><strong>' + data.prices[0].estimate+'</strong></h5>'
-		html+= '<p style="text-align : center;">via '+data.prices[0].display_name+'</p>';
-		html+= '<hr><small>Other options</small><br>';
-		html+= '<table class="mdl-data-table mdl-js-data-table">';
-		$.each(data.prices, function (key, value) {
-			// check if result for same service has already been displayed.
-			// takes care of uber pool being returned twice in india.
-			if (value.display_name != serviceName && value.estimate !='Metered') {
-				serviceName = value.display_name;
-				html+='<tr><td>'+value.display_name + '</td><td>' + value.estimate + '</td></tr>';
-			}			
-		});
-		html+='</table>';
-		$uberResultSubDiv.append(html);
-		//fade in result div
+		// populate drive results
+		makeDriveCalculations(data);
+		refreshDriveInfo();
+		// populate uber results
+		var uberHtml = createUberHtml(data);
+		$uberResultSubDiv.append(uberHtml);
+		//show result div
 		$inputGrid.fadeOut( "slow", function(){
 			$resultGrid.fadeIn( "slow" );
 		});
-		html = '';
-		html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.currency+(driveCost*.9).toFixed(0)+'-'+(driveCost*1.1).toFixed(0)+'</strong></h5>';
-		$driveResultSubDiv.append(html);
-		$fuelSpan.append(petrolUsed.toFixed(2) + ' L (petrol)<br>@ '+driveFactors.currency+'64 per litre');
 	});
 });
 

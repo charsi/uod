@@ -41,9 +41,10 @@ block content
 						div(id="driveResultSubDiv")
 						i(class="material-icons") local_gas_station
 						span(id="fuel")
-					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect mdl-cell mdl-cell--4-col", id="backButton")
-						i(class="material-icons") arrow_back
-						| Back
+					.mdl-cell.mdl-cell--12-col
+						button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id="backButton")
+							i(class="material-icons") arrow_back
+							| Back
 				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr")
 					iframe(id="routeMap", width="100%", height="400", src="", frameborder="0")
 				.mdl-cell.mdl-cell--12-col
