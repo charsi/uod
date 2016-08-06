@@ -36,7 +36,8 @@ var currency_symbols = {
 };
 
 // google api key
-const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
+//const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
+const key = "***REMOVED***";
 
 // set default map coordinates (to London)
 // will be overriden by local coordinates if user shares location
@@ -140,7 +141,7 @@ function fillFromAddress() {
 	currentLocationInfo.start_latitude = place.geometry.location.lat();
 	currentLocationInfo.start_longitude = place.geometry.location.lng();
 	refreshMap();
-	console.log(currentLocationInfo);
+	//console.log(currentLocationInfo);
 }
 
 function fillToAddress() {
@@ -150,7 +151,7 @@ function fillToAddress() {
 	currentLocationInfo.end_latitude = place.geometry.location.lat();
 	currentLocationInfo.end_longitude = place.geometry.location.lng();
 	refreshMap();
-	console.log(currentLocationInfo);
+	//console.log(currentLocationInfo);
 }
 
 // has a 'from' location been entered? is it valid?
@@ -204,7 +205,7 @@ function refreshMap() {
 	}
 	// apply updated map url
 	$("#routeMap").attr('src', mapSrcUrl);
-	console.log(mapSrcUrl);
+	//console.log(mapSrcUrl);
 }
 
 // Bias the autocomplete object to the user's geographical location,
@@ -223,12 +224,12 @@ function geolocate() {
 			autocompleteFrom.setBounds(circle.getBounds());
 			autocompleteTo.setBounds(circle.getBounds());
 			mapLocalViewUrl = "https://www.google.com/maps/embed/v1/view?zoom=10s&center="+geolocation.lat+","+geolocation.lng+"&key="+key;
-			refreshMap();
+			//refreshMap();
 			//console.log(circle.center);
 			//console.log(2222222222222);
 		});
 	}
-	//else console.log(44444444444444);
+	//else console.log("kbhhjbjh");
 }
 
 
@@ -247,17 +248,22 @@ function clearDiv(div){
 
 // calculates cost of driving based on info about the uber trip
 function makeDriveCalculations(uberInfo){
-	driveFactors.traffic_multiplier = 1.00;
-	driveFactors.petrol_cost = 64.00;
-	driveFactors.milage = 14.00;
-	driveFactors.duration= uberInfo.prices[0].duration/60; // convert to mins
-	driveFactors.distance= uberInfo.prices[0].distance*1.60934; // convert to kms
-	// get currency symbol
-	driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/);
-	driveFactors.petrolUsed = driveFactors.distance/driveFactors.milage;
-	var dc = driveFactors.petrolUsed*driveFactors.petrol_cost;
-	dc = driveFactors.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
-	driveFactors.driveCost = dc;
+	$.post("/traffic", currentLocationInfo, function(reply){
+		console.log(reply.multiplier);
+		driveFactors.traffic_multiplier = reply.multiplier;
+		driveFactors.petrol_cost = 64.00;
+		driveFactors.milage = 14.00;
+		driveFactors.duration= uberInfo.prices[0].duration/60; // convert to mins
+		driveFactors.distance= uberInfo.prices[0].distance*1.60934; // convert to kms
+		// get currency symbol
+		driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/);
+		driveFactors.petrolUsed = driveFactors.distance/driveFactors.milage;
+		var dc = driveFactors.petrolUsed*driveFactors.petrol_cost*driveFactors.traffic_multiplier;
+		dc = driveFactors.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
+		driveFactors.driveCost = dc;
+		// display driving cost on page
+		refreshDriveInfo();
+	});
 }
 
 function changeDriveFactorUnits(km){
@@ -267,7 +273,7 @@ function changeDriveFactorUnits(km){
 // adds distance, time and driving cost info on the page
 function refreshDriveInfo(){
 	var html = '';
-	html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.driveCost+'</strong></h5>';
+	html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.driveCost+'<sup>*<sup></strong></h5>';
 	$driveResultSubDiv.append(html);
 	$fuelSpan.append(driveFactors.petrolUsed.toFixed(2) + ' L (petrol)<br>@ '+driveFactors.currency+driveFactors.petrol_cost+' per litre');
 	$resultDiv.append('<p>Distance: '+(driveFactors.distance).toFixed(2)+' kms</p>'+
@@ -277,7 +283,7 @@ function refreshDriveInfo(){
 // returns html string for displaying cost of getting an uber
 function createUberHtml(uberInfo){
 	var html = '';
-	html+= '<h5 style="text-align : center;"><br><strong>' + uberInfo.prices[0].estimate+'</strong></h5>'
+	html+= '<h5 style="text-align : center;"><br><strong>' + uberInfo.prices[0].estimate+'<sup>*<sup></strong></h5>'
 	html+= '<p style="text-align : center;">via '+uberInfo.prices[0].display_name+'</p>';
 	html+= '<hr><small>Other options</small><br>';
 	html+= '<table class="mdl-data-table mdl-js-data-table">';
@@ -304,13 +310,14 @@ $("#submitButton").click(function () {
 	// show a progress bar
 	$progressBar.show();
 	// send the entered location info to backend for processing 
-	$.post("/result", currentLocationInfo, function (data) {
+	$.post("/uber", currentLocationInfo, function (data) {
+		console.log(data);
 		// update from and to locations
 		$fromDiv.append(fromStr);
 		$toDiv.append(toStr);
 		// populate drive results
 		makeDriveCalculations(data);
-		refreshDriveInfo();
+		//refreshDriveInfo();
 		// populate uber results
 		var uberHtml = createUberHtml(data);
 		$uberResultSubDiv.append(uberHtml);

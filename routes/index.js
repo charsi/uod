@@ -47,11 +47,55 @@ function getPriceFromUber(locations, response){
 	})
 }
 
+
+function getTrafficInfoFromGoogle(locations, response){
+	var fromStr = locations.start_latitude+','+locations.start_longitude;
+	var toStr = locations.end_latitude+','+locations.end_longitude;
+	var options = {
+		url: 'https://maps.googleapis.com/maps/api/distancematrix/json',
+		qs: {
+			origins : fromStr,
+			destinations : toStr,
+			traffic_model: "best_guess",
+			departure_time : "now",
+			key: "***REMOVED***" // server key	
+			},
+		method: 'GET'
+	};
+	console.log(options);
+	request(options)
+	.then((body)=>{
+		var info = JSON.parse(body);
+		console.log(info);
+		//calculate multiplier factor due to traffic and send it back
+		var normalDuration = info.rows[0].elements[0].duration.value;
+		var inTrafficDuration = info.rows[0].elements[0].duration_in_traffic.value;
+		var multiplier = inTrafficDuration/normalDuration;
+		if (multiplier < 1.0) {
+			multiplier = 1.0;
+		}
+		var reply = {multiplier :multiplier};
+		response.send(reply);
+	})
+	.catch((err)=>{
+		console.log('something went wrong with the google API call');
+		console.log(err);
+	})
+}
+
 // Listen for lat, long data. Pass the same to uber and return the response.
-router.post('/result', (req, res) => {
+router.post('/uber', (req, res) => {
 	console.log('Hellooooooooooooooooo!');
-	console.log(req.body);
+	//console.log(req.body);
 	getPriceFromUber(req.body, res);
+	//res.send(priceInfo);
+})
+
+// Listen for for, to addresses to be sent to google for traffic info
+router.post('/traffic', (req, res) => {
+	console.log('traffic check!');
+	console.log(req.body);
+	getTrafficInfoFromGoogle(req.body, res);
 	//res.send(priceInfo);
 })
 
