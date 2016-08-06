@@ -50,15 +50,24 @@ var currentLocationInfo = {
 	end_longitude : ""
 };
 
+function clearLocationInfo(){
+	currentLocationInfo = {
+		start_latitude : "",
+		start_longitude : "",
+		end_latitude : "",
+		end_longitude : ""
+	};
+}
+
 // holder for factors involved in drive cost calculation
 var driveFactors = {
 	duration : 0.00,        // in minutes 
 	distance : 0.00,        // in kms
-	milage : 14.00,          // in kmpl
-	petrol_cost : 64.00,     // per litre, in local currency
+	milage : 0.00,          // in kmpl
+	petrol_cost : 0.00,     // per litre, in local currency
 	traffic_multiplier : 1.00, // time with traffic/time without traffic
 	distUnits : "kms",    // or "miles"
-	milageUnits : "kmpl", // or "mpg"
+	milageUnits : "kmpl", // or "mpgus" or "mpguk"
 	currency : '',
 	petrolUsed : 0.0,
 	driveCost : ''
@@ -66,13 +75,13 @@ var driveFactors = {
 
 function clearDriveFactors(){
 	driveFactors = {
-		duration : 0.00,        // in minutes 
-		distance : 0.00,        // in kms
-		milage : 14.00,          // in kmpl
-		petrol_cost : 64.00,     // per litre, in local currency
-		traffic_multiplier : 1.00, // time with traffic/time without traffic
-		distUnits : "kms",    // or "miles"
-		milageUnits : "kmpl", // or "mpg"
+		duration : 0.00,
+		distance : 0.00,
+		milage : 0.00,
+		petrol_cost : 0.00,
+		traffic_multiplier : 1.00,
+		distUnits : "kms",
+		milageUnits : "kmpl",
 		currency : '',
 		petrolUsed : 0.0,
 		driveCost : ''
@@ -92,20 +101,17 @@ function resetEverything(){
 	$("#submitButton").prop('disabled', false);
 	$("#locationToInput").prop('disabled', false);
 	$("#locationFromInput").prop('disabled', false);
-	currentLocationInfo = {
-		start_latitude : "",
-		start_longitude : "",
-		end_latitude : "",
-		end_longitude : ""
-	};
+	clearLocationInfo();
 	clearDriveFactors();
-	clearDiv($uberResultSubDiv);
-	clearDiv($driveResultSubDiv);
-	clearDiv($resultDiv);
-	clearDiv($fromDiv);
-	clearDiv($toDiv);
-	clearDiv($resultDiv);
-	clearDiv($fuelSpan);
+	// clear all result divs
+	[
+	$uberResultSubDiv,
+	$driveResultSubDiv,
+	$resultDiv,
+	$fromDiv,
+	$toDiv,
+	$fuelSpan
+		].forEach(clearDiv);
 	});
 }
 
@@ -218,8 +224,11 @@ function geolocate() {
 			autocompleteTo.setBounds(circle.getBounds());
 			mapLocalViewUrl = "https://www.google.com/maps/embed/v1/view?zoom=10s&center="+geolocation.lat+","+geolocation.lng+"&key="+key;
 			refreshMap();
+			//console.log(circle.center);
+			//console.log(2222222222222);
 		});
 	}
+	//else console.log(44444444444444);
 }
 
 
@@ -233,11 +242,15 @@ function freezeControls(){
 
 function clearDiv(div){
 	div.empty();
-	div.prop('disabled', false);
+	//div.prop('disabled', false);
 }
 
+// calculates cost of driving based on info about the uber trip
 function makeDriveCalculations(uberInfo){
-	driveFactors.duration= uberInfo.prices[0].duration/60; // convert to kms
+	driveFactors.traffic_multiplier = 1.00;
+	driveFactors.petrol_cost = 64.00;
+	driveFactors.milage = 14.00;
+	driveFactors.duration= uberInfo.prices[0].duration/60; // convert to mins
 	driveFactors.distance= uberInfo.prices[0].distance*1.60934; // convert to kms
 	// get currency symbol
 	driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/);
@@ -247,15 +260,21 @@ function makeDriveCalculations(uberInfo){
 	driveFactors.driveCost = dc;
 }
 
+function changeDriveFactorUnits(km){
+	
+}
+
+// adds distance, time and driving cost info on the page
 function refreshDriveInfo(){
 	var html = '';
 	html += '<h5 style="text-align : center;"><br><strong>'+driveFactors.driveCost+'</strong></h5>';
 	$driveResultSubDiv.append(html);
-	$fuelSpan.append(driveFactors.petrolUsed.toFixed(2) + ' L (petrol)<br>@ '+driveFactors.currency+'64 per litre');
+	$fuelSpan.append(driveFactors.petrolUsed.toFixed(2) + ' L (petrol)<br>@ '+driveFactors.currency+driveFactors.petrol_cost+' per litre');
 	$resultDiv.append('<p>Distance: '+(driveFactors.distance).toFixed(2)+' kms</p>'+
 		'<p><i class="material-icons" id="time-icon">access_time</i> ' + driveFactors.duration+' mins</p>');
 }
 
+// returns html string for displaying cost of getting an uber
 function createUberHtml(uberInfo){
 	var html = '';
 	html+= '<h5 style="text-align : center;"><br><strong>' + uberInfo.prices[0].estimate+'</strong></h5>'
@@ -274,6 +293,7 @@ function createUberHtml(uberInfo){
 	html+='</table>';
 	return html;
 }
+
 
 $("#submitButton").click(function () {
 	if (!fromLocationValid() || !toLocationValid()){
@@ -300,6 +320,7 @@ $("#submitButton").click(function () {
 		});
 	});
 });
+
 
 $("#backButton").click(function () {
 	resetEverything();
