@@ -101,8 +101,8 @@ function restMap(){
 		zoom: 10,
 		mapTypeControl: false
 	});
-	directionsService = new google.maps.DirectionsService;
-	directionsDisplay = new google.maps.DirectionsRenderer;
+	directionsService = new google.maps.DirectionsService; 
+	directionsDisplay = new google.maps.DirectionsRenderer;  
 }
 
 function resetEverything(){
