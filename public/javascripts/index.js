@@ -4,6 +4,10 @@
 // google autocomplete objects
 var autocompleteFrom;
 var autocompleteTo;
+var map;
+var directionsService;
+var directionsDisplay;
+var markersArray = [];
 
 var fromStr;
 var toStr;
@@ -41,7 +45,7 @@ const key = "***REMOVED***";
 
 // set default map coordinates (to London)
 // will be overriden by local coordinates if user shares location
-var mapLocalViewUrl = "https://www.google.com/maps/embed/v1/view?zoom=12&center=51.5089254,-0.107437&key="+key;
+var localLatLang = {lat: 51.5089254, lng: -0.107437};
 
 // holder for geolocation coordinates returned by google
 var currentLocationInfo = {
@@ -89,14 +93,21 @@ function clearDriveFactors(){
 	};
 }
 
-// reset incase the browser caches form entries
-resetEverything();
+function restMap(){
+	markersArray = [];
+	map = new google.maps.Map(document.getElementById('map'), {
+		center: localLatLang,
+		scrollwheel: true,
+		zoom: 10,
+		mapTypeControl: false
+	});
+	directionsService = new google.maps.DirectionsService;
+	directionsDisplay = new google.maps.DirectionsRenderer;
+}
 
 function resetEverything(){
-	refreshMap();
+	// initialise google map
 	$("#progressBar").hide();
-	$resultGrid.fadeOut( "slow", function(){
-		$inputGrid.fadeIn( "slow" );
 	$("#locationToInput").val("");
 	$("#locationFromInput").val("");
 	$("#submitButton").prop('disabled', false);
@@ -104,15 +115,19 @@ function resetEverything(){
 	$("#locationFromInput").prop('disabled', false);
 	clearLocationInfo();
 	clearDriveFactors();
+	restMap();
+	refreshMap();
 	// clear all result divs
 	[
-	$uberResultSubDiv,
-	$driveResultSubDiv,
-	$resultDiv,
-	$fromDiv,
-	$toDiv,
-	$fuelSpan
-		].forEach(clearDiv);
+		$uberResultSubDiv,
+		$driveResultSubDiv,
+		$resultDiv,
+		$fromDiv,
+		$toDiv,
+		$fuelSpan
+	].forEach(clearDiv);
+	$resultGrid.fadeOut( "slow", function(){
+		$inputGrid.fadeIn( "slow" );
 	});
 }
 
@@ -132,6 +147,9 @@ function initAutocomplete() {
 	// fields in the form.
 	autocompleteTo.addListener('place_changed', fillToAddress);
 	geolocate();
+	
+	// reset incase the browser caches form entries
+	resetEverything();
 }
 
 function fillFromAddress() {
@@ -180,33 +198,69 @@ function toLocationValid(){
 	}	
 }
 
+function clearOverlays() {
+  for (var i = 0; i < markersArray.length; i++ ) {
+    markersArray[i].setMap(null);
+  }
+  markersArray.length = 0;
+}
+
 // show only to/from location or a route between them 
 // if both locations have been entered
 function refreshMap() {
+	var tmpLatLang = localLatLang;
+	map.setZoom(10);
 	var mapSrcUrl;
 	fromStr = $("#locationFromInput").val();
 	toStr = $("#locationToInput").val();
 	//if both locations are valid, create a route
 	if (fromLocationValid() && toLocationValid()){
-		//regex to break google map url into components
-		//var regex = new RegExp("(origin=)([^&]*)(&destination=)([^&]*)");
-		//replace the location info in the map url
-		//mapSrcUrl = mapSrcUrl.replace(regex, "$1" + fromStr + "$3" + toStr);
-		mapSrcUrl = "https://www.google.com/maps/embed/v1/directions?mode=driving&origin="+fromStr+"&destination="+toStr+"n&key="+key;
+		clearOverlays();
+		directionsDisplay.setMap(map);
+        directionsService.route({
+			origin: fromStr,
+			destination: toStr,
+			travelMode: 'DRIVING'
+        }, function(response, status) {
+			if (status === 'OK') {
+				directionsDisplay.setDirections(response);
+			} else {
+				console.log('Directions request failed due to ' + status);
+			}
+        });
 	}
 	else if (fromLocationValid()) {
-		mapSrcUrl = "https://www.google.com/maps/embed/v1/place?key="+key+"&q="+fromStr;
+		tmpLatLang = {
+			lat : currentLocationInfo.start_latitude,
+			lng: currentLocationInfo.start_longitude
+		}
+		var marker = new google.maps.Marker({
+			position: tmpLatLang,
+			map: map,
+			title: fromStr
+		});
+		markersArray.push(marker);
+		map.setZoom(13);
 	}
 	else if (toLocationValid()) {
-		mapSrcUrl = "https://www.google.com/maps/embed/v1/place?key="+key+"&q="+toStr;
+		tmpLatLang = {
+			lat : currentLocationInfo.end_latitude,
+			lng: currentLocationInfo.end_longitude
+		}
+		var marker = new google.maps.Marker({
+			position: tmpLatLang,
+			map: map,
+			title: toStr
+		});
+		markersArray.push(marker);
+		map.setZoom(13);
 	}
-	else {
-		mapSrcUrl= mapLocalViewUrl;
-	}
-	// apply updated map url
-	$("#routeMap").attr('src', mapSrcUrl);
+	// pan map to markers
+	map.panTo(tmpLatLang);
+
 	//console.log(mapSrcUrl);
 }
+
 
 // Bias the autocomplete object to the user's geographical location,
 // as supplied by the browser's 'navigator.geolocation' object.
@@ -223,8 +277,9 @@ function geolocate() {
 			});
 			autocompleteFrom.setBounds(circle.getBounds());
 			autocompleteTo.setBounds(circle.getBounds());
-			mapLocalViewUrl = "https://www.google.com/maps/embed/v1/view?zoom=10s&center="+geolocation.lat+","+geolocation.lng+"&key="+key;
-			//refreshMap();
+			localLatLang.lat = geolocation.lat;
+			localLatLang.lng = geolocation.lng;
+			refreshMap();
 			//console.log(circle.center);
 			//console.log(2222222222222);
 		});
@@ -257,12 +312,17 @@ function makeDriveCalculations(uberInfo){
 		driveFactors.distance= uberInfo.prices[0].distance*1.60934; // convert to kms
 		// get currency symbol
 		driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/);
-		driveFactors.petrolUsed = driveFactors.distance/driveFactors.milage;
-		var dc = driveFactors.petrolUsed*driveFactors.petrol_cost*driveFactors.traffic_multiplier;
+		driveFactors.petrolUsed = (driveFactors.distance/driveFactors.milage)*driveFactors.traffic_multiplier;
+		var dc = driveFactors.petrolUsed*driveFactors.petrol_cost;
 		dc = driveFactors.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
 		driveFactors.driveCost = dc;
 		// display driving cost on page
 		refreshDriveInfo();
+		$inputGrid.fadeOut( "slow", function(){
+			$resultGrid.fadeIn( "slow" );
+			var trafficLayer = new google.maps.TrafficLayer();
+			trafficLayer.setMap(map);
+		});
 	});
 }
 
@@ -322,9 +382,6 @@ $("#submitButton").click(function () {
 		var uberHtml = createUberHtml(data);
 		$uberResultSubDiv.append(uberHtml);
 		//show result div
-		$inputGrid.fadeOut( "slow", function(){
-			$resultGrid.fadeIn( "slow" );
-		});
 	});
 });
 

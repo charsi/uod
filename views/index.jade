@@ -42,12 +42,13 @@ block content
 						i(class="material-icons") local_gas_station
 						span(id="fuel")
 					.mdl-cell.mdl-cell--12-col
-						p(style="text-align:center;") * Based on current traffic conditions.
+						p(style="text-align:center;") <small>* Based on current traffic conditions.</small>
 						button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id="backButton")
 							i(class="material-icons") arrow_back
 							| Back
-				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="mgbrgbr")
-					iframe(id="routeMap", width="100%", height="400", src="", frameborder="0")
+				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(style="height:400px; width:100%;", id="mgbrgbr")
+					div(style="height:100%; width:100%;",id="map")
+					//iframe(id="routeMap", width="100%", height="400", src="", frameborder="0")
 				.mdl-cell.mdl-cell--12-col
 					footer(class="mdl-mini-footer")
 						.mdl-mini-footer__left-section
@@ -60,6 +61,8 @@ block content
 	
 		script(type='text/javascript', src='/javascripts/index.js')
 		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&libraries=places&callback=initAutocomplete", async, defer)
+		//script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&callback=initMap", async, defer)
+
 		
 		
 		
