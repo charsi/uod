@@ -1,16 +1,22 @@
 "use strict";
 
-
 // google autocomplete objects
 var autocompleteFrom;
 var autocompleteTo;
+
+// google map object and markers array
 var map;
-var directionsService;
-var directionsDisplay;
 var markersArray = [];
 
+// google directions
+var directionsService;
+var directionsDisplay;
+
+// origin and destination address
 var fromStr;
 var toStr;
+
+// DOM variables
 var $uberResultSubDiv = $('#uberResultSubDiv');
 var $driveResultSubDiv = $('#driveResultSubDiv');
 var $resultDiv = $('#resultDiv');
@@ -20,6 +26,7 @@ var $inputGrid = $("#inputDiv");
 var $resultGrid = $("#resultGrid");
 var $progressBar = $("#progressBar");
 var $fuelSpan = $("#fuel");
+
 
 var currency_symbols = {
     'USD': '$', // US Dollar
@@ -71,12 +78,18 @@ var driveFactors = {
 	milage : 0.00,          // in kmpl
 	petrol_cost : 0.00,     // per litre, in local currency
 	traffic_multiplier : 1.00, // time with traffic/time without traffic
-	distUnits : "kms",    // or "miles"
-	milageUnits : "kmpl", // or "mpgus" or "mpguk"
+	distUnits : "kms",		// or "miles"
+	milageUnits : "kmpl",	// or "mpgus" or "mpguk"
+	fuelUnits : "litres",	// or "gallons"
 	currency : '',
 	petrolUsed : 0.0,
 	driveCost : ''
 };
+
+//-----------------------
+
+$resultGrid.hide();
+
 
 function clearDriveFactors(){
 	driveFactors = {
@@ -85,8 +98,9 @@ function clearDriveFactors(){
 		milage : 0.00,
 		petrol_cost : 0.00,
 		traffic_multiplier : 1.00,
-		distUnits : "kms",
+		distUnits : "km",
 		milageUnits : "kmpl",
+		fuelUnits : "litres",
 		currency : '',
 		petrolUsed : 0.0,
 		driveCost : ''
@@ -99,7 +113,8 @@ function restMap(){
 		center: localLatLang,
 		scrollwheel: true,
 		zoom: 10,
-		mapTypeControl: false
+		mapTypeControl: false,
+		streetViewControl: false
 	});
 	directionsService = new google.maps.DirectionsService; 
 	directionsDisplay = new google.maps.DirectionsRenderer;  
@@ -117,59 +132,53 @@ function resetEverything(){
 	clearDriveFactors();
 	restMap();
 	refreshMap();
-	// clear all result divs
-	[
-		$uberResultSubDiv,
-		$driveResultSubDiv,
-		$resultDiv,
-		$fromDiv,
-		$toDiv,
-		$fuelSpan
-	].forEach(clearDiv);
 	$resultGrid.fadeOut( "slow", function(){
 		$inputGrid.fadeIn( "slow" );
+		// clear all result divs
+		[
+			$uberResultSubDiv,
+			$driveResultSubDiv,
+			$resultDiv,
+			$fromDiv,
+			$toDiv,
+			$fuelSpan
+		].forEach(clearDiv);
 	});
 }
 
-// called from api script in the html
+// callback function for google maps api. Fired when it finishes loading. 
 function initAutocomplete() {
-	// Create the autocomplete object, restricting the search to geographical
-	// location types.
+	// 'from' autocomplete object
 	autocompleteFrom = new google.maps.places.Autocomplete(
 	/** @type {!HTMLInputElement} */document.getElementById('locationFromInput'), { types: ['geocode'] });
-	// When the user selects an address from the dropdown, populate the address
-	// fields in the form.
+	// populate 'from' when user selects an address from the list 
 	autocompleteFrom.addListener('place_changed', fillFromAddress);
-
+	
+	// 'to' autocomplete object
 	autocompleteTo = new google.maps.places.Autocomplete(
 	/** @type {!HTMLInputElement} */document.getElementById('locationToInput'), { types: ['geocode'] });
-	// When the user selects an address from the dropdown, populate the address
-	// fields in the form.
+	// populate 'to' when user selects an address from the list
 	autocompleteTo.addListener('place_changed', fillToAddress);
-	geolocate();
 	
-	// reset incase the browser caches form entries
-	resetEverything();
+	geolocate();		// get user's geographical location
+	
+	resetEverything();	// reset incase the browser caches form entries
 }
 
+// populate lat, lng of origin address
 function fillFromAddress() {
-	// get the location coordinates (lat, lng) gtom google geolocation api
 	var place = autocompleteFrom.getPlace();
-	// store in location holder object
 	currentLocationInfo.start_latitude = place.geometry.location.lat();
 	currentLocationInfo.start_longitude = place.geometry.location.lng();
-	refreshMap();
-	//console.log(currentLocationInfo);
+	refreshMap();	// show marker for 'from' address
 }
 
+// populate lat, lng of destination address
 function fillToAddress() {
-	// get the location coordinates (lat, lng) gtom google geolocation api
 	var place = autocompleteTo.getPlace();
-	// store in location holder object
 	currentLocationInfo.end_latitude = place.geometry.location.lat();
 	currentLocationInfo.end_longitude = place.geometry.location.lng();
-	refreshMap();
-	//console.log(currentLocationInfo);
+	refreshMap();	// show marker for 'to' address
 }
 
 // has a 'from' location been entered? is it valid?
@@ -198,6 +207,7 @@ function toLocationValid(){
 	}	
 }
 
+// remove all markers from map
 function clearOverlays() {
   for (var i = 0; i < markersArray.length; i++ ) {
     markersArray[i].setMap(null);
@@ -229,7 +239,7 @@ function refreshMap() {
 			}
         });
 	}
-	else if (fromLocationValid()) {
+	else if (fromLocationValid()) {		// if only 'from' address is valid
 		tmpLatLang = {
 			lat : currentLocationInfo.start_latitude,
 			lng: currentLocationInfo.start_longitude
@@ -242,7 +252,7 @@ function refreshMap() {
 		markersArray.push(marker);
 		map.setZoom(13);
 	}
-	else if (toLocationValid()) {
+	else if (toLocationValid()) {		// if only 'to' address is valid
 		tmpLatLang = {
 			lat : currentLocationInfo.end_latitude,
 			lng: currentLocationInfo.end_longitude
@@ -255,10 +265,7 @@ function refreshMap() {
 		markersArray.push(marker);
 		map.setZoom(13);
 	}
-	// pan map to markers
-	map.panTo(tmpLatLang);
-
-	//console.log(mapSrcUrl);
+	map.panTo(tmpLatLang);	// re-centre the map
 }
 
 
@@ -303,27 +310,15 @@ function clearDiv(div){
 
 // calculates cost of driving based on info about the uber trip
 function makeDriveCalculations(uberInfo){
-	$.post("/traffic", currentLocationInfo, function(reply){
-		console.log(reply.multiplier);
-		driveFactors.traffic_multiplier = reply.multiplier;
-		driveFactors.petrol_cost = 64.00;
-		driveFactors.milage = 14.00;
-		driveFactors.duration= uberInfo.prices[0].duration/60; // convert to mins
-		driveFactors.distance= uberInfo.prices[0].distance*1.60934; // convert to kms
-		// get currency symbol
-		driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/);
-		driveFactors.petrolUsed = (driveFactors.distance/driveFactors.milage)*driveFactors.traffic_multiplier;
-		var dc = driveFactors.petrolUsed*driveFactors.petrol_cost;
-		dc = driveFactors.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
-		driveFactors.driveCost = dc;
-		// display driving cost on page
-		refreshDriveInfo();
-		$inputGrid.fadeOut( "slow", function(){
-			$resultGrid.fadeIn( "slow" );
-			var trafficLayer = new google.maps.TrafficLayer();
-			trafficLayer.setMap(map);
-		});
-	});
+	driveFactors.petrol_cost = 64.00;
+	driveFactors.milage = 14.00;
+	driveFactors.duration= uberInfo.prices[0].duration/60;				// convert to mins
+	driveFactors.distance= uberInfo.prices[0].distance*1.60934;			// convert to kms
+	driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/);	// get currency symbol
+	driveFactors.petrolUsed = (driveFactors.distance/driveFactors.milage)*driveFactors.traffic_multiplier;
+	var dc = driveFactors.petrolUsed*driveFactors.petrol_cost;
+	dc = driveFactors.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
+	driveFactors.driveCost = dc;
 }
 
 function changeDriveFactorUnits(km){
@@ -360,32 +355,53 @@ function createUberHtml(uberInfo){
 	return html;
 }
 
-
+// SUBMIT button
 $("#submitButton").click(function () {
 	if (!fromLocationValid() || !toLocationValid()){
 		// TO-DO: notify user something is wrong with the input
 		return;
 	}
-	freezeControls();
-	// show a progress bar
-	$progressBar.show();
-	// send the entered location info to backend for processing 
-	$.post("/uber", currentLocationInfo, function (data) {
-		console.log(data);
-		// update from and to locations
-		$fromDiv.append(fromStr);
-		$toDiv.append(toStr);
-		// populate drive results
-		makeDriveCalculations(data);
-		//refreshDriveInfo();
-		// populate uber results
-		var uberHtml = createUberHtml(data);
-		$uberResultSubDiv.append(uberHtml);
-		//show result div
+	freezeControls();		// freeze inputs
+	$progressBar.show();	// show a progress bar while processing
+	$.post("/traffic", currentLocationInfo, function(reply){	// get traffic multiplier from google
+		console.log(reply.multiplier);
+		driveFactors.traffic_multiplier = reply.multiplier;
+	}).then(function(){
+		$.post("/uber", currentLocationInfo, function (data) {	// get price estimates from uber
+			console.log(data);
+			$fromDiv.append(fromStr);				// display 'from' location
+			$toDiv.append(toStr);					// display 'to' location
+			makeDriveCalculations(data);			// calculate drive results
+			refreshDriveInfo();						// display driving cost on page
+			var uberHtml = createUberHtml(data);	// generate html for uber results
+			$uberResultSubDiv.append(uberHtml);		// display uber prices
+			$inputGrid.fadeOut( "slow", function(){	// fade in result div
+				$resultGrid.fadeIn( "slow" );
+				var trafficLayer = new google.maps.TrafficLayer();	// add traffic layer on map
+				trafficLayer.setMap(map);
+			});
+		});
 	});
 });
 
-
+// BACK button
 $("#backButton").click(function () {
 	resetEverything();
+});
+
+var dialog = document.querySelector('dialog');
+var showDialogButton = document.querySelector('#settings_icon');
+var showDialogButton = document.querySelector('#settings_icon');
+
+if (! dialog.showModal) {
+  dialogPolyfill.registerDialog(dialog);
+}
+showDialogButton.addEventListener('click', function() {
+	dialog.showModal();
+});
+dialog.querySelector('.close').addEventListener('click', function() {
+  dialog.close();
+});
+$('#mileage_slider').on('input',  function() {
+   $("#mileage_label").innerHTML = $('#mileage_slider').val();           
 });

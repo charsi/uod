@@ -1,12 +1,12 @@
 extends layout
 
 block content
-	.mdl-layout.mdl-js-layout
-		body(class="mdl-color--grey-100")
+	body(class="mdl-color--grey-100")
+		.mdl-layout.mdl-js-layout
 			.mdl-grid(id="main_grid")
 				.mdl-cell.mdl-cell--12-col
 					h2= title
-					h6= "Cost of driving compared with realtime fare estimates from Uber."
+					h6= "Cost of driving compared with realtime fare estimates from Uber"
 				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv")
 					//form(action= '/result', method='POST')
 					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
@@ -19,7 +19,9 @@ block content
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="submitButton") Submit
 					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar") 
 				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="resultGrid")
-					i(id="settings_icon", class="material-icons") settings
+					button(id="settings_icon", class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored")
+						i(class="material-icons", href="#") settings
+					//.mdl-tooltip(for="settings_icon") settings
 					.mdl-cell.mdl-cell--12-col(id="resultHeader")
 						i(class="material-icons") place
 						a ----------------------------------------------------------->
@@ -57,12 +59,49 @@ block content
 							ul.mdl-mini-footer__link-list
 								li
 									a(href='/faq') FAQ
-		
-	
-		script(type='text/javascript', src='/js/index.js')
-		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&libraries=places&callback=initAutocomplete", async, defer)
-		//script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&callback=initMap", async, defer)
+		dialog(class="mdl-dialog")
+			h4(class="mdl-dialog__title") Settings
+			.mdl-dialog__content
+				.radio
+					p Units<br>
+						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-1")
+							input(type="radio" id="units-1", class="mdl-radio__button", name="units", value="1", checked)
+							span(class="mdl-radio__label") <strong>Metric</strong> - km, litres
+						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-2")
+							input(type="radio" id="units-2", class="mdl-radio__button", name="units", value="2")
+							span(class="mdl-radio__label") <strong>Imperial</strong> - miles, gallons
+				.radio
+				p Your car runs on..<br>
+					label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-1")
+						input(type="radio" id="fuel-1", class="mdl-radio__button", name="fuel", value="1", checked)
+						span(class="mdl-radio__label") Petrol
+					label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-2")
+						input(type="radio" id="fuel-2", class="mdl-radio__button", name="fuel", value="2")
+						span(class="mdl-radio__label") Diesel
+				span Car Size
+				.mdl-grid(id="car_select", style="padding:0px;margin-bottom:44px;")
+					.mdl-cell.mdl-cell--4-col(style="margin-top:0px;")
+						label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect", for="car-toggle-small", style="margin-top:2px;")
+							input(type="checkbox" id="car-toggle-small" class="mdl-icon-toggle__input", checked)
+							i(class="mdl-icon-toggle__label material-icons", id="small-car-icon") directions_car
+							| <br>small<br><small>15 kmpl</small>
+					.mdl-cell.mdl-cell--4-col(style="margin-top:0px;")
+						label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect", for="car-toggle-medium")
+							input(type="checkbox" id="car-toggle-medium" class="mdl-icon-toggle__input")
+							i(class="mdl-icon-toggle__label material-icons", id="medium-car-icon") directions_car
+							| <br>medium<br><small>12 kmpl</small>
+					.mdl-cell.mdl-cell--4-col(style="margin-top:0px;")
+						label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect", for="car-toggle-large")
+							input(type="checkbox" id="car-toggle-large" class="mdl-icon-toggle__input")
+							i(class="mdl-icon-toggle__label material-icons", id="large-car-icon") directions_car
+							| <br>large<br><small>8 kmpl</small>
+				.slider_fuel
+					p Cost of fuel<br>
+					input(class="mdl-slider mdl-js-slider", id="mileage_slider",type="range",min="0",max="100",value="25",tabindex="0")
+					
+			.mdl-dialog__actions
+				button(type="button", class="mdl-button close") OK
+				//button(type="button", class="mdl-button close") Disagree
 
-		
-		
-		
+		script(type='text/javascript', src='/js/src/index.js')
+		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&libraries=places&callback=initAutocomplete", async, defer)

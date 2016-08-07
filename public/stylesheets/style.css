@@ -21,6 +21,11 @@ a {
 
 #resultHeader, #resultDiv{
 	text-align:center;
+	padding-top:20px;
+}
+
+#resultHeader{
+	padding-top:20px;
 }
 
 #uberResultFrame{
@@ -92,3 +97,25 @@ a {
 	float: left;
 	opacity: 0.7;
 	}
+	
+.mdl-radio{
+	width:100%;
+}
+.mdl-radio__label{
+	font-size: 12px;
+	
+}
+
+#small-car-icon{
+	font-size: 18px;
+}
+#medium-car-icon{
+	font-size: 22px;
+}
+#large-car-icon{
+	font-size: 26px;
+}
+
+#car_select{
+	margin-top:0;
+}

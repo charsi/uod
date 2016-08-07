@@ -74,7 +74,7 @@ function getTrafficInfoFromGoogle(locations, response){
 		if (multiplier < 1.0) {
 			multiplier = 1.0;
 		}
-		var reply = {multiplier :multiplier};
+		var reply = {multiplier: multiplier};
 		response.send(reply);
 	})
 	.catch((err)=>{
