@@ -3,13 +3,13 @@ var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 
 gulp.task('scripts', function() {
-  gulp.src('./src-js/*.js')
+  gulp.src('./public/js/src/*.js')
     .pipe(uglify())
     .pipe(gulp.dest('./public/js/'))
 });
 
 gulp.task('watch', function() {
-    gulp.watch(['./src-js/*.js'], ['scripts']);
+    gulp.watch(['./public/js/src/*.js'], ['scripts']);
 });
 
 
