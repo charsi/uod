@@ -10,7 +10,7 @@ gulp.task('scripts', () => {
 	.pipe(sourcemaps.init())
     //.pipe(obfuscate())
 	.pipe(uglify())
-	.pipe(sourcemaps.write('maps'))
+	.pipe(sourcemaps.write({includeContent: false, sourceRoot: 'file:///C:/Users/Nishil/projects/uod/js-src/'}))
     .pipe(gulp.dest('./public/js/'))
 });
 
