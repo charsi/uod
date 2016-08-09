@@ -31,14 +31,14 @@ a {
 #uberResultFrame{
 	border-right: dashed #828282;
 	border-right-width: 1px;
-	margin: 0;
-	padding:10px;
+	margin-right: 0;
+
 	float:right;
 }
 
 #driveResultFrame{
-	margin: 0;
-	padding:10px;
+	margin-left: 0;
+
 	float:left;
 	text-align:center;
 }
