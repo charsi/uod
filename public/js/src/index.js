@@ -98,6 +98,17 @@ var driveFactors = {
 $resultGrid.hide();
 
 
+
+// set map to visitor's location
+$.get('http://freegeoip.net/json/', function(ipGeo){
+	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
+	map.panTo(localLatLang);
+	if (ipGeo == 'UK'){
+		g2l = 4.5;
+		$("#modal_gallon_type").text("UK");
+	}
+});
+
 function clearDriveFactors(){
 	driveFactors = {
 		duration : 0.00,
@@ -450,21 +461,42 @@ $('#mileage_slider').on('input',  function() {
    $("#mileage_label").innerHTML = $('#mileage_slider').val();           
 });
 
-	 //dialog.showModal();
+		// dialog.showModal();	 
 
+function getValueFromMilageString(string){
+	return parseFloat(string.split(' ')[0]);
+}
+	 
 $('input[type=radio][name=units]').change(function(){
 	driveFactors.units = this.value;
 	changeDfUnitStrings();
 	//console.log(driveFactors);
+	var smallMilage = $('#modal-milage-small').text();
+	var mediumMilage = $('#modal-milage-medium').text();
+	var largeMilage = $('#modal-milage-large').text();
 	if (this.value == 'metric'){
-		$('#modal-milage-small').text('15 kmpl');
-		$('#modal-milage-medium').text('12 kmpl');
-		$('#modal-milage-large').text('8 kmpl');
+		console.log(smallMilage);
+		console.log(getValueFromMilageString(smallMilage));
+		console.log(getValueFromMilageString(smallMilage) * m2k / g2l);
+		console.log(Math.round(getValueFromMilageString(smallMilage)));
+		console.log(smallMilage);
+		smallMilage = Math.round(getValueFromMilageString(smallMilage) * m2k / g2l).toString() + ' kmpl';
+		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * m2k / g2l).toString()+ ' kmpl';
+		largeMilage = Math.round(getValueFromMilageString(largeMilage) * m2k / g2l).toString() + ' kmpl';
+		
 	} else if (this.value == 'imperial'){
-		$('#modal-milage-small').text('35 mpg');
-		$('#modal-milage-medium').text('28 mpg');
-		$('#modal-milage-large').text('18 mpg');
+		console.log(smallMilage);
+		console.log(getValueFromMilageString(smallMilage));
+		console.log(getValueFromMilageString(smallMilage) * g2l / m2k);
+		console.log(Math.round(getValueFromMilageString(smallMilage)));
+		console.log(smallMilage);
+		smallMilage = Math.round(getValueFromMilageString(smallMilage) * g2l / m2k).toString() + ' mpg';
+		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * g2l / m2k).toString() + ' mpg';
+		largeMilage = Math.round(getValueFromMilageString(largeMilage) * g2l / m2k).toString() + ' mpg';
 	}
+	$('#modal-milage-small').text(smallMilage);
+	$('#modal-milage-medium').text(mediumMilage);
+	$('#modal-milage-large').text(largeMilage);
 });
 
 
@@ -476,7 +508,7 @@ $('input[type=radio][name=fuel]').change(function(){
 });
 
 
-// google analytics
+// google analytics-----------
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -485,9 +517,5 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-82207430-1', 'auto');
 ga('send', 'pageview');
 
-$.get('http://freegeoip.net/json/', function(ipGeo){
-	//$.get('https://maps.googleapis.com/maps/api/geocode/json?address='+ipGeo.+'&key='+key)
-	//map.panTo();
-	console.log(ipGeo);
-});
+//---------------------------------
 

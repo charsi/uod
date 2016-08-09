@@ -66,20 +66,20 @@ block content
 					p Units<br>
 						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-1")
 							input(type="radio" id="units-1", class="mdl-radio__button", name="units", value="metric", checked)
-							span(class="mdl-radio__label") <strong>Metric</strong> - km, litres
+							span(class="mdl-radio__label") <strong>km, litres</strong>
 						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-2")
 							input(type="radio" id="units-2", class="mdl-radio__button", name="units", value="imperial")
-							span(class="mdl-radio__label") <strong>Imperial</strong> - miles, gallons
+							span(class="mdl-radio__label") <strong>miles, gallons(<span id="modal_gallon_type">US</span>)</strong>
 				.radio
 				p What does your car run on?<br>
 					label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-1")
 						input(type="radio" id="fuel-1", class="mdl-radio__button", name="fuel", value="petrol", checked)
-						span(class="mdl-radio__label") Petrol
+						span(class="mdl-radio__label") <strong>Petrol</strong>
 					label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-2")
 						input(type="radio" id="fuel-2", class="mdl-radio__button", name="fuel", value="diesel")
-						span(class="mdl-radio__label") Diesel
+						span(class="mdl-radio__label") <strong>Diesel</strong>
 				span Car Size
-				.mdl-grid(id="car_select", style="padding:0px;margin-bottom:44px;")
+				.mdl-grid(id="car_select", style="padding:0px;margin-bottom:50px;")
 					.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
 						label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect", for="car-toggle-small", style="margin-top:2px;")
 							input(type="checkbox" id="car-toggle-small" class="mdl-icon-toggle__input", checked)
