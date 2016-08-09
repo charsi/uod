@@ -103,11 +103,11 @@ $resultGrid.hide();
 $.get('http://freegeoip.net/json/', function(ipGeo){
 	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
 	map.panTo(localLatLang);
-	if (ipGeo == 'GB'){
+	if (ipGeo.country_code == 'GB'){
 		g2l = 4.5;
 		$("#modal_gallon_type").text("UK");
 		driveFactors.units = 'imperial';
-	} else if (ipGeo == 'US'){
+	} else if (ipGeo.country_code == 'US'){
 		driveFactors.units = 'imperial';
 	}
 });
