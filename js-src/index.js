@@ -79,7 +79,7 @@ var driveFactors = {
 	distance : 0.00,        // in km
 	milage : 14.00,			// in kmpl
 	fuelCost : 64.00,		// per litre, in local currency
-	traffic_multiplier : 1.00, // time with traffic/time without traffic
+	trafficMultiplier : 1.00, // time with traffic/time without traffic
 	currency : '',			// currency symbol string
 	petrolUsed : 0.0,		// calculated, in litres
 	driveCost : '',			// calculated, in local currency
@@ -99,40 +99,33 @@ $resultGrid.hide();
 
 
 
-// set map to visitor's location
+// set map to visitor's location, and local units if (US or UK)
 $.get('http://freegeoip.net/json/', function(ipGeo){
 	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
 	map.panTo(localLatLang);
-	if (ipGeo.country_code == 'GB'){
+	//if (ipGeo.country_code == 'GB'){
 		g2l = 4.5;
 		$("#modal_gallon_type").text("UK");
-		driveFactors.units = 'imperial';
-		changeDfUnitStrings();		// change unit strings
-	} else if (ipGeo.country_code == 'US'){
-		driveFactors.units = 'imperial';
-		changeDfUnitStrings();		// change unit strings
+		$('input[name=units]#units-2').attr('checked', true);
+		driveFactors.fuelCost = 1.11;
+		changeDfUnits('imperial');
+		refreshDriveInfo();
+	//} else 
+		if (ipGeo.country_code == 'US'){
+		$('input[name=units]#units-2').attr('checked', true);
+		changeDfUnits('imperial');		// change unit strings
+		driveFactors.fuelCost = 0.63;
+		refreshDriveInfo();
+		driveFactors.fuelCost = 2.2;
 	}
 });
 
 function clearDriveFactors(){
-	driveFactors = {
-		duration : 0.00,
-		distance : 0.00,
-		milage : 14.00,
-		fuelCost : 64.00,
-		traffic_multiplier : 1.00,
-		currency : '',
-		petrolUsed : 0.0,
-		driveCost : '',
-		units : 'metric',
-		fuel : 'petrol',
-		unitStrings : {
-			distUnits : "kms",		
-			milageUnits : "kmpl",	
-			fuelUnits : "L",		
-			fuelCostUnits : "per litre"
-		}
-	};
+	driveFactors.duration = 0.00;
+	driveFactors.distance = 0.00;
+	driveFactors.trafficMultiplier = 1.00;
+	driveFactors.petrolUsed = 0.0;
+	driveFactors. driveCost = '';
 }
 
 function restMap(){
@@ -338,24 +331,31 @@ function clearDiv(div){
 
 // 
 function populateDriveFactors(uberInfo){
-	driveFactors.duration= uberInfo.prices[0].duration/60;				// convert to mins
-	driveFactors.distance= uberInfo.prices[0].distance*m2k;			// convert to kms
+	driveFactors.duration= uberInfo.prices[0].duration/60;					// convert to mins
+	driveFactors.distance= uberInfo.prices[0].distance
 	driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/)[0];	// get currency symbol
+	if (driveFactors.units=='metric'){
+		driveFactors.distance= uberInfo.prices[0].distance*m2k;				// convert to kms
+	} else if (driveFactors.units=='imperial'){
+		driveFactors.distance= uberInfo.prices[0].distance;					// leave in miles as retured from uber
+	}
 }
 
 // calculates cost of driving based on info about the uber trip
 function makeDriveCalculations(){
 	var df = driveFactors;
-	df.petrolUsed = (df.distance/df.milage)*df.traffic_multiplier;
+	df.petrolUsed = (df.distance/df.milage)*df.trafficMultiplier;
 	var dc = df.petrolUsed*df.fuelCost;
 	dc = df.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
 	df.driveCost = dc;
 }
 
 // update unit strings when units change
-function changeDfUnitStrings(){
+function changeDfUnits(newunits){
 	var df = driveFactors;
 	var dfus = driveFactors.unitStrings;
+	df.units = newunits;
+	switchModalMilageUnits(newunits);
 	if (df.units == 'metric'){
 		dfus.fuelUnits = 'L';
 		dfus.milageUnits = 'kmpl';
@@ -375,7 +375,7 @@ function changeDfUnitStrings(){
 		df.fuelCost = df.fuelCost * g2l; // per gallon
 	}
 	makeDriveCalculations();
-	console.log(driveFactors);
+	//console.log(driveFactors);
 }
 
 // adds distance, time and driving cost info on the page
@@ -423,10 +423,10 @@ $("#submitButton").click(function () {
 	var trafficPromise = $.post("/traffic", currentLocationInfo)	// get traffic multiplier from google
 	trafficPromise.then(function(reply){
 		console.log(reply.multiplier);
-		driveFactors.traffic_multiplier = reply.multiplier;
+		driveFactors.trafficMultiplier = reply.multiplier;
 		var uberPromise = $.post("/uber", currentLocationInfo);	// get price estimates from uber
 		uberPromise.then(function (data) {	
-			console.log(data);
+			//console.log(data);
 			$fromDiv.append(fromStr);				// display 'from' location
 			$toDiv.append(toStr);					// display 'to' location
 			populateDriveFactors(data);				// add uber data to drve factors
@@ -473,28 +473,27 @@ function getValueFromMilageString(string){
 }
 	 
 $('input[type=radio][name=units]').change(function(){
-	driveFactors.units = this.value;
-	changeDfUnitStrings();
-	//console.log(driveFactors);
+	changeDfUnits(this.value);
+});
+
+
+// this is a needlessly long function
+// all it does is convert the units of the three milage options in the modal dialog
+// from kmpl to mpg or vie-versa. the function is a bit complex to avoid static linking the 
+// predetermined values for both unit systems. This prefered in order to support two different
+// types of  'gallons' (USA/UK). Since the converted values are calculated on the fly, for UK visitors
+// the conversion variable is modified and the values change here accordingly.
+// Must be a way to refactor this somehow.
+function switchModalMilageUnits(newunits){
 	var smallMilage = $('#modal-milage-small').text();
 	var mediumMilage = $('#modal-milage-medium').text();
 	var largeMilage = $('#modal-milage-large').text();
-	if (this.value == 'metric'){
-		console.log(smallMilage);
-		console.log(getValueFromMilageString(smallMilage));
-		console.log(getValueFromMilageString(smallMilage) * m2k / g2l);
-		console.log(Math.round(getValueFromMilageString(smallMilage)));
-		console.log(smallMilage);
+	if (newunits == 'metric'){
 		smallMilage = Math.round(getValueFromMilageString(smallMilage) * m2k / g2l).toString() + ' kmpl';
 		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * m2k / g2l).toString()+ ' kmpl';
 		largeMilage = Math.round(getValueFromMilageString(largeMilage) * m2k / g2l).toString() + ' kmpl';
 		
-	} else if (this.value == 'imperial'){
-		console.log(smallMilage);
-		console.log(getValueFromMilageString(smallMilage));
-		console.log(getValueFromMilageString(smallMilage) * g2l / m2k);
-		console.log(Math.round(getValueFromMilageString(smallMilage)));
-		console.log(smallMilage);
+	} else if (newunits == 'imperial'){
 		smallMilage = Math.round(getValueFromMilageString(smallMilage) * g2l / m2k).toString() + ' mpg';
 		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * g2l / m2k).toString() + ' mpg';
 		largeMilage = Math.round(getValueFromMilageString(largeMilage) * g2l / m2k).toString() + ' mpg';
@@ -502,7 +501,7 @@ $('input[type=radio][name=units]').change(function(){
 	$('#modal-milage-small').text(smallMilage);
 	$('#modal-milage-medium').text(mediumMilage);
 	$('#modal-milage-large').text(largeMilage);
-});
+}
 
 
 $('input[type=radio][name=fuel]').change(function(){

@@ -17,6 +17,8 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-obfuscate": "^0.2.9",
+    "gulp-sourcemaps": "^1.6.0"
   }
 }
