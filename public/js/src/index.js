@@ -103,9 +103,12 @@ $resultGrid.hide();
 $.get('http://freegeoip.net/json/', function(ipGeo){
 	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
 	map.panTo(localLatLang);
-	if (ipGeo == 'UK'){
+	if (ipGeo == 'GB'){
 		g2l = 4.5;
 		$("#modal_gallon_type").text("UK");
+		driveFactors.units = 'imperial';
+	} else if (ipGeo == 'US'){
+		driveFactors.units = 'imperial';
 	}
 });
 
