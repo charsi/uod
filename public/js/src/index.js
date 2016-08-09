@@ -107,8 +107,10 @@ $.get('http://freegeoip.net/json/', function(ipGeo){
 		g2l = 4.5;
 		$("#modal_gallon_type").text("UK");
 		driveFactors.units = 'imperial';
+		changeDfUnitStrings();		// change unit strings
 	} else if (ipGeo.country_code == 'US'){
 		driveFactors.units = 'imperial';
+		changeDfUnitStrings();		// change unit strings
 	}
 });
 
