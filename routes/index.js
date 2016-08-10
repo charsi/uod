@@ -13,12 +13,6 @@ router.get('/faq', function(req, res, next) {
       res.render('faq', { title: 'FAQ' });
 });
 
-router.route('/contacts')
-.get(function(req, res, next) {
-  res.send('Get');
-  console.log("ecdecedc");
-})
-
 // gets price info from uber. Takes an object containing lat,lng info for start and stop of trip
 function getPriceFromUber(locations, response){
 	var options = {
@@ -38,7 +32,7 @@ function getPriceFromUber(locations, response){
 	request(options)
 	.then((body)=>{
 		var info = JSON.parse(body);
-		console.log(info);
+		//console.log(info);
 		response.send(info);
 	})
 	.catch((err)=>{
@@ -62,11 +56,12 @@ function getTrafficInfoFromGoogle(locations, response){
 			},
 		method: 'GET'
 	};
-	console.log(options);
+	//console.log(options);
+	console.log('Dialing Google!');
 	request(options)
 	.then((body)=>{
 		var info = JSON.parse(body);
-		console.log(info);
+		//console.log(info);
 		//calculate multiplier factor due to traffic and send it back
 		var normalDuration = info.rows[0].elements[0].duration.value;
 		var inTrafficDuration = info.rows[0].elements[0].duration_in_traffic.value;
@@ -85,7 +80,7 @@ function getTrafficInfoFromGoogle(locations, response){
 
 // Listen for lat, long data. Pass the same to uber and return the response.
 router.post('/uber', (req, res) => {
-	console.log('Hellooooooooooooooooo!');
+	console.log('Dialing Uber!');
 	//console.log(req.body);
 	getPriceFromUber(req.body, res);
 	//res.send(priceInfo);
@@ -94,9 +89,9 @@ router.post('/uber', (req, res) => {
 // Listen for for, to addresses to be sent to google for traffic info
 router.post('/traffic', (req, res) => {
 	console.log('traffic check!');
-	console.log(req.body);
+	//console.log(req.body);
 	getTrafficInfoFromGoogle(req.body, res);
 	//res.send(priceInfo);
-})
+})    
 
 module.exports = router;

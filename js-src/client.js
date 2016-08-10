@@ -103,15 +103,15 @@ $resultGrid.hide();
 $.get('http://freegeoip.net/json/', function(ipGeo){
 	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
 	map.panTo(localLatLang);
-	//if (ipGeo.country_code == 'GB'){
+	if (ipGeo.country_code == 'GB'){
 		g2l = 4.5;
 		$("#modal_gallon_type").text("UK");
 		$('input[name=units]#units-2').attr('checked', true);
 		driveFactors.fuelCost = 1.11;
 		changeDfUnits('imperial');
 		refreshDriveInfo();
-	//} else 
-		if (ipGeo.country_code == 'US'){
+	} else 
+	if (ipGeo.country_code == 'US'){
 		$('input[name=units]#units-2').attr('checked', true);
 		changeDfUnits('imperial');		// change unit strings
 		driveFactors.fuelCost = 0.63;
@@ -342,11 +342,11 @@ function populateDriveFactors(uberInfo){
 }
 
 // calculates cost of driving based on info about the uber trip
-function makeDriveCalculations(){
+function driveCalculations(){
 	var df = driveFactors;
 	df.petrolUsed = (df.distance/df.milage)*df.trafficMultiplier;
 	var dc = df.petrolUsed*df.fuelCost;
-	dc = df.currency+(dc*.9).toFixed(0)+'-'+(dc*1.1).toFixed(0)
+	dc = df.currency+Math.ceil((dc*.9))+'-'+Math.ceil((dc*1.1))
 	df.driveCost = dc;
 }
 
@@ -374,7 +374,7 @@ function changeDfUnits(newunits){
 		df.distance = df.distance / m2k		// convert to miles
 		df.fuelCost = df.fuelCost * g2l; // per gallon
 	}
-	makeDriveCalculations();
+	driveCalculations();
 	//console.log(driveFactors);
 }
 
@@ -430,7 +430,7 @@ $("#submitButton").click(function () {
 			$fromDiv.append(fromStr);				// display 'from' location
 			$toDiv.append(toStr);					// display 'to' location
 			populateDriveFactors(data);				// add uber data to drve factors
-			makeDriveCalculations();				// calculate drive results
+			driveCalculations();				// calculate drive results
 			refreshDriveInfo();						// display driving cost on page
 			var uberHtml = createUberHtml(data);	// generate html for uber results
 			$uberResultSubDiv.append(uberHtml);		// display uber prices
@@ -521,4 +521,4 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-82207430-1', 'auto');
 ga('send', 'pageview');
 
-//-----------------------------------
+//------------------------------------
