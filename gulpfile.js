@@ -38,6 +38,7 @@ gulp.task('start',['watch'], function(){
   //have nodemon run watch on start
   .on('restart', function(){
     console.log(' -----------        Server restarted      ------------ ');
-  });
+  })
+  .on('start', ['compile']);
 });
 

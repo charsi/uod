@@ -66,10 +66,10 @@ block content
 					p Units<br>
 						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-1")
 							input(type="radio" id="units-1", class="mdl-radio__button", name="units", value="metric", checked)
-							span(class="mdl-radio__label") <strong>km, litres</strong>
+							span(class="mdl-radio__label") <strong>Metric</strong> - km, litres
 						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-2")
 							input(type="radio" id="units-2", class="mdl-radio__button", name="units", value="imperial")
-							span(class="mdl-radio__label") <strong>miles, gallons(<span id="modal_gallon_type">US</span>)</strong>
+							span(class="mdl-radio__label") <strong><span id="unit_system">US</span></strong> - miles, gallons
 				.radio
 				p What does your car run on?<br>
 					label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-1")
@@ -104,5 +104,5 @@ block content
 				//button(type="button", class="mdl-button close") Disagree
 
 		script(type='text/javascript', src='/js/client.js')
-		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&libraries=places&callback=initAutocomplete", async, defer)
+		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
 		

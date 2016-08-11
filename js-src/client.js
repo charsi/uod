@@ -1,4 +1,6 @@
 "use strict";
+/*jshint esversion: 6 */
+/*globals $:false */
 
 // google autocomplete objects
 var autocompleteFrom;
@@ -27,6 +29,7 @@ var $resultGrid = $("#resultGrid");
 var $progressBar = $("#progressBar");
 var $fuelSpan = $("#fuel");
 
+var currentLocationInfo;
 var g2l = 3.785 ;	// 1 gallon = g2l * litres
 var m2k = 1.609 ;	// 1 mile = m2k * kms
 
@@ -57,20 +60,13 @@ const key = "***REMOVED***";
 var localLatLang = {lat: 51.5089254, lng: -0.107437};
 
 // holder for geolocation coordinates returned by google
-var currentLocationInfo = {
-	start_latitude : "",
-	start_longitude : "",
-	end_latitude : "",
-	end_longitude : ""
-};
-
-function clearLocationInfo(){
-	currentLocationInfo = {
-		start_latitude : "",
-		start_longitude : "",
-		end_latitude : "",
-		end_longitude : ""
-	};
+class LocationInfo {
+	constructor(){
+		this.start_latitude = "",
+		this.start_longitude = "",
+		this.end_latitude = "",
+		this.end_longitude = ""
+	}
 }
 
 // holder for factors involved in drive cost calculation
@@ -93,32 +89,7 @@ var driveFactors = {
 	}
 };
 
-//-----------------------
 
-$resultGrid.hide();
-
-
-
-// set map to visitor's location, and local units if (US or UK)
-$.get('http://freegeoip.net/json/', function(ipGeo){
-	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
-	map.panTo(localLatLang);
-	if (ipGeo.country_code == 'GB'){
-		g2l = 4.5;
-		$("#modal_gallon_type").text("UK");
-		$('input[name=units]#units-2').attr('checked', true);
-		driveFactors.fuelCost = 1.11;
-		changeDfUnits('imperial');
-		refreshDriveInfo();
-	} else 
-	if (ipGeo.country_code == 'US'){
-		$('input[name=units]#units-2').attr('checked', true);
-		changeDfUnits('imperial');		// change unit strings
-		driveFactors.fuelCost = 0.63;
-		refreshDriveInfo();
-		driveFactors.fuelCost = 2.2;
-	}
-});
 
 function clearDriveFactors(){
 	driveFactors.duration = 0.00;
@@ -137,8 +108,8 @@ function restMap(){
 		mapTypeControl: false,
 		streetViewControl: false
 	});
-	directionsService = new google.maps.DirectionsService; 
-	directionsDisplay = new google.maps.DirectionsRenderer;  
+	directionsService = new google.maps.DirectionsService(); 
+	directionsDisplay = new google.maps.DirectionsRenderer();  
 }
 
 function resetEverything(){
@@ -149,11 +120,11 @@ function resetEverything(){
 	$("#submitButton").prop('disabled', false);
 	$("#locationToInput").prop('disabled', false);
 	$("#locationFromInput").prop('disabled', false);
-	clearLocationInfo();
+	currentLocationInfo = new LocationInfo();
 	clearDriveFactors();
 	restMap();
 	refreshMap();
-	$resultGrid.fadeOut( "slow", function(){
+	$resultGrid.fadeOut( "slow", function(){ 
 		$inputGrid.fadeIn( "slow" );
 		// clear all result divs
 		[
@@ -165,25 +136,6 @@ function resetEverything(){
 			$fuelSpan
 		].forEach(clearDiv);
 	});
-}
-
-// callback function for google maps api. Fired when it finishes loading. 
-function initAutocomplete() {
-	// 'from' autocomplete object
-	autocompleteFrom = new google.maps.places.Autocomplete(
-	/** @type {!HTMLInputElement} */document.getElementById('locationFromInput'), { types: ['geocode'] });
-	// populate 'from' when user selects an address from the list 
-	autocompleteFrom.addListener('place_changed', fillFromAddress);
-	
-	// 'to' autocomplete object
-	autocompleteTo = new google.maps.places.Autocomplete(
-	/** @type {!HTMLInputElement} */document.getElementById('locationToInput'), { types: ['geocode'] });
-	// populate 'to' when user selects an address from the list
-	autocompleteTo.addListener('place_changed', fillToAddress);
-	
-	geolocate();		// get user's geographical location
-	
-	resetEverything();	// reset incase the browser caches form entries
 }
 
 // populate lat, lng of origin address
@@ -204,9 +156,9 @@ function fillToAddress() {
 
 // has a 'from' location been entered? is it valid?
 function fromLocationValid(){
-	if ( currentLocationInfo.start_latitude!="" &&
-		currentLocationInfo.start_longitude!="" &&
-		$('#locationFromInput').val() !=""
+	if ( currentLocationInfo.start_latitude!=="" &&
+		currentLocationInfo.start_longitude!=="" &&
+		$('#locationFromInput').val() !==""
 		)
 	{
 		return true;
@@ -217,9 +169,9 @@ function fromLocationValid(){
 
 // has a 'to' location been entered? is it valid?
 function toLocationValid(){
-	if (currentLocationInfo.end_latitude!="" &&
-		currentLocationInfo.end_longitude!=""&&
-		$('#locationToInput').val() !=""
+	if (currentLocationInfo.end_latitude!=="" &&
+		currentLocationInfo.end_longitude!==""&&
+		$('#locationToInput').val() !==""
 		)
 	{
 		return true;
@@ -241,7 +193,6 @@ function clearOverlays() {
 function refreshMap() {
 	var tmpLatLang = localLatLang;
 	map.setZoom(10);
-	var mapSrcUrl;
 	fromStr = $("#locationFromInput").val();
 	toStr = $("#locationToInput").val();
 	//if both locations are valid, create a route
@@ -264,8 +215,8 @@ function refreshMap() {
 		tmpLatLang = {
 			lat : currentLocationInfo.start_latitude,
 			lng: currentLocationInfo.start_longitude
-		}
-		var marker = new google.maps.Marker({
+		};
+		let marker = new google.maps.Marker({
 			position: tmpLatLang,
 			map: map,
 			title: fromStr
@@ -277,8 +228,8 @@ function refreshMap() {
 		tmpLatLang = {
 			lat : currentLocationInfo.end_latitude,
 			lng: currentLocationInfo.end_longitude
-		}
-		var marker = new google.maps.Marker({
+		};
+		let marker = new google.maps.Marker({
 			position: tmpLatLang,
 			map: map,
 			title: toStr
@@ -332,7 +283,7 @@ function clearDiv(div){
 // 
 function populateDriveFactors(uberInfo){
 	driveFactors.duration= uberInfo.prices[0].duration/60;					// convert to mins
-	driveFactors.distance= uberInfo.prices[0].distance
+	driveFactors.distance= uberInfo.prices[0].distance;
 	driveFactors.currency = uberInfo.prices[0].estimate.match(/^\D*/)[0];	// get currency symbol
 	if (driveFactors.units=='metric'){
 		driveFactors.distance= uberInfo.prices[0].distance*m2k;				// convert to kms
@@ -346,7 +297,7 @@ function driveCalculations(){
 	var df = driveFactors;
 	df.petrolUsed = (df.distance/df.milage)*df.trafficMultiplier;
 	var dc = df.petrolUsed*df.fuelCost;
-	dc = df.currency+Math.ceil((dc*.9))+'-'+Math.ceil((dc*1.1))
+	dc = df.currency+Math.ceil((dc*0.9))+'-'+Math.ceil((dc*1.1));
 	df.driveCost = dc;
 }
 
@@ -371,7 +322,7 @@ function changeDfUnits(newunits){
 		dfus.distUnits = 'miles';
 		dfus.fuelCostUnits = 'per gallon';
 		df.milage = df.milage * g2l / m2k;	// convert to mpg
-		df.distance = df.distance / m2k		// convert to miles
+		df.distance = df.distance / m2k;		// convert to miles
 		df.fuelCost = df.fuelCost * g2l; // per gallon
 	}
 	driveCalculations();
@@ -395,7 +346,7 @@ function refreshDriveInfo(){
 function createUberHtml(uberInfo){
 	var cheapestOptionCost = uberInfo.prices[0].estimate.split('.')[0]; // first result from uber, stripped of decimal places
 	var html = '';
-	html+= '<h5 style="text-align : center;"><br><strong>' + cheapestOptionCost +'<sup>*<sup></strong></h5>'
+	html+= '<h5 style="text-align : center;"><br><strong>' + cheapestOptionCost +'<sup>*<sup></strong></h5>';
 	html+= '<p style="text-align : center;">via '+uberInfo.prices[0].display_name+'</p>';
 	html+= '<hr><small>Other options</small><br>';
 	html+= '<table class="mdl-data-table mdl-js-data-table" style="width:20%;">';
@@ -411,6 +362,112 @@ function createUberHtml(uberInfo){
 	html+='</table>';
 	return html;
 }
+
+
+function getValueFromMilageString(string){
+	return parseFloat(string.split(' ')[0]);
+}
+	 
+
+	 
+$('input[type=radio][name=units]').change(function(){
+	changeDfUnits(this.value);
+});
+
+
+// this is a needlessly long function
+// all it does is convert the units of the three milage options (car size )in the modal dialog
+// from kmpl to mpg or vie-versa. The function is a bit complex to avoid static linking the 
+// precalculated values for both unit systems. The function instead calculates the values each
+// time the units are switched. This is prefered in order to support two different
+// types of  'gallons' (USA/UK). With this function for UK visitors only the 
+// the conversion variable is modified and the values change here accordingly.
+// Must be a way to refactor this somehow.
+function switchModalMilageUnits(newunits){
+	var smallMilage = $('#modal-milage-small').text();
+	var mediumMilage = $('#modal-milage-medium').text();
+	var largeMilage = $('#modal-milage-large').text();
+	if (newunits == 'metric'){
+		smallMilage = Math.round(getValueFromMilageString(smallMilage) * m2k / g2l).toString() + ' kmpl';
+		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * m2k / g2l).toString()+ ' kmpl';
+		largeMilage = Math.round(getValueFromMilageString(largeMilage) * m2k / g2l).toString() + ' kmpl';
+		
+	} else if (newunits == 'imperial'){
+		smallMilage = Math.round(getValueFromMilageString(smallMilage) * g2l / m2k).toString() + ' mpg';
+		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * g2l / m2k).toString() + ' mpg';
+		largeMilage = Math.round(getValueFromMilageString(largeMilage) * g2l / m2k).toString() + ' mpg';
+	}
+	$('#modal-milage-small').text(smallMilage);
+	$('#modal-milage-medium').text(mediumMilage);
+	$('#modal-milage-large').text(largeMilage);
+}
+
+
+$('input[type=radio][name=fuel]').change(function(){
+	driveFactors.fuel = this.value;
+	$('#modal-fuel-name').text(this.value);
+	//console.log(driveFactors);
+	// change milage picker units
+});
+
+
+// google analytics---------------
+(function(i,s,o,g,r,a,m){i.GoogleAnalyticsObject=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-82207430-1', 'auto');
+ga('send', 'pageview');
+
+//------------------------------------
+
+// callback function for google maps api. Fired when it finishes loading. 
+function initAutocomplete() {
+	// 'from' autocomplete object
+	autocompleteFrom = new google.maps.places.Autocomplete(
+	/** @type {!HTMLInputElement} */document.getElementById('locationFromInput'), { types: ['geocode'] });
+	// populate 'from' when user selects an address from the list 
+	autocompleteFrom.addListener('place_changed', fillFromAddress);
+	
+	// 'to' autocomplete object
+	autocompleteTo = new google.maps.places.Autocomplete(
+	/** @type {!HTMLInputElement} */document.getElementById('locationToInput'), { types: ['geocode'] });
+	// populate 'to' when user selects an address from the list
+	autocompleteTo.addListener('place_changed', fillToAddress);
+	
+	geolocate();		// get user's geographical location
+	
+	resetEverything();	// reset incase the browser caches form entries
+}
+
+//-----------------------
+
+$resultGrid.hide();
+
+
+
+// set map to visitor's location, and local units if (US or UK)
+$.get('http://freegeoip.net/json/', function(ipGeo){
+	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
+	map.panTo(localLatLang);
+	if (ipGeo.country_code == 'GB'){
+		g2l = 4.5;
+		$("#unit_system").text("Imperial");
+		$('input[name=units]#units-2').attr('checked', true);
+		driveFactors.fuelCost = 1.11;
+		changeDfUnits('imperial');
+		refreshDriveInfo();
+	} else 
+	if (ipGeo.country_code == 'US'){
+		$('input[name=units]#units-2').attr('checked', true);
+		changeDfUnits('imperial');		// change unit strings
+		driveFactors.fuelCost = 0.63;
+		refreshDriveInfo();
+		driveFactors.fuelCost = 2.2;
+	}
+});
+
+
 
 // SUBMIT button
 $("#submitButton").click(function () {
@@ -456,7 +513,7 @@ if (! dialog.showModal) {
   dialogPolyfill.registerDialog(dialog);
 }
 showDialogButton.addEventListener('click', function() {
-	dialog.showModal();
+	dialog.showModal(); 
 });
 dialog.querySelector('.close').addEventListener('click', function() {
 	refreshDriveInfo();
@@ -466,59 +523,5 @@ $('#mileage_slider').on('input',  function() {
    $("#mileage_label").innerHTML = $('#mileage_slider').val();           
 });
 
-		// dialog.showModal();	 
+//dialog.showModal();	 
 
-function getValueFromMilageString(string){
-	return parseFloat(string.split(' ')[0]);
-}
-	 
-$('input[type=radio][name=units]').change(function(){
-	changeDfUnits(this.value);
-});
-
-
-// this is a needlessly long function
-// all it does is convert the units of the three milage options in the modal dialog
-// from kmpl to mpg or vie-versa. the function is a bit complex to avoid static linking the 
-// predetermined values for both unit systems. This prefered in order to support two different
-// types of  'gallons' (USA/UK). Since the converted values are calculated on the fly, for UK visitors
-// the conversion variable is modified and the values change here accordingly.
-// Must be a way to refactor this somehow.
-function switchModalMilageUnits(newunits){
-	var smallMilage = $('#modal-milage-small').text();
-	var mediumMilage = $('#modal-milage-medium').text();
-	var largeMilage = $('#modal-milage-large').text();
-	if (newunits == 'metric'){
-		smallMilage = Math.round(getValueFromMilageString(smallMilage) * m2k / g2l).toString() + ' kmpl';
-		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * m2k / g2l).toString()+ ' kmpl';
-		largeMilage = Math.round(getValueFromMilageString(largeMilage) * m2k / g2l).toString() + ' kmpl';
-		
-	} else if (newunits == 'imperial'){
-		smallMilage = Math.round(getValueFromMilageString(smallMilage) * g2l / m2k).toString() + ' mpg';
-		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * g2l / m2k).toString() + ' mpg';
-		largeMilage = Math.round(getValueFromMilageString(largeMilage) * g2l / m2k).toString() + ' mpg';
-	}
-	$('#modal-milage-small').text(smallMilage);
-	$('#modal-milage-medium').text(mediumMilage);
-	$('#modal-milage-large').text(largeMilage);
-}
-
-
-$('input[type=radio][name=fuel]').change(function(){
-	driveFactors.fuel = this.value;
-	$('#modal-fuel-name').text(this.value);
-	//console.log(driveFactors);
-	// change milage picker units
-});
-
-
-// google analytics---------------
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-82207430-1', 'auto');
-ga('send', 'pageview');
-
-//------------------------------------
