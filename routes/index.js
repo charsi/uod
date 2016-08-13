@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var request = require('request-promise');
 require('request').debug = true;
+var fs = require('fs');
+var petrolprices = JSON.parse(fs.readFileSync('./db/pricelist.json', 'utf8'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -78,8 +80,14 @@ function getTrafficInfoFromGoogle(locations, response){
 	})
 }
 
+function fuelpricecheck(query, response) {
+	var countryCode = query.country;
+	console.log(countryCode);
+	response.send(petrolprices[countryCode]);
+}
+
 // Listen for lat, long data. Pass the same to uber and return the response.
-router.post('/uber', (req, res) => {
+router.post('/api/uber', (req, res) => {
 	console.log('Dialing Uber!');
 	//console.log(req.body);
 	getPriceFromUber(req.body, res);
@@ -87,10 +95,18 @@ router.post('/uber', (req, res) => {
 })
 
 // Listen for for, to addresses to be sent to google for traffic info
-router.post('/traffic', (req, res) => {
+router.post('/api/traffic', (req, res) => {
 	console.log('traffic check!');
 	//console.log(req.body);
 	getTrafficInfoFromGoogle(req.body, res);
+	//res.send(priceInfo);
+})    
+
+// Listen for country name and return fuel price
+router.get('/api/fuelprice', (req, res) => {
+	console.log('fuel price check!');
+	//console.log(req.body);
+	fuelpricecheck(req.query, res);
 	//res.send(priceInfo);
 })    
 

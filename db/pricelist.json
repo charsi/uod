@@ -1,0 +1,1569 @@
+{
+  "KW": {
+    "country_code": "KW",
+    "currency_code": "KWD",
+    "diesel_price_usd": 0.36,
+    "diesel_price_local": 0.11,
+    "petrol_price_local": 0.06,
+    "petrol_price_usd": 0.21,
+    "country_name": "Kuwait"
+  },
+  "SA": {
+    "country_code": "SA",
+    "currency_code": "SAR",
+    "diesel_price_usd": 0.2,
+    "diesel_price_local": 0.75,
+    "petrol_price_local": 0.9,
+    "petrol_price_usd": 0.24,
+    "country_name": "Saudi Arabia"
+  },
+  "TM": {
+    "country_code": "TM",
+    "currency_code": "TMT",
+    "diesel_price_usd": 0.26,
+    "diesel_price_local": 0.89,
+    "petrol_price_local": 0.95,
+    "petrol_price_usd": 0.28,
+    "country_name": "Turkmenistan"
+  },
+  "DZ": {
+    "country_code": "DZ",
+    "currency_code": "DZD",
+    "diesel_price_usd": 0.17,
+    "diesel_price_local": 18.56,
+    "petrol_price_local": 30.75,
+    "petrol_price_usd": 0.28,
+    "country_name": "Algeria"
+  },
+  "QA": {
+    "country_code": "QA",
+    "currency_code": "QAR",
+    "diesel_price_usd": 0.38,
+    "diesel_price_local": 1.38,
+    "petrol_price_local": 1.42,
+    "petrol_price_usd": 0.39,
+    "country_name": "Qatar"
+  },
+  "EC": {
+    "country_code": "EC",
+    "currency_code": "ECS",
+    "diesel_price_usd": 0.27,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 0.39,
+    "country_name": "Ecuador"
+  },
+  "IR": {
+    "country_code": "IR",
+    "currency_code": "IRR",
+    "diesel_price_usd": 0.1,
+    "diesel_price_local": 3005.5,
+    "petrol_price_local": 11721.84,
+    "petrol_price_usd": 0.39,
+    "country_name": "Iran"
+  },
+  "BH": {
+    "country_code": "BH",
+    "currency_code": "BHD",
+    "diesel_price_usd": 0.31,
+    "diesel_price_local": 0.12,
+    "petrol_price_local": 0.15,
+    "petrol_price_usd": 0.41,
+    "country_name": "Bahrain"
+  },
+  "KZ": {
+    "country_code": "KZ",
+    "currency_code": "KZT",
+    "diesel_price_usd": 0.31,
+    "diesel_price_local": 106.9,
+    "petrol_price_local": 141.98,
+    "petrol_price_usd": 0.41,
+    "country_name": "Kazakhstan"
+  },
+  "OM": {
+    "country_code": "OM",
+    "currency_code": "OMR",
+    "diesel_price_usd": 0.46,
+    "diesel_price_local": 0.18,
+    "petrol_price_local": 0.16,
+    "petrol_price_usd": 0.42,
+    "country_name": "Oman"
+  },
+  "MY": {
+    "country_code": "MY",
+    "currency_code": "MYR",
+    "diesel_price_usd": 0.42,
+    "diesel_price_local": 1.69,
+    "petrol_price_local": 1.76,
+    "petrol_price_usd": 0.44,
+    "country_name": "Malaysia"
+  },
+  "AE": {
+    "country_code": "AE",
+    "currency_code": "AED",
+    "diesel_price_usd": 0.48,
+    "diesel_price_local": 1.76,
+    "petrol_price_local": 1.62,
+    "petrol_price_usd": 0.44,
+    "country_name": "UA Emirates"
+  },
+  "NG": {
+    "country_code": "NG",
+    "currency_code": "NGN",
+    "diesel_price_usd": 0.52,
+    "diesel_price_local": 161.2,
+    "petrol_price_local": 160,
+    "petrol_price_usd": 0.5,
+    "country_name": "Nigeria"
+  },
+  "AZ": {
+    "country_code": "AZ",
+    "currency_code": "AZN",
+    "diesel_price_usd": 0.39,
+    "diesel_price_local": 0.63,
+    "petrol_price_local": 0.82,
+    "petrol_price_usd": 0.51,
+    "country_name": "Azerbaijan"
+  },
+  "BO": {
+    "country_code": "BO",
+    "currency_code": "BOB",
+    "diesel_price_usd": 0.52,
+    "diesel_price_local": 3.57,
+    "petrol_price_local": 3.57,
+    "petrol_price_usd": 0.52,
+    "country_name": "Bolivia"
+  },
+  "TT": {
+    "country_code": "TT",
+    "currency_code": "TTD",
+    "diesel_price_usd": 0.3,
+    "diesel_price_local": 2,
+    "petrol_price_local": 3.53,
+    "petrol_price_usd": 0.53,
+    "country_name": "Tr.&Tobago"
+  },
+  "AF": {
+    "country_code": "AF",
+    "currency_code": "AFN",
+    "diesel_price_usd": 0.5,
+    "diesel_price_local": 33.9,
+    "petrol_price_local": 36.61,
+    "petrol_price_usd": 0.54,
+    "country_name": "Afghanistan"
+  },
+  "KG": {
+    "country_code": "KG",
+    "currency_code": "KGS",
+    "diesel_price_usd": 0.47,
+    "diesel_price_local": 32.34,
+    "petrol_price_local": 39.23,
+    "petrol_price_usd": 0.57,
+    "country_name": "Kyrgyzstan"
+  },
+  "MM": {
+    "country_code": "MM",
+    "currency_code": "MMK",
+    "diesel_price_usd": 0.5,
+    "diesel_price_local": 592.5,
+    "petrol_price_local": 672.03,
+    "petrol_price_usd": 0.57,
+    "country_name": "Burma"
+  },
+  "RU": {
+    "country_code": "RU",
+    "currency_code": "RUB",
+    "diesel_price_usd": 0.54,
+    "diesel_price_local": 35.18,
+    "petrol_price_local": 37.29,
+    "petrol_price_usd": 0.58,
+    "country_name": "Russia"
+  },
+  "BY": {
+    "country_code": "BY",
+    "currency_code": "BYR",
+    "diesel_price_usd": 0.61,
+    "diesel_price_local": 12212.2,
+    "petrol_price_local": 11811.8,
+    "petrol_price_usd": 0.59,
+    "country_name": "Belarus"
+  },
+  "ID": {
+    "country_code": "ID",
+    "currency_code": "IDR",
+    "diesel_price_usd": 0.63,
+    "diesel_price_local": 8265.6,
+    "petrol_price_local": 7736.67,
+    "petrol_price_usd": 0.59,
+    "country_name": "Indonesia"
+  },
+  "SR": {
+    "country_code": "SR",
+    "currency_code": "SRD",
+    "diesel_price_usd": 0.62,
+    "diesel_price_local": 4.44,
+    "petrol_price_local": 4.22,
+    "petrol_price_usd": 0.59,
+    "country_name": "Suriname"
+  },
+  "VE": {
+    "country_code": "VE",
+    "currency_code": "VEF",
+    "diesel_price_usd": 0.01,
+    "diesel_price_local": 0.1,
+    "petrol_price_local": 5.99,
+    "petrol_price_usd": 0.6,
+    "country_name": "Venezuela"
+  },
+  "PK": {
+    "country_code": "PK",
+    "currency_code": "PKR",
+    "diesel_price_usd": 0.69,
+    "diesel_price_local": 72.17,
+    "petrol_price_local": 63.74,
+    "petrol_price_usd": 0.61,
+    "country_name": "Pakistan"
+  },
+  "PR": {
+    "country_code": "PR",
+    "currency_code": "USD",
+    "diesel_price_usd": 0.51,
+    "diesel_price_local": 0.51,
+    "petrol_price_local": 0.62,
+    "petrol_price_usd": 0.62,
+    "country_name": "Puerto Rico"
+  },
+  "IQ": {
+    "country_code": "IQ",
+    "currency_code": "IQD",
+    "petrol_price_local": 723.54,
+    "petrol_price_usd": 0.62,
+    "country_name": "Iraq"
+  },
+  "MV": {
+    "country_code": "MV",
+    "currency_code": "MVR",
+    "diesel_price_usd": 0.65,
+    "diesel_price_local": 9.8,
+    "petrol_price_local": 9.42,
+    "petrol_price_usd": 0.63,
+    "country_name": "Maldives"
+  },
+  "AS": {
+    "country_code": "AS",
+    "currency_code": "EUR",
+    "diesel_price_usd": 0.66,
+    "diesel_price_local": 0.59,
+    "petrol_price_local": 0.57,
+    "petrol_price_usd": 0.63,
+    "country_name": "Am. Samoa"
+  },
+  "US": {
+    "country_code": "US",
+    "currency_code": "USD",
+    "diesel_price_usd": 0.61,
+    "diesel_price_local": 0.61,
+    "petrol_price_local": 0.63,
+    "petrol_price_usd": 0.63,
+    "country_name": "USA"
+  },
+  "LB": {
+    "country_code": "LB",
+    "currency_code": "LBP",
+    "diesel_price_usd": 0.41,
+    "diesel_price_local": 616.85,
+    "petrol_price_local": 997.92,
+    "petrol_price_usd": 0.66,
+    "country_name": "Lebanon"
+  },
+  "SL": {
+    "country_code": "SL",
+    "currency_code": "SLL",
+    "diesel_price_usd": 0.66,
+    "diesel_price_local": 3606.9,
+    "petrol_price_local": 3696,
+    "petrol_price_usd": 0.66,
+    "country_name": "Sierra Leone"
+  },
+  "CO": {
+    "country_code": "CO",
+    "currency_code": "COP",
+    "diesel_price_usd": 0.64,
+    "diesel_price_local": 1873.02,
+    "petrol_price_local": 1961.09,
+    "petrol_price_usd": 0.67,
+    "country_name": "Colombia"
+  },
+  "EG": {
+    "country_code": "EG",
+    "currency_code": "EGP",
+    "diesel_price_usd": 0.2,
+    "diesel_price_local": 1.77,
+    "petrol_price_local": 6.11,
+    "petrol_price_usd": 0.69,
+    "country_name": "Egypt"
+  },
+  "BW": {
+    "country_code": "BW",
+    "currency_code": "BWP",
+    "diesel_price_usd": 0.65,
+    "diesel_price_local": 6.76,
+    "petrol_price_local": 7.14,
+    "petrol_price_usd": 0.69,
+    "country_name": "Botswana"
+  },
+  "VN": {
+    "country_code": "VN",
+    "currency_code": "VND",
+    "diesel_price_usd": 0.53,
+    "diesel_price_local": 11817.94,
+    "petrol_price_local": 15610,
+    "petrol_price_usd": 0.7,
+    "country_name": "Vietnam"
+  },
+  "LS": {
+    "country_code": "LS",
+    "currency_code": "LSL",
+    "diesel_price_usd": 0.67,
+    "diesel_price_local": 9.07,
+    "petrol_price_local": 9.39,
+    "petrol_price_usd": 0.7,
+    "country_name": "Lesotho"
+  },
+  "YE": {
+    "country_code": "YE",
+    "currency_code": "YER",
+    "diesel_price_usd": 0.71,
+    "diesel_price_local": 177.29,
+    "petrol_price_local": 177.32,
+    "petrol_price_usd": 0.71,
+    "country_name": "Yemen"
+  },
+  "PA": {
+    "country_code": "PA",
+    "currency_code": "PAB",
+    "diesel_price_usd": 0.58,
+    "diesel_price_local": 0.58,
+    "petrol_price_local": 0.72,
+    "petrol_price_usd": 0.72,
+    "country_name": "Panama"
+  },
+  "TJ": {
+    "country_code": "TJ",
+    "currency_code": "TJS",
+    "diesel_price_usd": 0.73,
+    "diesel_price_local": 5.74,
+    "petrol_price_local": 5.74,
+    "petrol_price_usd": 0.73,
+    "country_name": "Tajikistan"
+  },
+  "TN": {
+    "country_code": "TN",
+    "currency_code": "TND",
+    "diesel_price_usd": 0.63,
+    "diesel_price_local": 1.39,
+    "petrol_price_local": 1.61,
+    "petrol_price_usd": 0.73,
+    "country_name": "Tunisia"
+  },
+  "GT": {
+    "country_code": "GT",
+    "currency_code": "GTQ",
+    "diesel_price_usd": 0.55,
+    "diesel_price_local": 4.13,
+    "petrol_price_local": 5.49,
+    "petrol_price_usd": 0.73,
+    "country_name": "Guatemala"
+  },
+  "MZ": {
+    "country_code": "MZ",
+    "currency_code": "MZN",
+    "diesel_price_usd": 0.57,
+    "diesel_price_local": 41.14,
+    "petrol_price_local": 51.06,
+    "petrol_price_usd": 0.74,
+    "country_name": "Mozambique"
+  },
+  "BJ": {
+    "country_code": "BJ",
+    "currency_code": "XOF",
+    "diesel_price_usd": 0.72,
+    "diesel_price_local": 421.8,
+    "petrol_price_local": 435.16,
+    "petrol_price_usd": 0.74,
+    "country_name": "Benin"
+  },
+  "ET": {
+    "country_code": "ET",
+    "currency_code": "ETB",
+    "diesel_price_usd": 0.63,
+    "diesel_price_local": 13.73,
+    "petrol_price_local": 16.14,
+    "petrol_price_usd": 0.74,
+    "country_name": "Ethiopia"
+  },
+  "NA": {
+    "country_code": "NA",
+    "currency_code": "NAD",
+    "diesel_price_usd": 0.74,
+    "diesel_price_local": 9.93,
+    "petrol_price_local": 9.92,
+    "petrol_price_usd": 0.74,
+    "country_name": "Namibia"
+  },
+  "SZ": {
+    "country_code": "SZ",
+    "currency_code": "SZL",
+    "diesel_price_usd": 0.74,
+    "diesel_price_local": 9.89,
+    "petrol_price_local": 9.93,
+    "petrol_price_usd": 0.74,
+    "country_name": "Swaziland"
+  },
+  "SD": {
+    "country_code": "SD",
+    "currency_code": "SDG",
+    "diesel_price_usd": 0.5,
+    "diesel_price_local": 3.04,
+    "petrol_price_local": 4.55,
+    "petrol_price_usd": 0.75,
+    "country_name": "Sudan"
+  },
+  "SV": {
+    "country_code": "SV",
+    "currency_code": "SVC",
+    "diesel_price_usd": 0.59,
+    "diesel_price_local": 5.15,
+    "petrol_price_local": 6.54,
+    "petrol_price_usd": 0.75,
+    "country_name": "El Salvador"
+  },
+  "TW": {
+    "country_code": "TW",
+    "currency_code": "TWD",
+    "diesel_price_usd": 0.62,
+    "diesel_price_local": 19.43,
+    "petrol_price_local": 23.79,
+    "petrol_price_usd": 0.76,
+    "country_name": "Taiwan"
+  },
+  "GE": {
+    "country_code": "GE",
+    "currency_code": "GEL",
+    "diesel_price_usd": 0.66,
+    "diesel_price_local": 1.54,
+    "petrol_price_local": 1.78,
+    "petrol_price_usd": 0.76,
+    "country_name": "Georgia"
+  },
+  "TG": {
+    "country_code": "TG",
+    "currency_code": "XOF",
+    "diesel_price_usd": 0.76,
+    "diesel_price_local": 445.23,
+    "petrol_price_local": 446.92,
+    "petrol_price_usd": 0.76,
+    "country_name": "Togo"
+  },
+  "KH": {
+    "country_code": "KH",
+    "currency_code": "KHR",
+    "diesel_price_usd": 0.66,
+    "diesel_price_local": 2686.2,
+    "petrol_price_local": 3093.2,
+    "petrol_price_usd": 0.76,
+    "country_name": "Cambodia"
+  },
+  "TD": {
+    "country_code": "TD",
+    "currency_code": "XAF",
+    "diesel_price_usd": 0.93,
+    "diesel_price_local": 545.99,
+    "petrol_price_local": 447.15,
+    "petrol_price_usd": 0.76,
+    "country_name": "Chad"
+  },
+  "MD": {
+    "country_code": "MD",
+    "currency_code": "MDL",
+    "diesel_price_usd": 0.66,
+    "diesel_price_local": 12.97,
+    "petrol_price_local": 14.92,
+    "petrol_price_usd": 0.76,
+    "country_name": "Moldova"
+  },
+  "HT": {
+    "country_code": "HT",
+    "currency_code": "HTG",
+    "diesel_price_usd": 0.61,
+    "diesel_price_local": 38.7,
+    "petrol_price_local": 49.06,
+    "petrol_price_usd": 0.77,
+    "country_name": "Haiti"
+  },
+  "AM": {
+    "country_code": "AM",
+    "currency_code": "AMD",
+    "diesel_price_usd": 0.79,
+    "diesel_price_local": 376.16,
+    "petrol_price_local": 376.2,
+    "petrol_price_usd": 0.79,
+    "country_name": "Armenia"
+  },
+  "MX": {
+    "country_code": "MX",
+    "currency_code": "MXN",
+    "diesel_price_usd": 0.77,
+    "diesel_price_local": 14.04,
+    "petrol_price_local": 14.77,
+    "petrol_price_usd": 0.81,
+    "country_name": "Mexico"
+  },
+  "GY": {
+    "country_code": "GY",
+    "currency_code": "GYD",
+    "diesel_price_usd": 0.7,
+    "diesel_price_local": 143.5,
+    "petrol_price_local": 168.1,
+    "petrol_price_usd": 0.82,
+    "country_name": "Guyana"
+  },
+  "PH": {
+    "country_code": "PH",
+    "currency_code": "PHP",
+    "diesel_price_usd": 0.55,
+    "diesel_price_local": 25.61,
+    "petrol_price_local": 38.25,
+    "petrol_price_usd": 0.82,
+    "country_name": "Philippines"
+  },
+  "UZ": {
+    "country_code": "UZ",
+    "currency_code": "UZS",
+    "diesel_price_usd": 0.74,
+    "diesel_price_local": 2190.4,
+    "petrol_price_local": 2460.95,
+    "petrol_price_usd": 0.83,
+    "country_name": "Uzbekistan"
+  },
+  "LR": {
+    "country_code": "LR",
+    "currency_code": "LRD",
+    "diesel_price_usd": 0.83,
+    "diesel_price_local": 74.7,
+    "petrol_price_local": 74.7,
+    "petrol_price_usd": 0.83,
+    "country_name": "Liberia"
+  },
+  "GA": {
+    "country_code": "GA",
+    "currency_code": "XAF",
+    "diesel_price_usd": 0.73,
+    "diesel_price_local": 428.58,
+    "petrol_price_local": 494.22,
+    "petrol_price_usd": 0.84,
+    "country_name": "Gabon"
+  },
+  "TZ": {
+    "country_code": "TZ",
+    "currency_code": "TZS",
+    "diesel_price_usd": 0.8,
+    "diesel_price_local": 1745.6,
+    "petrol_price_local": 1834.56,
+    "petrol_price_usd": 0.84,
+    "country_name": "Tanzania"
+  },
+  "BT": {
+    "country_code": "BT",
+    "currency_code": "INR",
+    "diesel_price_usd": 0.64,
+    "diesel_price_local": 42.81,
+    "petrol_price_local": 56.75,
+    "petrol_price_usd": 0.85,
+    "country_name": "Bhutan"
+  },
+  "FJ": {
+    "country_code": "FJ",
+    "currency_code": "FJD",
+    "diesel_price_usd": 0.67,
+    "diesel_price_local": 1.37,
+    "petrol_price_local": 1.76,
+    "petrol_price_usd": 0.85,
+    "country_name": "Fiji"
+  },
+  "VC": {
+    "country_code": "VC",
+    "currency_code": "XCD",
+    "diesel_price_usd": 0.89,
+    "diesel_price_local": 2.41,
+    "petrol_price_local": 2.32,
+    "petrol_price_usd": 0.86,
+    "country_name": "St. Vincent and the Grenadines"
+  },
+  "TH": {
+    "country_code": "TH",
+    "currency_code": "THB",
+    "diesel_price_usd": 0.66,
+    "diesel_price_local": 22.92,
+    "petrol_price_local": 29.85,
+    "petrol_price_usd": 0.86,
+    "country_name": "Thailand"
+  },
+  "CA": {
+    "country_code": "CA",
+    "currency_code": "CAD",
+    "diesel_price_usd": 0.74,
+    "diesel_price_local": 0.96,
+    "petrol_price_local": 1.12,
+    "petrol_price_usd": 0.86,
+    "country_name": "Canada"
+  },
+  "NI": {
+    "country_code": "NI",
+    "currency_code": "NIO",
+    "diesel_price_usd": 0.69,
+    "diesel_price_local": 19.86,
+    "petrol_price_local": 24.75,
+    "petrol_price_usd": 0.86,
+    "country_name": "Nicaragua"
+  },
+  "PE": {
+    "country_code": "PE",
+    "currency_code": "PEN",
+    "diesel_price_usd": 0.71,
+    "diesel_price_local": 2.34,
+    "petrol_price_local": 2.87,
+    "petrol_price_usd": 0.87,
+    "country_name": "Peru"
+  },
+  "LK": {
+    "country_code": "LK",
+    "currency_code": "LKR",
+    "diesel_price_usd": 0.65,
+    "diesel_price_local": 94.45,
+    "petrol_price_local": 127.78,
+    "petrol_price_usd": 0.88,
+    "country_name": "Sri Lanka"
+  },
+  "UA": {
+    "country_code": "UA",
+    "currency_code": "UAH",
+    "diesel_price_usd": 0.76,
+    "diesel_price_local": 19,
+    "petrol_price_local": 21.91,
+    "petrol_price_usd": 0.88,
+    "country_name": "Ukraine"
+  },
+  "NP": {
+    "country_code": "NP",
+    "currency_code": "NPR",
+    "diesel_price_usd": 0.66,
+    "diesel_price_local": 70.42,
+    "petrol_price_local": 93.63,
+    "petrol_price_usd": 0.88,
+    "country_name": "Nepal"
+  },
+  "BS": {
+    "country_code": "BS",
+    "currency_code": "BSD",
+    "diesel_price_usd": 0.79,
+    "diesel_price_local": 0.79,
+    "petrol_price_local": 0.88,
+    "petrol_price_usd": 0.88,
+    "country_name": "Bahamas"
+  },
+  "NE": {
+    "country_code": "NE",
+    "currency_code": "XOF",
+    "diesel_price_usd": 0.89,
+    "diesel_price_local": 521.39,
+    "petrol_price_local": 517.48,
+    "petrol_price_usd": 0.88,
+    "country_name": "Niger"
+  },
+  "VG": {
+    "country_code": "VG",
+    "currency_code": "USD",
+    "diesel_price_usd": 0.87,
+    "diesel_price_local": 0.87,
+    "petrol_price_local": 0.89,
+    "petrol_price_usd": 0.89,
+    "country_name": "Br. Virgin Isl."
+  },
+  "GH": {
+    "country_code": "GH",
+    "diesel_price_usd": 0.88,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 0.9,
+    "country_name": "Ghana"
+  },
+  "ZA": {
+    "country_code": "ZA",
+    "currency_code": "ZAR",
+    "diesel_price_usd": 0.93,
+    "diesel_price_local": 12.57,
+    "petrol_price_local": 12.2,
+    "petrol_price_usd": 0.91,
+    "country_name": "South Africa"
+  },
+  "AU": {
+    "country_code": "AU",
+    "currency_code": "AUD",
+    "diesel_price_usd": 0.94,
+    "diesel_price_local": 1.23,
+    "petrol_price_local": 1.18,
+    "petrol_price_usd": 0.91,
+    "country_name": "Australia"
+  },
+  "KE": {
+    "country_code": "KE",
+    "currency_code": "KES",
+    "diesel_price_usd": 0.82,
+    "diesel_price_local": 83.11,
+    "petrol_price_local": 92.23,
+    "petrol_price_usd": 0.91,
+    "country_name": "Kenya"
+  },
+  "": {
+    "country_code": "",
+    "diesel_price_usd": 0.96,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 0.95,
+    "country_name": "Ivory Coast"
+  },
+  "CN": {
+    "country_code": "CN",
+    "currency_code": "CNY",
+    "diesel_price_usd": 0.81,
+    "diesel_price_local": 5.37,
+    "petrol_price_local": 6.09,
+    "petrol_price_usd": 0.92,
+    "country_name": "China"
+  },
+  "UG": {
+    "country_code": "UG",
+    "currency_code": "UGX",
+    "diesel_price_usd": 0.76,
+    "diesel_price_local": 2559.68,
+    "petrol_price_local": 3132.24,
+    "petrol_price_usd": 0.93,
+    "country_name": "Uganda"
+  },
+  "DM": {
+    "country_code": "DM",
+    "currency_code": "XCD",
+    "diesel_price_usd": 0.77,
+    "diesel_price_local": 2.08,
+    "petrol_price_local": 2.51,
+    "petrol_price_usd": 0.93,
+    "country_name": "Dominica"
+  },
+  "HN": {
+    "country_code": "HN",
+    "currency_code": "HNL",
+    "diesel_price_usd": 0.73,
+    "diesel_price_local": 16.61,
+    "petrol_price_local": 21.16,
+    "petrol_price_usd": 0.93,
+    "country_name": "Honduras"
+  },
+  "MN": {
+    "country_code": "MN",
+    "currency_code": "MNT",
+    "diesel_price_usd": 0.89,
+    "diesel_price_local": 1916.17,
+    "petrol_price_local": 2002.2,
+    "petrol_price_usd": 0.94,
+    "country_name": "Mongolia"
+  },
+  "KN": {
+    "country_code": "KN",
+    "currency_code": "XCD",
+    "diesel_price_usd": 0.96,
+    "diesel_price_local": 2.6,
+    "petrol_price_local": 2.56,
+    "petrol_price_usd": 0.95,
+    "country_name": "St. K.&Nevis"
+  },
+  "IN": {
+    "country_code": "IN",
+    "currency_code": "INR",
+    "diesel_price_usd": 0.82,
+    "diesel_price_local": 54.85,
+    "petrol_price_local": 63.42,
+    "petrol_price_usd": 0.95,
+    "country_name": "India"
+  },
+  "AO": {
+    "country_code": "AO",
+    "diesel_price_usd": 0.8,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 0.95,
+    "country_name": "Angola"
+  },
+  "AW": {
+    "country_code": "AW",
+    "currency_code": "ANG",
+    "diesel_price_usd": 0.77,
+    "diesel_price_local": 1.36,
+    "petrol_price_local": 1.68,
+    "petrol_price_usd": 0.95,
+    "country_name": "Aruba"
+  },
+  "GN": {
+    "country_code": "GN",
+    "currency_code": "GNF",
+    "diesel_price_usd": 0.97,
+    "diesel_price_local": 8623.3,
+    "petrol_price_local": 8633,
+    "petrol_price_usd": 0.97,
+    "country_name": "Guinea"
+  },
+  "JM": {
+    "country_code": "JM",
+    "currency_code": "JMD",
+    "diesel_price_usd": 0.9,
+    "diesel_price_local": 113.63,
+    "petrol_price_local": 126.34,
+    "petrol_price_usd": 1,
+    "country_name": "Jamaica"
+  },
+  "JO": {
+    "country_code": "JO",
+    "currency_code": "JOD",
+    "diesel_price_usd": 0.59,
+    "diesel_price_local": 0.42,
+    "petrol_price_local": 0.71,
+    "petrol_price_usd": 1,
+    "country_name": "Jordan"
+  },
+  "BF": {
+    "country_code": "BF",
+    "currency_code": "XOF",
+    "diesel_price_usd": 0.88,
+    "diesel_price_local": 515.53,
+    "petrol_price_local": 593.93,
+    "petrol_price_usd": 1.01,
+    "country_name": "Burkina Faso"
+  },
+  "SY": {
+    "country_code": "SY",
+    "currency_code": "SYP",
+    "diesel_price_usd": 0.82,
+    "diesel_price_local": 176.22,
+    "petrol_price_local": 219.25,
+    "petrol_price_usd": 1.02,
+    "country_name": "Syria"
+  },
+  "ZM": {
+    "country_code": "ZM",
+    "currency_code": "ZMK",
+    "diesel_price_usd": 0.89,
+    "diesel_price_local": 4588.93,
+    "petrol_price_local": 5259.22,
+    "petrol_price_usd": 1.02,
+    "country_name": "Zambia"
+  },
+  "BA": {
+    "country_code": "BA",
+    "diesel_price_usd": 1.01,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 1.02,
+    "country_name": "Bosnia & Herz."
+  },
+  "AG": {
+    "country_code": "AG",
+    "currency_code": "XCD",
+    "diesel_price_usd": 1,
+    "diesel_price_local": 2.7,
+    "petrol_price_local": 2.75,
+    "petrol_price_usd": 1.02,
+    "country_name": "Ant.& Barb."
+  },
+  "MA": {
+    "country_code": "MA",
+    "currency_code": "MAD",
+    "diesel_price_usd": 0.84,
+    "diesel_price_local": 8.19,
+    "petrol_price_local": 10.04,
+    "petrol_price_usd": 1.03,
+    "country_name": "Morocco"
+  },
+  "CV": {
+    "country_code": "CV",
+    "currency_code": "CVE",
+    "diesel_price_usd": 0.84,
+    "diesel_price_local": 82.57,
+    "petrol_price_local": 103.38,
+    "petrol_price_usd": 1.04,
+    "country_name": "Cape Verde"
+  },
+  "PY": {
+    "country_code": "PY",
+    "currency_code": "PYG",
+    "diesel_price_usd": 0.74,
+    "diesel_price_local": 4078.14,
+    "petrol_price_local": 5732.48,
+    "petrol_price_usd": 1.04,
+    "country_name": "Paraguay"
+  },
+  "MU": {
+    "country_code": "MU",
+    "currency_code": "MUR",
+    "diesel_price_usd": 0.8,
+    "diesel_price_local": 28.06,
+    "petrol_price_local": 36.5,
+    "petrol_price_usd": 1.04,
+    "country_name": "Mauritius"
+  },
+  "CR": {
+    "country_code": "CR",
+    "currency_code": "CRC",
+    "diesel_price_usd": 0.79,
+    "diesel_price_local": 429.45,
+    "petrol_price_local": 565.34,
+    "petrol_price_usd": 1.04,
+    "country_name": "Costa Rica"
+  },
+  "MK": {
+    "country_code": "MK",
+    "currency_code": "MKD",
+    "diesel_price_usd": 0.82,
+    "diesel_price_local": 45.02,
+    "petrol_price_local": 57.77,
+    "petrol_price_usd": 1.05,
+    "country_name": "Macedonia"
+  },
+  "LC": {
+    "country_code": "LC",
+    "currency_code": "XCD",
+    "diesel_price_usd": 0.93,
+    "diesel_price_local": 2.51,
+    "petrol_price_local": 2.86,
+    "petrol_price_usd": 1.06,
+    "country_name": "Saint Lucia"
+  },
+  "CM": {
+    "country_code": "CM",
+    "currency_code": "XAF",
+    "diesel_price_usd": 0.98,
+    "diesel_price_local": 575.35,
+    "petrol_price_local": 629.55,
+    "petrol_price_usd": 1.07,
+    "country_name": "Cameroon"
+  },
+  "LA": {
+    "country_code": "LA",
+    "currency_code": "LAK",
+    "diesel_price_usd": 0.79,
+    "diesel_price_local": 6391.1,
+    "petrol_price_local": 8737.2,
+    "petrol_price_usd": 1.08,
+    "country_name": "Laos"
+  },
+  "DO": {
+    "country_code": "DO",
+    "currency_code": "DOP",
+    "diesel_price_usd": 0.75,
+    "diesel_price_local": 34.46,
+    "petrol_price_local": 49.64,
+    "petrol_price_usd": 1.08,
+    "country_name": "Domin. Rep."
+  },
+  "MW": {
+    "country_code": "MW",
+    "currency_code": "MWK",
+    "diesel_price_usd": 1.06,
+    "diesel_price_local": 754.39,
+    "petrol_price_local": 768.34,
+    "petrol_price_usd": 1.08,
+    "country_name": "Malawi"
+  },
+  "BG": {
+    "country_code": "BG",
+    "currency_code": "BGN",
+    "diesel_price_usd": 1.06,
+    "diesel_price_local": 1.86,
+    "petrol_price_local": 1.91,
+    "petrol_price_usd": 1.09,
+    "country_name": "Bulgaria"
+  },
+  "BD": {
+    "country_code": "BD",
+    "currency_code": "BDT",
+    "diesel_price_usd": 0.81,
+    "diesel_price_local": 63.4,
+    "petrol_price_local": 86.16,
+    "petrol_price_usd": 1.1,
+    "country_name": "Bangladesh"
+  },
+  "AD": {
+    "country_code": "AD",
+    "currency_code": "EUR",
+    "diesel_price_usd": 0.93,
+    "diesel_price_local": 0.83,
+    "petrol_price_local": 1,
+    "petrol_price_usd": 1.11,
+    "country_name": "Andorra"
+  },
+  "CL": {
+    "country_code": "CL",
+    "currency_code": "CLP",
+    "diesel_price_usd": 0.7,
+    "diesel_price_local": 455.49,
+    "petrol_price_local": 712.95,
+    "petrol_price_usd": 1.11,
+    "country_name": "Chile"
+  },
+  "RW": {
+    "country_code": "RW",
+    "currency_code": "RWF",
+    "diesel_price_usd": 1.12,
+    "diesel_price_local": 885.4,
+    "petrol_price_local": 885.35,
+    "petrol_price_usd": 1.12,
+    "country_name": "Rwanda"
+  },
+  "MG": {
+    "country_code": "MG",
+    "currency_code": "MGA",
+    "diesel_price_usd": 0.95,
+    "diesel_price_local": 2870.9,
+    "petrol_price_local": 3396.78,
+    "petrol_price_usd": 1.13,
+    "country_name": "Madagascar"
+  },
+  "KY": {
+    "country_code": "KY",
+    "currency_code": "KYD",
+    "diesel_price_usd": 1.04,
+    "diesel_price_local": 0.85,
+    "petrol_price_local": 0.93,
+    "petrol_price_usd": 1.13,
+    "country_name": "Cayman Isl."
+  },
+  "PL": {
+    "country_code": "PL",
+    "currency_code": "PLN",
+    "diesel_price_usd": 1.07,
+    "diesel_price_local": 4.09,
+    "petrol_price_local": 4.32,
+    "petrol_price_usd": 1.13,
+    "country_name": "Poland"
+  },
+  "ML": {
+    "country_code": "ML",
+    "currency_code": "XOF",
+    "diesel_price_usd": 0.99,
+    "diesel_price_local": 579.97,
+    "petrol_price_local": 670.38,
+    "petrol_price_usd": 1.14,
+    "country_name": "Mali"
+  },
+  "BZ": {
+    "country_code": "BZ",
+    "currency_code": "BZD",
+    "diesel_price_usd": 0.96,
+    "diesel_price_local": 1.9,
+    "petrol_price_local": 2.26,
+    "petrol_price_usd": 1.14,
+    "country_name": "Belize"
+  },
+  "GD": {
+    "country_code": "GD",
+    "currency_code": "XCD",
+    "diesel_price_usd": 1.03,
+    "diesel_price_local": 2.78,
+    "petrol_price_local": 3.07,
+    "petrol_price_usd": 1.14,
+    "country_name": "Grenada"
+  },
+  "SN": {
+    "country_code": "SN",
+    "currency_code": "XOF",
+    "diesel_price_usd": 1,
+    "diesel_price_local": 585.83,
+    "petrol_price_local": 682.14,
+    "petrol_price_usd": 1.16,
+    "country_name": "Senegal"
+  },
+  "HU": {
+    "country_code": "HU",
+    "currency_code": "HUF",
+    "diesel_price_usd": 1.15,
+    "diesel_price_local": 318.26,
+    "petrol_price_local": 322.38,
+    "petrol_price_usd": 1.16,
+    "country_name": "Hungary"
+  },
+  "BR": {
+    "country_code": "BR",
+    "currency_code": "BRL",
+    "diesel_price_usd": 0.96,
+    "diesel_price_local": 3.06,
+    "petrol_price_local": 3.67,
+    "petrol_price_usd": 1.17,
+    "country_name": "Brazil"
+  },
+  "LT": {
+    "country_code": "LT",
+    "currency_code": "LTL",
+    "diesel_price_usd": 1.05,
+    "diesel_price_local": 3.2,
+    "petrol_price_local": 3.57,
+    "petrol_price_usd": 1.17,
+    "country_name": "Lithuania"
+  },
+  "JP": {
+    "country_code": "JP",
+    "currency_code": "JPY",
+    "diesel_price_usd": 0.95,
+    "diesel_price_local": 96.19,
+    "petrol_price_local": 119.3,
+    "petrol_price_usd": 1.17,
+    "country_name": "Japan"
+  },
+  "LV": {
+    "country_code": "LV",
+    "currency_code": "LVL",
+    "diesel_price_usd": 1.06,
+    "diesel_price_local": 0.66,
+    "petrol_price_local": 0.73,
+    "petrol_price_usd": 1.17,
+    "country_name": "Latvia"
+  },
+  "BI": {
+    "country_code": "BI",
+    "currency_code": "BIF",
+    "diesel_price_usd": 1.1,
+    "diesel_price_local": 1814.88,
+    "petrol_price_local": 1929.97,
+    "petrol_price_usd": 1.17,
+    "country_name": "Burundi"
+  },
+  "EE": {
+    "country_code": "EE",
+    "currency_code": "EEK",
+    "diesel_price_usd": 1.14,
+    "diesel_price_local": 15.98,
+    "petrol_price_local": 16.42,
+    "petrol_price_usd": 1.17,
+    "country_name": "Estonia"
+  },
+  "RO": {
+    "country_code": "RO",
+    "currency_code": "RON",
+    "diesel_price_usd": 1.17,
+    "diesel_price_local": 4.67,
+    "petrol_price_local": 4.72,
+    "petrol_price_usd": 1.18,
+    "country_name": "Romania"
+  },
+  "AR": {
+    "country_code": "AR",
+    "currency_code": "ARS",
+    "diesel_price_usd": 1.08,
+    "diesel_price_local": 15.82,
+    "petrol_price_local": 17.29,
+    "petrol_price_usd": 1.18,
+    "country_name": "Argentina"
+  },
+  "LU": {
+    "country_code": "LU",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.02,
+    "diesel_price_local": 0.91,
+    "petrol_price_local": 1.07,
+    "petrol_price_usd": 1.19,
+    "country_name": "Luxembourg"
+  },
+  "GM": {
+    "country_code": "GM",
+    "currency_code": "GMD",
+    "diesel_price_usd": 1.11,
+    "diesel_price_local": 45.07,
+    "petrol_price_local": 50.52,
+    "petrol_price_usd": 1.2,
+    "country_name": "Gambia"
+  },
+  "RS": {
+    "country_code": "RS",
+    "diesel_price_usd": 1.27,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 1.21,
+    "country_name": "Serbia"
+  },
+  "CZ": {
+    "country_code": "CZ",
+    "currency_code": "CZK",
+    "diesel_price_usd": 1.16,
+    "diesel_price_local": 28.05,
+    "petrol_price_local": 29.35,
+    "petrol_price_usd": 1.21,
+    "country_name": "Czech Rep."
+  },
+  "VU": {
+    "country_code": "VU",
+    "currency_code": "VUV",
+    "diesel_price_usd": 1.13,
+    "diesel_price_local": 118.37,
+    "petrol_price_local": 126.44,
+    "petrol_price_usd": 1.21,
+    "country_name": "Vanuatu"
+  },
+  "ME": {
+    "country_code": "ME",
+    "diesel_price_usd": 1.05,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 1.21,
+    "country_name": "Montenegro"
+  },
+  "MR": {
+    "country_code": "MR",
+    "currency_code": "MRO",
+    "diesel_price_usd": 1.09,
+    "diesel_price_local": 384.77,
+    "petrol_price_local": 434.19,
+    "petrol_price_usd": 1.23,
+    "country_name": "Mauritania"
+  },
+  "AT": {
+    "country_code": "AT",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.15,
+    "diesel_price_local": 1.03,
+    "petrol_price_local": 1.1,
+    "petrol_price_usd": 1.23,
+    "country_name": "Austria"
+  },
+  "ES": {
+    "country_code": "ES",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.11,
+    "diesel_price_local": 0.99,
+    "petrol_price_local": 1.12,
+    "petrol_price_usd": 1.25,
+    "country_name": "Spain"
+  },
+  "AL": {
+    "country_code": "AL",
+    "currency_code": "ALL",
+    "diesel_price_usd": 1.25,
+    "diesel_price_local": 152.06,
+    "petrol_price_local": 152.39,
+    "petrol_price_usd": 1.25,
+    "country_name": "Albania"
+  },
+  "ZW": {
+    "country_code": "ZW",
+    "currency_code": "ZWD",
+    "diesel_price_usd": 1.09,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 1.27,
+    "country_name": "Zimbabwe"
+  },
+  "CY": {
+    "country_code": "CY",
+    "currency_code": "CYP",
+    "diesel_price_usd": 1.26,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 1.27,
+    "country_name": "Cyprus"
+  },
+  "KR": {
+    "country_code": "KR",
+    "currency_code": "KRW",
+    "diesel_price_usd": 1.1,
+    "diesel_price_local": 1212.2,
+    "petrol_price_local": 1417.07,
+    "petrol_price_usd": 1.29,
+    "country_name": "South Korea"
+  },
+  "SI": {
+    "country_code": "SI",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.21,
+    "diesel_price_local": 1.08,
+    "petrol_price_local": 1.18,
+    "petrol_price_usd": 1.31,
+    "country_name": "Slovenia"
+  },
+  "HR": {
+    "country_code": "HR",
+    "currency_code": "HRK",
+    "diesel_price_usd": 1.2,
+    "diesel_price_local": 8,
+    "petrol_price_local": 8.77,
+    "petrol_price_usd": 1.31,
+    "country_name": "Croatia"
+  },
+  "CU": {
+    "country_code": "CU",
+    "currency_code": "CUP",
+    "diesel_price_usd": 1.19,
+    "diesel_price_local": 1.19,
+    "petrol_price_local": 1.33,
+    "petrol_price_usd": 1.33,
+    "country_name": "Cuba"
+  },
+  "SK": {
+    "country_code": "SK",
+    "currency_code": "SKK",
+    "diesel_price_usd": 1.16,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 1.34,
+    "country_name": "Slovakia"
+  },
+  "SG": {
+    "country_code": "SG",
+    "currency_code": "SGD",
+    "diesel_price_usd": 0.79,
+    "diesel_price_local": 1.06,
+    "petrol_price_local": 1.8,
+    "petrol_price_usd": 1.34,
+    "country_name": "Singapore"
+  },
+  "NZ": {
+    "country_code": "NZ",
+    "currency_code": "NZD",
+    "diesel_price_usd": 0.8,
+    "diesel_price_local": 1.11,
+    "petrol_price_local": 1.86,
+    "petrol_price_usd": 1.34,
+    "country_name": "New Zealand"
+  },
+  "UY": {
+    "country_code": "UY",
+    "currency_code": "UYU",
+    "diesel_price_usd": 1.23,
+    "diesel_price_local": 35.31,
+    "petrol_price_local": 38.88,
+    "petrol_price_usd": 1.35,
+    "country_name": "Uruguay"
+  },
+  "LI": {
+    "country_code": "LI",
+    "currency_code": "CHF",
+    "diesel_price_usd": 1.17,
+    "diesel_price_local": 1.14,
+    "petrol_price_local": 1.35,
+    "petrol_price_usd": 1.38,
+    "country_name": "Liechtenstein"
+  },
+  "BE": {
+    "country_code": "BE",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.24,
+    "diesel_price_local": 1.11,
+    "petrol_price_local": 1.25,
+    "petrol_price_usd": 1.39,
+    "country_name": "Belgium"
+  },
+  "BB": {
+    "country_code": "BB",
+    "currency_code": "BBD",
+    "diesel_price_usd": 1.01,
+    "diesel_price_local": 2.02,
+    "petrol_price_local": 2.8,
+    "petrol_price_usd": 1.4,
+    "country_name": "Barbados"
+  },
+  "IE": {
+    "country_code": "IE",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.28,
+    "diesel_price_local": 1.15,
+    "petrol_price_local": 1.27,
+    "petrol_price_usd": 1.42,
+    "country_name": "Ireland"
+  },
+  "FR": {
+    "country_code": "FR",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.21,
+    "diesel_price_local": 1.08,
+    "petrol_price_local": 1.28,
+    "petrol_price_usd": 1.43,
+    "country_name": "France"
+  },
+  "DE": {
+    "country_code": "DE",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.2,
+    "diesel_price_local": 1.07,
+    "petrol_price_local": 1.28,
+    "petrol_price_usd": 1.43,
+    "country_name": "Germany"
+  },
+  "MT": {
+    "country_code": "MT",
+    "currency_code": "MTL",
+    "diesel_price_usd": 1.3,
+    "diesel_price_local": null,
+    "petrol_price_local": 0,
+    "petrol_price_usd": 1.43,
+    "country_name": "Malta"
+  },
+  "GB": {
+    "country_code": "GB",
+    "currency_code": "GBP",
+    "diesel_price_usd": 1.44,
+    "diesel_price_local": 1.11,
+    "petrol_price_local": 1.1,
+    "petrol_price_usd": 1.43,
+    "country_name": "UK"
+  },
+  "TR": {
+    "country_code": "TR",
+    "currency_code": "TRY",
+    "diesel_price_usd": 1.24,
+    "diesel_price_local": 3.67,
+    "petrol_price_local": 4.32,
+    "petrol_price_usd": 1.46,
+    "country_name": "Turkey"
+  },
+  "CH": {
+    "country_code": "CH",
+    "currency_code": "CHF",
+    "diesel_price_usd": 1.48,
+    "diesel_price_local": 1.44,
+    "petrol_price_local": 1.43,
+    "petrol_price_usd": 1.47,
+    "country_name": "Switzerland"
+  },
+  "FI": {
+    "country_code": "FI",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.29,
+    "diesel_price_local": 1.16,
+    "petrol_price_local": 1.36,
+    "petrol_price_usd": 1.51,
+    "country_name": "Finland"
+  },
+  "PT": {
+    "country_code": "PT",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.24,
+    "diesel_price_local": 1.11,
+    "petrol_price_local": 1.36,
+    "petrol_price_usd": 1.51,
+    "country_name": "Portugal"
+  },
+  "SE": {
+    "country_code": "SE",
+    "currency_code": "SEK",
+    "diesel_price_usd": 1.48,
+    "diesel_price_local": 12.49,
+    "petrol_price_local": 12.88,
+    "petrol_price_usd": 1.52,
+    "country_name": "Sweden"
+  },
+  "YT": {
+    "country_code": "YT",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.25,
+    "diesel_price_local": 1.12,
+    "petrol_price_local": 1.38,
+    "petrol_price_usd": 1.54,
+    "country_name": "Mayotte"
+  },
+  "IL": {
+    "country_code": "IL",
+    "currency_code": "ILS",
+    "diesel_price_usd": 1.41,
+    "diesel_price_local": 5.37,
+    "petrol_price_local": 5.87,
+    "petrol_price_usd": 1.54,
+    "country_name": "Israel"
+  },
+  "SM": {
+    "country_code": "SM",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.37,
+    "diesel_price_local": 1.23,
+    "petrol_price_local": 1.41,
+    "petrol_price_usd": 1.57,
+    "country_name": "San Marino"
+  },
+  "GR": {
+    "country_code": "GR",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.22,
+    "diesel_price_local": 1.09,
+    "petrol_price_local": 1.41,
+    "petrol_price_usd": 1.57,
+    "country_name": "Greece"
+  },
+  "DK": {
+    "country_code": "DK",
+    "currency_code": "DKK",
+    "diesel_price_usd": 1.29,
+    "diesel_price_local": 8.59,
+    "petrol_price_local": 10.55,
+    "petrol_price_usd": 1.58,
+    "country_name": "Denmark"
+  },
+  "IT": {
+    "country_code": "IT",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.44,
+    "diesel_price_local": 1.29,
+    "petrol_price_local": 1.44,
+    "petrol_price_usd": 1.6,
+    "country_name": "Italy"
+  },
+  "IS": {
+    "country_code": "IS",
+    "currency_code": "ISK",
+    "diesel_price_usd": 1.52,
+    "diesel_price_local": 179.8,
+    "petrol_price_local": 190.93,
+    "petrol_price_usd": 1.61,
+    "country_name": "Iceland"
+  },
+  "NL": {
+    "country_code": "NL",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.23,
+    "diesel_price_local": 1.1,
+    "petrol_price_local": 1.45,
+    "petrol_price_usd": 1.62,
+    "country_name": "Netherlands"
+  },
+  "MC": {
+    "country_code": "MC",
+    "currency_code": "EUR",
+    "diesel_price_usd": 1.46,
+    "diesel_price_local": 1.31,
+    "petrol_price_local": 1.47,
+    "petrol_price_usd": 1.64,
+    "country_name": "Monaco"
+  },
+  "NO": {
+    "country_code": "NO",
+    "currency_code": "NOK",
+    "diesel_price_usd": 1.56,
+    "diesel_price_local": 12.8,
+    "petrol_price_local": 14.33,
+    "petrol_price_usd": 1.74,
+    "country_name": "Norway"
+  },
+  "HK": {
+    "country_code": "HK",
+    "currency_code": "HKD",
+    "diesel_price_usd": 1.39,
+    "diesel_price_local": 10.78,
+    "petrol_price_local": 14.19,
+    "petrol_price_usd": 1.83,
+    "country_name": "Hong Kong"
+  }
+}

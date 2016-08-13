@@ -1,6 +1,8 @@
 
 // prices in USD from -- http://www.globalpetrolprices.com/gasoline_prices/
 
+// drop data into google spreadsheet, convert to csv. convert csv to json with
+
 // Get country codes and relate them back to country names -- http://codepen.io/anon/pen/LkrgpP
 
 // Get exchange rates and calculate price in local currency -- http://codepen.io/anon/pen/xOmQKO
