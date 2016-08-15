@@ -81,7 +81,7 @@ function getTrafficInfoFromGoogle(locations, response){
 }
 
 function fuelpricecheck(query, response) {
-	var countryCode = query.country;
+	var countryCode = query.countrycode.toUpperCase();
 	console.log(countryCode);
 	response.send(petrolprices[countryCode]);
 }

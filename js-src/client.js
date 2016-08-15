@@ -28,10 +28,13 @@ var $inputGrid = $("#inputDiv");
 var $resultGrid = $("#resultGrid");
 var $progressBar = $("#progressBar");
 var $fuelSpan = $("#fuel");
+var $modal_units_radio = $('input[type=radio][name=units]');
 
 var currentLocationInfo;
 var g2l = 3.785 ;	// 1 gallon = g2l * litres
 var m2k = 1.609 ;	// 1 mile = m2k * kms
+
+var country = 'TH';
 
 var currency_symbols = {
     'USD': '$', // US Dollar
@@ -52,8 +55,8 @@ var currency_symbols = {
 };
 
 // google api key
-//const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
-const key = "***REMOVED***";
+// const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
+// const key = "***REMOVED***";
 
 // set default map coordinates (to London)
 // will be overriden by local coordinates if user shares location
@@ -71,21 +74,22 @@ class LocationInfo {
 
 // holder for factors involved in drive cost calculation
 var driveFactors = {
-	duration : 0.00,        // in minutes 
-	distance : 0.00,        // in km
-	milage : 14.00,			// in kmpl
-	fuelCost : 64.00,		// per litre, in local currency
-	trafficMultiplier : 1.00, // time with traffic/time without traffic
-	currency : '',			// currency symbol string
-	petrolUsed : 0.0,		// calculated, in litres
-	driveCost : '',			// calculated, in local currency
-	units : 'metric',		//or imperial
-	fuel : 'petrol',		// or diesel
-	unitStrings : {
-		distUnits : "kms",			// or "miles"
-		milageUnits : "kmpl",		// or "mpg"
-		fuelUnits : "L",			// or "GL"
-		fuelCostUnits : "per litre" // or 'per gallon'
+	duration : 0.00,        			// in minutes 
+	distance : 0.00,        			// in km
+	milage : 14.00,						// in kmpl
+	petrolCost : 0.00,					// per litre, in local currency
+	dieselCost : 0.00,					// per litre, in local currency
+	trafficMultiplier : 1.00,			// time with traffic/time without traffic
+	currency : '',						// currency symbol string
+	petrolUsed : 0.0,					// calculated, in litres
+	driveCost : '',						// calculated, in local currency
+	units : 'metric',					//or imperial
+	fuel : 'petrol',					// or diesel
+	unitStrings : {		
+		distUnits : "kms",				// or "miles"
+		milageUnits : "kmpl",			// or "mpg"
+		fuelUnits : "L",				// or "GL"
+		petrolCostUnits : "per litre"	// or 'per gallon'
 	}
 };
 
@@ -136,6 +140,7 @@ function resetEverything(){
 			$fuelSpan
 		].forEach(clearDiv);
 	});
+	changeDfUnits($modal_units_radio.value);	// set units according to whats selected in the modal window
 }
 
 // populate lat, lng of origin address
@@ -181,7 +186,7 @@ function toLocationValid(){
 }
 
 // remove all markers from map
-function clearOverlays() {
+function clearMarkers() {
   for (var i = 0; i < markersArray.length; i++ ) {
     markersArray[i].setMap(null);
   }
@@ -197,7 +202,7 @@ function refreshMap() {
 	toStr = $("#locationToInput").val();
 	//if both locations are valid, create a route
 	if (fromLocationValid() && toLocationValid()){
-		clearOverlays();
+		clearMarkers();
 		directionsDisplay.setMap(map);
         directionsService.route({
 			origin: fromStr,
@@ -295,35 +300,39 @@ function populateDriveFactors(uberInfo){
 // calculates cost of driving based on info about the uber trip
 function driveCalculations(){
 	var df = driveFactors;
+	var fuelCost = () => {if (dieselCost.fuel=='petrol') return df.petrolCost; else return df.dieselCost}
 	df.petrolUsed = (df.distance/df.milage)*df.trafficMultiplier;
-	var dc = df.petrolUsed*df.fuelCost;
+	var dc = df.petrolUsed*df.petrolCost;
 	dc = df.currency+Math.ceil((dc*0.9))+'-'+Math.ceil((dc*1.1));
 	df.driveCost = dc;
 }
 
 // update unit strings when units change
+// change drive factor units
 function changeDfUnits(newunits){
 	var df = driveFactors;
 	var dfus = driveFactors.unitStrings;
-	df.units = newunits;
+	df.units = newunits; 
 	switchModalMilageUnits(newunits);
 	if (df.units == 'metric'){
 		dfus.fuelUnits = 'L';
 		dfus.milageUnits = 'kmpl';
 		dfus.distUnits = 'km';
-		dfus.fuelCostUnits = 'per litre';
+		dfus.petrolCostUnits = 'per litre';
 		df.milage = df.milage * m2k / g2l;		// convert to kmpl
 		df.distance = df.distance * m2k;		// convert to kms
-		df.fuelCost = df.fuelCost / g2l; //  per litre
+		df.petrolCost = df.petrolCost / g2l; //  per litre
+		df.dieselCost = df.dieselCost / g2l; //  per litre
 	}
 	else if (df.units == 'imperial'){
 		dfus.fuelUnits = 'GL';
 		dfus.milageUnits = 'mpg';
 		dfus.distUnits = 'miles';
-		dfus.fuelCostUnits = 'per gallon';
+		dfus.petrolCostUnits = 'per gallon';
 		df.milage = df.milage * g2l / m2k;	// convert to mpg
 		df.distance = df.distance / m2k;		// convert to miles
-		df.fuelCost = df.fuelCost * g2l; // per gallon
+		df.petrolCost = df.petrolCost * g2l; // per gallon
+		df.dieselCost = df.dieselCost * g2l; // per gallon
 	}
 	driveCalculations();
 	//console.log(driveFactors);
@@ -337,7 +346,7 @@ function refreshDriveInfo(){
 	html += '<h5 style="text-align : center;"><br><strong>'+df.driveCost+'<sup>*<sup></strong></h5>';
 	$driveResultSubDiv.html(html);
 	$fuelSpan.html(df.petrolUsed.toFixed(2) + ' ' + dfus.fuelUnits + 
-		'<br>@ '+df.currency+df.fuelCost.toFixed(2)+' '+ dfus.fuelCostUnits);
+		'<br>@ '+df.currency+df.petrolCost.toFixed(2)+' '+ dfus.petrolCostUnits);
 	$resultDiv.html('<p>Distance: '+(df.distance).toFixed(2)+' '+dfus.distUnits+'</p>'+
 		'<p><i class="material-icons" id="time-icon">access_time</i> ' + df.duration+' mins</p>');
 }
@@ -364,13 +373,24 @@ function createUberHtml(uberInfo){
 }
 
 
-function getValueFromMilageString(string){
-	return parseFloat(string.split(' ')[0]);
+function getMultipliedMilage(string, newunits){
+	var units;
+	var multiplier;
+	if (newunits=='metric') {
+		units = 'kmpl';
+		multiplier = m2k/g2l;
+	}else if (newunits=='imperial'){
+		units = 'mpg';
+		multiplier = g2l/m2k;
+	}
+	var origValue = parseFloat(string.split(' ')[0]);
+	console.log(string);
+	return Math.round(origValue*multiplier).toString()+' '+units;
 }
 	 
 
 	 
-$('input[type=radio][name=units]').change(function(){
+$modal_units_radio.change(function(){
 	changeDfUnits(this.value);
 });
 
@@ -383,23 +403,14 @@ $('input[type=radio][name=units]').change(function(){
 // types of  'gallons' (USA/UK). With this function for UK visitors only the 
 // the conversion variable is modified and the values change here accordingly.
 // Must be a way to refactor this somehow.
+// refactored :)
 function switchModalMilageUnits(newunits){
-	var smallMilage = $('#modal-milage-small').text();
-	var mediumMilage = $('#modal-milage-medium').text();
-	var largeMilage = $('#modal-milage-large').text();
-	if (newunits == 'metric'){
-		smallMilage = Math.round(getValueFromMilageString(smallMilage) * m2k / g2l).toString() + ' kmpl';
-		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * m2k / g2l).toString()+ ' kmpl';
-		largeMilage = Math.round(getValueFromMilageString(largeMilage) * m2k / g2l).toString() + ' kmpl';
-		
-	} else if (newunits == 'imperial'){
-		smallMilage = Math.round(getValueFromMilageString(smallMilage) * g2l / m2k).toString() + ' mpg';
-		mediumMilage = Math.round(getValueFromMilageString(mediumMilage) * g2l / m2k).toString() + ' mpg';
-		largeMilage = Math.round(getValueFromMilageString(largeMilage) * g2l / m2k).toString() + ' mpg';
-	}
-	$('#modal-milage-small').text(smallMilage);
-	$('#modal-milage-medium').text(mediumMilage);
-	$('#modal-milage-large').text(largeMilage);
+	var $smallMilage = $('#modal-milage-small');
+	var $mediumMilage = $('#modal-milage-medium');
+	var $largeMilage = $('#modal-milage-large');
+	$smallMilage.text(getMultipliedMilage($smallMilage.text(), newunits));
+	$mediumMilage.text(getMultipliedMilage($mediumMilage.text(), newunits));
+	$largeMilage.text(getMultipliedMilage($largeMilage.text(), newunits));
 }
 
 
@@ -454,16 +465,18 @@ $.get('http://freegeoip.net/json/', function(ipGeo){
 		g2l = 4.5;
 		$("#unit_system").text("Imperial");
 		$('input[name=units]#units-2').attr('checked', true);
-		driveFactors.fuelCost = 1.11;
+		driveFactors.petrolCost = 1.11;
 		changeDfUnits('imperial');
 		refreshDriveInfo();
 	} else 
 	if (ipGeo.country_code == 'US'){
 		$('input[name=units]#units-2').attr('checked', true);
 		changeDfUnits('imperial');		// change unit strings
-		driveFactors.fuelCost = 0.63;
+		driveFactors.petrolCost = 0.63;
 		refreshDriveInfo();
-		driveFactors.fuelCost = 2.2;
+		driveFactors.petrolCost = 2.2;
+	} else {
+		//country = ipGeo.country_code;
 	}
 });
 
@@ -477,26 +490,31 @@ $("#submitButton").click(function () {
 	}
 	freezeControls();		// freeze inputs
 	$progressBar.show();	// show a progress bar while processing
-	var trafficPromise = $.post("/traffic", currentLocationInfo)	// get traffic multiplier from google
-	trafficPromise.then(function(reply){
-		console.log(reply.multiplier);
-		driveFactors.trafficMultiplier = reply.multiplier;
-		var uberPromise = $.post("/uber", currentLocationInfo);	// get price estimates from uber
-		uberPromise.then(function (data) {	
-			//console.log(data);
-			$fromDiv.append(fromStr);				// display 'from' location
-			$toDiv.append(toStr);					// display 'to' location
-			populateDriveFactors(data);				// add uber data to drve factors
-			driveCalculations();				// calculate drive results
-			refreshDriveInfo();						// display driving cost on page
-			var uberHtml = createUberHtml(data);	// generate html for uber results
-			$uberResultSubDiv.append(uberHtml);		// display uber prices
-			$inputGrid.fadeOut( "slow", function(){	// fade in result div
-				$resultGrid.fadeIn( "slow" );
-				var trafficLayer = new google.maps.TrafficLayer();	// add traffic layer on map
-				trafficLayer.setMap(map);
-			});
-		})
+	$.get("/api/fuelprice/", {countrycode:country})	// get fuel cost for the user's country
+	.then(function(fuelInfo){
+		driveFactors.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
+		driveFactors.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
+		$.post("/api/traffic", currentLocationInfo)	// get traffic multiplier from google
+		.then(function(reply){
+			console.log(reply.multiplier);
+			driveFactors.trafficMultiplier = reply.multiplier;
+			$.post("/api/uber", currentLocationInfo)	// get price estimates from uber
+			.then(function (data) {	
+				//console.log(data);
+				$fromDiv.append(fromStr);				// display 'from' location
+				$toDiv.append(toStr);					// display 'to' location
+				populateDriveFactors(data);				// add uber data to drve factors
+				driveCalculations();					// calculate drive results
+				refreshDriveInfo();						// display driving cost on page
+				var uberHtml = createUberHtml(data);	// generate html for uber results
+				$uberResultSubDiv.append(uberHtml);		// display uber prices
+				$inputGrid.fadeOut( "slow", function(){	// fade out input div
+					$resultGrid.fadeIn( "slow" );		// fade in result div
+					var trafficLayer = new google.maps.TrafficLayer();	// create traffic layer
+					trafficLayer.setMap(map);			// show traffic layer on map
+				});
+			})
+		});
 	});
 });
 
