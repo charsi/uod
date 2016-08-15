@@ -34,7 +34,7 @@ var currentLocationInfo;
 var g2l = 3.785 ;	// 1 gallon = g2l * litres
 var m2k = 1.609 ;	// 1 mile = m2k * kms
 
-var country = 'TH';
+var country = 'IN';
 
 var currency_symbols = {
     'USD': '$', // US Dollar
@@ -476,7 +476,7 @@ $.get('http://freegeoip.net/json/', function(ipGeo){
 		refreshDriveInfo();
 		driveFactors.petrolCost = 2.2;
 	} else {
-		//country = ipGeo.country_code;
+		country = ipGeo.country_code;
 	}
 });
 
