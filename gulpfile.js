@@ -14,7 +14,7 @@ var publicDir = './public/js/';
 
 gulp.task('compile', () => {
 	return gulp.src(assetsDir)
-		.pipe(sourcemaps.init())
+		.pipe(sourcemaps.init({identityMap:true, debug:true }))
 		//.pipe(obfuscate())
 		.pipe(babel({
 				presets: ['es2015']
