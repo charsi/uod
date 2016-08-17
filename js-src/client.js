@@ -38,8 +38,8 @@ var $fuel_cost_slider = $('#fuel_cost_slider');
 var dom_fuel_cost_slider = document.querySelector('#fuel_cost_slider')
 
 var currentLocationInfo;
-var l2g = 3.785 ;	// 1 gallon = l2g * litres
-var k2m = 1.609 ;	// 1 mile = k2m * kms
+var g2l = 3.785 ;	// x gallons = g2l * x litres
+var m2k = 1.609 ;	// x mile = m2k * x kms
 
 var country = 'IN';
 var currency = '';
@@ -111,19 +111,7 @@ class DriveInfo {
 		this.fuel = fuel;
 	}
 	
-	// calculates cost of driving based on info about the uber trip
-	driveCalculations(){
-		var fuelCost = (di.fuel==='petrol') ? di.petrolCost : di.dieselCost ;
-		var milage = (di.fuel==='petrol') ? di.petrolMilage : di.dieselMilage ;
-		di.fuelUsed = (di.distance/milage)*di.trafficMultiplier;
-		var dc = di.fuelUsed*fuelCost;
-		dc = currency+Math.ceil((dc*0.9))+'-'+Math.ceil((dc*1.1));
-		di.driveCost = dc;
-		//console.log(df);
-	}
-	
 	getFuelUsed(){
-		var unitMultiplier = (units ==='metric')? 1.0 : l2g ;
 		var milage = (this.fuel==='petrol') ? this.petrolMilage : this.dieselMilage ;
 		return (this.distance/milage) * this.trafficMultiplier;
 	}
@@ -134,16 +122,17 @@ class DriveInfo {
 	}
 	
 	display(dispUnits=units){ // units == metric or imperial 
-		var fuelUsedMultiplier = (dispUnits ==='metric')? 1.0 : l2g ;
-		var milageMultiplier = (dispUnits ==='metric')? 1.0 : l2g / k2m ;
-		var distanceMultiplier = (dispUnits ==='metric')? 1.0 : k2m ;
+		var fuelCostMultiplier = (dispUnits ==='metric')? 1.0 : g2l ;
+		var fuelUsedMultiplier = (dispUnits ==='metric')? 1.0 : 1/g2l ;
+		var milageMultiplier = (dispUnits ==='metric')? 1.0 : g2l / m2k ;
+		var distanceMultiplier = (dispUnits ==='metric')? 1.0 : 1/m2k ;
 		var dFuelUsed = (this.getFuelUsed() * fuelUsedMultiplier).toFixed(2)+ ' ' + unitStrings.fuelUnits ;
 		var dDriveCost = currency+''+Math.ceil((this.getDriveCost()*0.9))+'-'+Math.ceil((this.getDriveCost()*1.1));
 		var dMilage = (this.fuel==='petrol') ? this.petrolMilage : this.dieselMilage;
 		dMilage = (dMilage * milageMultiplier).toFixed(2) + ' ' + unitStrings.milageUnits ;
 		var dDistance = (this.distance * distanceMultiplier).toFixed(2)+ ' ' + unitStrings.distUnits;
 		var dFuelCost = (this.fuel==='petrol') ? this.petrolCost : this.dieselCost;
-		dFuelCost = currency+''+(dFuelCost * fuelUsedMultiplier).toFixed(2)+ ' ' + unitStrings.fuelCostUnits; ;
+		dFuelCost = currency+''+(dFuelCost * fuelCostMultiplier).toFixed(2)+ ' ' + unitStrings.fuelCostUnits; ;
 		var displayValues = {
 			fuelCost : dFuelCost,
 			fuelUsed : dFuelUsed,
@@ -407,9 +396,9 @@ function createUberHtml(uberInfo){
 function convertedMilage(string){
 	var multiplier = 1.0;
 	if (units=='metric') {
-		multiplier = k2m/l2g;
+		multiplier = m2k/g2l;
 	}else {
-		multiplier = l2g/k2m;
+		multiplier = g2l/m2k;
 	}
 	var origValue = parseFloat(string.split(' ')[0]);
 	return Math.round(origValue*multiplier).toString() + ' ' + unitStrings.milageUnits;
@@ -473,7 +462,7 @@ $.get('http://freegeoip.net/json/', function(ipGeo){
 	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
 	map.panTo(localLatLang);
 	if (ipGeo.country_code == 'GB'){
-		l2g = 4.5;		// change the multiplier for UK gallons
+		g2l = 4.5;		// change the multiplier for UK gallons
 		$("#unit_system").text("Imperial");		// make display in miles, gallons by default
 		$('input[name=units]#units-2').attr('checked', true);	// in the modal select the correct unit
 		units = 'imperial'
@@ -583,7 +572,7 @@ $(".carsizeradio").change(function() {
 
 // Units selector
 $modal_units_radio.change(function(){
-	console.log(this.value);
+	//console.log(this.value);
 	units = this.value;
 	changeDisplayUnits();
 });
