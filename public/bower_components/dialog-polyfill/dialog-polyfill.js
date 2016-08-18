@@ -220,7 +220,7 @@
 
       // Optionally center vertically, relative to the current viewport.
       if (dialogPolyfill.needsCentering(this.dialog_)) {
-        console.info('repositioning what');
+        //---something happened here------------console.info('repositioning what');
         dialogPolyfill.reposition(this.dialog_);
         this.replacedStyleTop_ = true;
       } else {
@@ -234,7 +234,7 @@
           this.dialog_.nextSibling);
 
       this.dialog_.addEventListener('DOMNodeRemoved', function(ev) {
-        console.info('dialog itself removed', ev);
+        //----something happened here--------console.info('dialog itself removed', ev);
       });
     },
 

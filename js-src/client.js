@@ -29,29 +29,33 @@ var $resultGrid = $("#resultGrid");
 var $progressBar = $("#progressBar");
 var $fuelSpan = $("#fuel");
 var $modal_units_radio = $('input[type=radio][name=units]');
-var $modal_units_radio_checked = $('input[type=radio][name=units]:checked');
 var $modal_fuel_cost = $('#modal-fuel-cost');
+var $modal_fuel_type_radio = $('input[type=radio][name=fuel]');
+var $modal_fuel_name_span = $('#modal-fuel-name');
+var $modal_car_size_radio = $(".carsizeradio");
 var $smallMilage = $('#modal-milage-small');
 var $mediumMilage = $('#modal-milage-medium');
 var $largeMilage = $('#modal-milage-large');
-var $fuel_cost_slider = $('#fuel_cost_slider');
-var dom_fuel_cost_slider = document.querySelector('#fuel_cost_slider')
+var $modal_fuel_cost_slider = $('#fuel_cost_slider');
 
 var currentLocationInfo;
 var g2l = 3.785 ;	// x gallons = g2l * x litres
-var m2k = 1.609 ;	// x mile = m2k * x kms
+var m2k = 1.609 ;	// x miles = m2k * x kms
 
-var country = 'IN';
-var currency = '';
-var units = 'metric' ;
+var country = 'IN';		// two letter country code
+var currency = '';		// local currency symbol or abbr.
+var units = 'metric' ;	// or 'imperial'
 var unitStrings = {		
 		distUnits : "kms",				// or "miles"
 		milageUnits : "kmpl",			// or "mpg"
 		fuelUnits : "L",				// or "GL"
 		fuelCostUnits : "per litre"		// or 'per gallon'
 	}
-var petrolMilageRange = {small:15, medium:12, large:8};
-var dieselMilageRange = {small:35, medium:27, large:20};
+var milageRange = {
+		petrol:{small:15, medium:12, large:8}, 
+		diesel:{small:20, medium:15, large:10}
+	};
+
 
 var currency_symbols = {
     'USD': '$', // US Dollar
@@ -168,6 +172,9 @@ function restMap(){
 	directionsDisplay = new google.maps.DirectionsRenderer();  
 }
 
+
+
+
 function resetEverything(){
 	// initialise google map
 	$("#progressBar").hide();
@@ -192,10 +199,6 @@ function resetEverything(){
 			$fuelSpan
 		].forEach(clearDiv);
 	});
-	if($modal_units_radio_checked.val()=='imperial'){
-		units = 'imperial';
-		changeDisplayUnits();	// set units according to whats selected in the modal window
-	}
 }
 
 // populate lat, lng of origin address
@@ -343,6 +346,8 @@ function clearDiv(div){
 // update unit strings when units change
 // change drive factor units
 function changeDisplayUnits(){
+	units = $modal_units_radio.filter(':checked').val();	// set the units
+	// console.log(units);
 	var us = unitStrings;	
 	if (units === 'metric'){
 		us.fuelUnits = 'L';
@@ -356,8 +361,8 @@ function changeDisplayUnits(){
 		us.distUnits = 'miles';
 		us.fuelCostUnits = 'per gallon';
 	}
-	refreshMilageTextInModal();
-	$modal_fuel_cost.text(di.display().fuelCost);
+	refreshMilageTextInModal();		// change text under car sizes in settings
+	$modal_fuel_cost.text(di.display().fuelCost);	// update the text under fuel cost slider
 }
 
 // adds distance, time and driving cost info on the page
@@ -392,35 +397,20 @@ function createUberHtml(uberInfo){
 	return html;
 }
 
-
-function convertedMilage(string){
-	var multiplier = 1.0;
-	if (units=='metric') {
-		multiplier = m2k/g2l;
-	}else {
-		multiplier = g2l/m2k;
-	}
-	var origValue = parseFloat(string.split(' ')[0]);
-	return Math.round(origValue*multiplier).toString() + ' ' + unitStrings.milageUnits;
+// helper func for refreshMilageTextInModal
+function convertedMilage(size){
+	var multiplier = (units=='metric') ? 1 : g2l / m2k
+	return Math.round(milageRange[di.fuel][size] * multiplier)+ ' ' + unitStrings.milageUnits;
 }
-	 
-// this is a needlessly long function
-// all it does is convert the units of the three milage options (car size )in the modal dialog
-// from kmpl to mpg or vie-versa. The function is a bit complex to avoid static linking the 
-// precalculated values for both unit systems. The function instead calculates the values each
-// time the units are switched. This is prefered in order to support two different
-// types of  'gallons' (USA/UK). With this function for UK visitors only the 
-// the conversion variable is modified and the values change here accordingly.
-// Must be a way to refactor this somehow.
-// refactored :)
+
+// refreshes the text under car size selector in settings
+// takes into account the fuel type and units selected
 function refreshMilageTextInModal(){
-	$smallMilage.text(convertedMilage($smallMilage.text()));
-	$mediumMilage.text(convertedMilage($mediumMilage.text()));
-	$largeMilage.text(convertedMilage($largeMilage.text()));
-}
+	$smallMilage.text(convertedMilage('small'));
+	$mediumMilage.text(convertedMilage('medium'));
+	$largeMilage.text(convertedMilage('large'));
+};
 	 
-
-
 
 // google analytics---------------
 (function(i,s,o,g,r,a,m){i.GoogleAnalyticsObject=r;i[r]=i[r]||function(){
@@ -453,7 +443,7 @@ function initAutocomplete() {
 
 //-----------------------
 
-$resultGrid.hide();
+
 
 
 
@@ -470,29 +460,35 @@ $.get('http://freegeoip.net/json/', function(ipGeo){
 		refreshDriveInfo();		// make the calculations again
 	} else 
 	if (ipGeo.country_code == 'US'){
+		//ipGeo.country_code = 'US';
 		$('input[name=units]#units-2').attr('checked', true);
 		units = 'imperial'
 		changeDisplayUnits();		// change unit strings
 		refreshDriveInfo();
 	} 
 	country = ipGeo.country_code;
-	$.get("/api/fuelprice/", {countrycode:country})	// get fuel cost for the user's country
-	.then(function(fuelInfo){
+	$.get("/api/fuelprice/", {countrycode:country},function(fuelInfo){
 		di.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
 		di.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
+		console.log(di.petrolCost);
+		console.log(di.dieselCost);
+		console.log(di.fuel);
+		console.log((di[di.fuel+'Cost']*0.9).toFixed(2));
+		console.log(('max', di[di.fuel+'Cost']*1.1).toFixed(2));
 		if (currency_symbols.hasOwnProperty(fuelInfo.currency_code)){
 			currency = currency_symbols[fuelInfo.currency_code];
 		} else {
 			currency = fuelInfo.currency_code;
 		}
 		$modal_fuel_cost.text(di.display().fuelCost);
-		$fuel_cost_slider.attr('min', di[di.fuel+'Cost']*0.9);
-		$fuel_cost_slider.attr('max', di[di.fuel+'Cost']*1.1);
+		$modal_fuel_cost_slider.attr('min', (di[di.fuel+'Cost']*0.9));	// set min 10% below di.petrolCost or di.dieselCost
+		$modal_fuel_cost_slider.attr('max', (di[di.fuel+'Cost']*1.1));	// set max 10% above di.petrolCost or di.dieselCost
+		$modal_fuel_cost_slider.val(Math.round(di[di.fuel+'Cost']*100)/100);
 		//document.querySelector('#fuel_cost_slider').MaterialSlider.change(di[di.fuel+'Cost']); // causes jquery errors for some reason
-		$fuel_cost_slider.val(di[di.fuel+'Cost']);
+		//$modal_fuel_cost_slider[0].MaterialSlider.change(di[di.fuel+'Cost']); // causes jquery errors for some reason
+		
 	});
 });
-
 
 
 // SUBMIT button
@@ -534,7 +530,7 @@ $("#backButton").click(function () {
 
 var dialog = document.querySelector('dialog');
 var showDialogButton = document.querySelector('#settings_icon');
-var showDialogButton = document.querySelector('#settings_icon');
+
 
 if (! dialog.showModal) {
   dialogPolyfill.registerDialog(dialog);
@@ -553,39 +549,58 @@ dialog.querySelector('.close').addEventListener('click', function() {
 
 
 
-// fine tune fuel cost
-$fuel_cost_slider[0].addEventListener("input", function() {
-	di[di.fuel+'Cost'] = $fuel_cost_slider.val()
-	$modal_fuel_cost.text(di.display().fuelCost);          
+// fine tune fuel cost 
+// fires as the slider is being slid
+$modal_fuel_cost_slider[0].addEventListener("input", function() {
+	di[di.fuel+'Cost'] = $modal_fuel_cost_slider.val()		// update the fuel cost in litres
+	$modal_fuel_cost.text(di.display().fuelCost);         // display the cost in local units 
 });
+
+$modal_fuel_cost_slider.change(function() { 
+	console.log(this.value);
+});
+
 
 // Milage selector
-$(".carsizeradio").change(function() {
-    $.each($('.carsizeradio'),function(){
-		this.MaterialIconToggle.uncheck();
+$modal_car_size_radio.change(function() {
+	// this is how you use mdl icon toggles as radio boxes
+    $.each($modal_car_size_radio,function(){
+		this.MaterialIconToggle.uncheck();		// uncheck all toggle buttons
 	  });
-	this.MaterialIconToggle.check();
-	var carSize = $(this).find("input").attr("id").replace('car-toggle-','');
-	di.petrolMilage = petrolMilageRange[carSize];
-	di.dieselMilage = dieselMilageRange[carSize];
+	this.MaterialIconToggle.check();			// check the one that was clicked
+	var carSize = this.find("input").val();		// small, medium or large
+	di.petrolMilage = milageRange.petrol[carSize];
+	di.dieselMilage = milageRange.diesel[carSize];
 });
 
-// Units selector
-$modal_units_radio.change(function(){
-	//console.log(this.value);
-	units = this.value;
-	changeDisplayUnits();
-});
+// Units selector (on change)
+$modal_units_radio.parent().change(changeDisplayUnits);
 
 
 // select fuel type (petrol vs diesel)
-$('input[type=radio][name=fuel]').change(function(){
+$modal_fuel_type_radio.change(function(){
 	di.fuel = this.value;		// change fuel type
-	$('#modal-fuel-name').text(this.value);		// how much do you pay for...
-	$fuel_cost_slider.attr('min', di[di.fuel+'Cost']*0.9);
-	$fuel_cost_slider.attr('max', di[di.fuel+'Cost']*1.1);
-	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di[di.fuel+'Cost']);
+	$modal_fuel_name_span.text(this.value);		// how much do you pay for...(petrol/diesel)
+	$modal_fuel_cost_slider.attr('min', (di[di.fuel+'Cost']*0.9));	// set min 10% below di.petrolCost or di.dieselCost
+	$modal_fuel_cost_slider.attr('max', (di[di.fuel+'Cost']*1.1));	// set max 10% above di.petrolCost or di.dieselCost
 	$modal_fuel_cost.text(di.display().fuelCost);
+	$modal_fuel_cost_slider[0].MaterialSlider.change(Math.round(di[di.fuel+'Cost']*100)/100);
+	console.log(di[di.fuel+'Cost']);
+	//$modal_fuel_cost_slider.val(Math.round(di[di.fuel+'Cost']*100)/100);
+	refreshMilageTextInModal();
 });
-//dialog.showModal();	 
 
+
+(function onload(){
+	$resultGrid.hide();
+	changeDisplayUnits();
+	//dialog.showModal();
+})();
+
+// $(window).load(function () {
+// 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di[di.fuel+'Cost']);
+// });
+
+// $( document ).ready(function( {
+// 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di[di.fuel+'Cost']);
+// });
