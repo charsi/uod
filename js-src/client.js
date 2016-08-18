@@ -568,7 +568,8 @@ $modal_car_size_radio.change(function() {
 		this.MaterialIconToggle.uncheck();		// uncheck all toggle buttons
 	  });
 	this.MaterialIconToggle.check();			// check the one that was clicked
-	var carSize = this.find("input").val();		// small, medium or large
+	var carSize = $modal_car_size_radio.find("input").filter(':checked').val();		// small, medium or large
+	console.log(carSize);
 	di.petrolMilage = milageRange.petrol[carSize];
 	di.dieselMilage = milageRange.diesel[carSize];
 });
@@ -594,7 +595,7 @@ $modal_fuel_type_radio.change(function(){
 (function onload(){
 	$resultGrid.hide();
 	changeDisplayUnits();
-	//dialog.showModal();
+	dialog.showModal();
 })();
 
 // $(window).load(function () {
