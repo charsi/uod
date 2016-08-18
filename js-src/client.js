@@ -159,7 +159,7 @@ function clearDriveFactors(){
 	di.trafficMultiplier = 1.00;
 }
 
-function restMap(){
+function resetMap(){
 	markersArray = [];
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: localLatLang,
@@ -185,7 +185,7 @@ function resetEverything(){
 	$("#locationFromInput").prop('disabled', false);
 	currentLocationInfo = new LocationInfo();
 	clearDriveFactors();
-	restMap();
+	resetMap();
 	refreshMap();
 	$resultGrid.fadeOut( "slow", function(){ 
 		$inputGrid.fadeIn( "slow" );
@@ -315,6 +315,7 @@ function geolocate() {
 				center: geolocation,
 				radius: position.coords.accuracy
 			});
+			console.log(circle);
 			autocompleteFrom.setBounds(circle.getBounds());
 			autocompleteTo.setBounds(circle.getBounds());
 			localLatLang.lat = geolocation.lat;
@@ -326,6 +327,18 @@ function geolocate() {
 	}
 	//else console.log("kbhhjbjh");
 }
+
+function geolocateIp() {
+	var circle = new google.maps.Circle({
+		center: localLatLang,
+		radius: 33
+	});
+	autocompleteFrom.setBounds(circle.getBounds());
+	autocompleteTo.setBounds(circle.getBounds());
+	refreshMap();
+}
+
+
 
 
 // freeze input fields and the submit button
@@ -436,7 +449,7 @@ function initAutocomplete() {
 	// populate 'to' when user selects an address from the list
 	autocompleteTo.addListener('place_changed', fillToAddress);
 	
-	geolocate();		// get user's geographical location
+	//geolocate();		// get user's geographical location
 	
 	resetEverything();	// reset incase the browser caches form entries
 }
@@ -451,6 +464,7 @@ function initAutocomplete() {
 $.get('http://freegeoip.net/json/', function(ipGeo){
 	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
 	map.panTo(localLatLang);
+	geolocateIp();
 	if (ipGeo.country_code == 'GB'){
 		g2l = 4.5;		// change the multiplier for UK gallons
 		$("#unit_system").text("Imperial");		// make display in miles, gallons by default
@@ -595,7 +609,7 @@ $modal_fuel_type_radio.change(function(){
 (function onload(){
 	$resultGrid.hide();
 	changeDisplayUnits();
-	dialog.showModal();
+	// dialog.showModal();
 })();
 
 // $(window).load(function () {
