@@ -1,6 +1,8 @@
 "use strict";
-/*jshint esversion: 6 */
+/*jshint esversion: 6, devel: true */
 /*globals $:false */
+/*global google, console, navigator, document, dialogPolyfill, ga, window */
+
 
 // google autocomplete objects
 var autocompleteFrom;
@@ -50,7 +52,7 @@ var unitStrings = {
 		milageUnits : "kmpl",			// or "mpg"
 		fuelUnits : "L",				// or "GL"
 		fuelCostUnits : "per litre"		// or 'per gallon'
-	}
+	};
 var milageRange = {
 		petrol:{small:15, medium:12, large:8}, 
 		diesel:{small:20, medium:15, large:10}
@@ -86,10 +88,10 @@ var localLatLang = {lat: 51.5089254, lng: -0.107437};
 // holder for geolocation coordinates returned by google
 class LocationInfo {
 	constructor(){
-		this.start_latitude = "",
-		this.start_longitude = "",
-		this.end_latitude = "",
-		this.end_longitude = ""
+		this.start_latitude = "";
+		this.start_longitude = "";
+		this.end_latitude = "";
+		this.end_longitude = "";
 	}
 }
 
@@ -117,12 +119,24 @@ class DriveInfo {
 	
 	getFuelUsed(){
 		var milage = (this.fuel==='petrol') ? this.petrolMilage : this.dieselMilage ;
-		return (this.distance/milage) * this.trafficMultiplier;
+		var fuel = (this.distance/milage) * this.trafficMultiplier;
+		return fuel;
 	}
 	
 	getDriveCost(){
 		var fuelCost = (this.fuel==='petrol') ? this.petrolCost : this.dieselCost ;
-		return fuelCost*this.getFuelUsed()
+		console.log('fuelcost = '+fuelCost);
+		var cost = fuelCost*this.getFuelUsed();
+		console.log('cost = '+cost);
+		return cost;
+	}
+
+	getFuelCost(){
+		return this[this.fuel+'Cost'];
+	}
+
+	setFuelCost(cost){
+		this[this.fuel+'Cost'] = cost;
 	}
 	
 	display(dispUnits=units){ // units == metric or imperial 
@@ -136,14 +150,14 @@ class DriveInfo {
 		dMilage = (dMilage * milageMultiplier).toFixed(2) + ' ' + unitStrings.milageUnits ;
 		var dDistance = (this.distance * distanceMultiplier).toFixed(2)+ ' ' + unitStrings.distUnits;
 		var dFuelCost = (this.fuel==='petrol') ? this.petrolCost : this.dieselCost;
-		dFuelCost = currency+''+(dFuelCost * fuelCostMultiplier).toFixed(2)+ ' ' + unitStrings.fuelCostUnits; ;
+		dFuelCost = currency+''+(dFuelCost * fuelCostMultiplier).toFixed(2)+ ' ' + unitStrings.fuelCostUnits;
 		var displayValues = {
 			fuelCost : dFuelCost,
 			fuelUsed : dFuelUsed,
 			driveCost : dDriveCost,
 			milage : dMilage,
 			distance : dDistance
-		}
+		};
 		return displayValues;
 	}
 	
@@ -412,7 +426,7 @@ function createUberHtml(uberInfo){
 
 // helper func for refreshMilageTextInModal
 function convertedMilage(size){
-	var multiplier = (units=='metric') ? 1 : g2l / m2k
+	var multiplier = (units=='metric') ? 1 : g2l / m2k;
 	return Math.round(milageRange[di.fuel][size] * multiplier)+ ' ' + unitStrings.milageUnits;
 }
 
@@ -422,7 +436,7 @@ function refreshMilageTextInModal(){
 	$smallMilage.text(convertedMilage('small'));
 	$mediumMilage.text(convertedMilage('medium'));
 	$largeMilage.text(convertedMilage('large'));
-};
+}
 	 
 
 // google analytics---------------
@@ -455,52 +469,51 @@ function initAutocomplete() {
 }
 
 //-----------------------
-
-
-
-
-
-// set map to visitor's location, and local units if (US or UK)
-$.get('http://freegeoip.net/json/', function(ipGeo){
-	localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
-	map.panTo(localLatLang);
-	geolocateIp();
-	if (ipGeo.country_code == 'GB'){
-		g2l = 4.5;		// change the multiplier for UK gallons
-		$("#unit_system").text("Imperial");		// make display in miles, gallons by default
-		$('input[name=units]#units-2').attr('checked', true);	// in the modal select the correct unit
-		units = 'imperial'
-		changeDisplayUnits();	// change unit strings, convert values for milage, petrol cost etc
-		refreshDriveInfo();		// make the calculations again
-	} else 
-	if (ipGeo.country_code == 'US'){
-		//ipGeo.country_code = 'US';
-		$('input[name=units]#units-2').attr('checked', true);
-		units = 'imperial'
-		changeDisplayUnits();		// change unit strings
-		refreshDriveInfo();
-	} 
-	country = ipGeo.country_code;
-	$.get("/api/fuelprice/", {countrycode:country},function(fuelInfo){
-		di.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
-		di.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
-		console.log(di.petrolCost);
-		console.log(di.dieselCost);
-		console.log(di.fuel);
-		console.log((di[di.fuel+'Cost']*0.9).toFixed(2));
-		console.log(('max', di[di.fuel+'Cost']*1.1).toFixed(2));
-		if (currency_symbols.hasOwnProperty(fuelInfo.currency_code)){
-			currency = currency_symbols[fuelInfo.currency_code];
-		} else {
-			currency = fuelInfo.currency_code;
-		}
-		$modal_fuel_cost.text(di.display().fuelCost);
-		$modal_fuel_cost_slider.attr('min', (di[di.fuel+'Cost']*0.9));	// set min 10% below di.petrolCost or di.dieselCost
-		$modal_fuel_cost_slider.attr('max', (di[di.fuel+'Cost']*1.1));	// set max 10% above di.petrolCost or di.dieselCost
-		$modal_fuel_cost_slider.val(Math.round(di[di.fuel+'Cost']*100)/100);
-		//document.querySelector('#fuel_cost_slider').MaterialSlider.change(di[di.fuel+'Cost']); // causes jquery errors for some reason
-		//$modal_fuel_cost_slider[0].MaterialSlider.change(di[di.fuel+'Cost']); // causes jquery errors for some reason
-		
+// run after jquery loads
+$(function(){
+	// set map to visitor's location, and local units if (US or UK)
+	$.get('http://freegeoip.net/json/', function(ipGeo){
+		localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
+		map.panTo(localLatLang);
+		geolocateIp();
+		if (ipGeo.country_code == 'GB'){
+			g2l = 4.5;		// change the multiplier for UK gallons
+			$("#unit_system").text("Imperial");		// make display in miles, gallons by default
+			$('input[name=units]#units-2').attr('checked', true);	// in the modal select the correct unit
+			units = 'imperial';
+			changeDisplayUnits();	// change unit strings, convert values for milage, petrol cost etc
+			refreshDriveInfo();		// make the calculations again
+		} else 
+		if (ipGeo.country_code == 'US'){
+			//ipGeo.country_code = 'US';
+			$('input[name=units]#units-2').attr('checked', true);
+			units = 'imperial';
+			changeDisplayUnits();		// change unit strings
+			refreshDriveInfo();
+		} 
+		country = ipGeo.country_code;
+		$.get("/api/fuelprice/", {countrycode:country},function(fuelInfo){
+			di.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
+			di.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
+			console.log(di.petrolCost);
+			console.log(di.dieselCost);
+			console.log(di.fuel);
+			console.log((di.getFuelCost()*0.9).toFixed(2));
+			console.log(('max', di.getFuelCost()*1.1).toFixed(2));
+			if (currency_symbols.hasOwnProperty(fuelInfo.currency_code)){
+				currency = currency_symbols[fuelInfo.currency_code];
+			} else {
+				currency = fuelInfo.currency_code;
+			}
+			$modal_fuel_cost.text(di.display().fuelCost);
+			$modal_fuel_cost_slider.attr('min', (di.getFuelCost()*0.9));	// set min 10% below di.petrolCost or di.dieselCost
+			$modal_fuel_cost_slider.attr('max', (di.getFuelCost()*1.1));	// set max 10% above di.petrolCost or di.dieselCost
+			$modal_fuel_cost_slider.val(Math.round(di.getFuelCost()*100)/100);
+			// console.log(Math.round(di.getFuelCost()*100)/100);
+			// document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
+			// $modal_fuel_cost_slider[0].MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
+			
+		});
 	});
 });
 
@@ -532,7 +545,7 @@ $("#submitButton").click(function () {
 					var trafficLayer = new google.maps.TrafficLayer();	// create traffic layer
 					trafficLayer.setMap(map);			// show traffic layer on map
 				});
-			})
+			});
 		});
 	
 });
@@ -566,7 +579,7 @@ dialog.querySelector('.close').addEventListener('click', function() {
 // fine tune fuel cost 
 // fires as the slider is being slid
 $modal_fuel_cost_slider[0].addEventListener("input", function() {
-	di[di.fuel+'Cost'] = $modal_fuel_cost_slider.val()		// update the fuel cost in litres
+	di.setFuelCost($modal_fuel_cost_slider.val());		// update the fuel cost in litres
 	$modal_fuel_cost.text(di.display().fuelCost);         // display the cost in local units 
 });
 
@@ -596,12 +609,12 @@ $modal_units_radio.parent().change(changeDisplayUnits);
 $modal_fuel_type_radio.change(function(){
 	di.fuel = this.value;		// change fuel type
 	$modal_fuel_name_span.text(this.value);		// how much do you pay for...(petrol/diesel)
-	$modal_fuel_cost_slider.attr('min', (di[di.fuel+'Cost']*0.9));	// set min 10% below di.petrolCost or di.dieselCost
-	$modal_fuel_cost_slider.attr('max', (di[di.fuel+'Cost']*1.1));	// set max 10% above di.petrolCost or di.dieselCost
+	$modal_fuel_cost_slider.attr('min', (di.getFuelCost()*0.9));	// set min 10% below di.petrolCost or di.dieselCost
+	$modal_fuel_cost_slider.attr('max', (di.getFuelCost()*1.1));	// set max 10% above di.petrolCost or di.dieselCost
 	$modal_fuel_cost.text(di.display().fuelCost);
-	$modal_fuel_cost_slider[0].MaterialSlider.change(Math.round(di[di.fuel+'Cost']*100)/100);
-	console.log(di[di.fuel+'Cost']);
-	//$modal_fuel_cost_slider.val(Math.round(di[di.fuel+'Cost']*100)/100);
+	$modal_fuel_cost_slider[0].MaterialSlider.change(Math.round(di.getFuelCost()*100)/100);
+	console.log(di.getFuelCost());
+	//$modal_fuel_cost_slider.val(Math.round(di.getFuelCost()*100)/100);
 	refreshMilageTextInModal();
 });
 
@@ -613,9 +626,9 @@ $modal_fuel_type_radio.change(function(){
 })();
 
 // $(window).load(function () {
-// 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di[di.fuel+'Cost']);
+// 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost());
 // });
 
 // $( document ).ready(function( {
-// 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di[di.fuel+'Cost']);
+// 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost());
 // });
