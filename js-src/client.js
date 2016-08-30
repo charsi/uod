@@ -535,8 +535,8 @@ $("#submitButton").click(function () {
 				//console.log(data);
 				$fromDiv.append(fromStr);				// display 'from' location
 				$toDiv.append(toStr);					// display 'to' location
-				di.duration= uberInfo.prices[0].duration/60;					// convert to mins
-				di.distance= uberInfo.prices[0].distance;
+				di.duration= uberInfo.prices[0].duration/60;	// convert to mins
+				di.distance= uberInfo.prices[0].distance * m2k;
 				refreshDriveInfo();						// display driving cost on page
 				var uberHtml = createUberHtml(uberInfo);	// generate html for uber results
 				$uberResultSubDiv.append(uberHtml);		// display uber prices

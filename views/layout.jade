@@ -14,6 +14,17 @@ html
 		//css
 		link(rel='stylesheet', href='/stylesheets/style.css')
 
+
+		//polyfill (support for dialog)
+		script(src="/bower_components/dialog-polyfill/dialog-polyfill.js")
+		link(rel="stylesheet", type="text/css", href="/bower_components/dialog-polyfill/dialog-polyfill.css")
+
+		| <!--[if IE]> 
+		<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.2.0/es5-shim.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/classlist/2014.01.31/classList.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
+		<![endif]-->
+
 		//material-design-lite
 		link(rel='stylesheet', href='/bower_components/material-design-lite/material.min.css')
 		script(src='/bower_components/material-design-lite/material.min.js')
@@ -25,10 +36,6 @@ html
 		//Material icon fonts
 		//link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
 		link(href='https://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet', type='text/css')
-		
-		//polyfill (support for dialog)
-		script(src="/bower_components/dialog-polyfill/dialog-polyfill.js")
-		link(rel="stylesheet", type="text/css", href="/bower_components/dialog-polyfill/dialog-polyfill.css")
 		
 		//maps
 		//link(rel="stylesheet", href="/maps/documentation/javascript/demos/demos.css")
