@@ -78,8 +78,8 @@ var currency_symbols = {
 };
 
 // google api key
-// const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
-// const key = "***REMOVED***";
+const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
+
 
 // set default map coordinates (to London)
 // will be overriden by local coordinates if user shares location
@@ -536,7 +536,7 @@ $("#submitButton").click(function () {
 				$fromDiv.append(fromStr);				// display 'from' location
 				$toDiv.append(toStr);					// display 'to' location
 				di.duration= uberInfo.prices[0].duration/60;	// convert to mins
-				di.distance= uberInfo.prices[0].distance * m2k;
+				di.distance= uberInfo.prices[0].distance * m2k;	// update distance for the trip. (conver to kms)
 				refreshDriveInfo();						// display driving cost on page
 				var uberHtml = createUberHtml(uberInfo);	// generate html for uber results
 				$uberResultSubDiv.append(uberHtml);		// display uber prices
@@ -547,7 +547,6 @@ $("#submitButton").click(function () {
 				});
 			});
 		});
-	
 });
 
 // BACK button

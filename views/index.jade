@@ -19,12 +19,14 @@ block content
 					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="submitButton") Submit
 					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar") 
 				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp.mdl-grid--no-spacing(id="resultGrid")
-					button(id="settings_icon", class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored")
-						i(class="material-icons", href="#") settings
+					div(id="settings-icon")
+						button(id="settings_icon", class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored")
+							i(class="material-icons", href="#") settings
+					.mdl-tooltip(data-mdl-for="settings-icon") settings
 					//.mdl-tooltip(for="settings_icon") settings
 					.mdl-cell.mdl-cell--12-col(id="resultHeader")
 						i(class="material-icons") place
-						a ----------------------------------------------------------->
+						a --------------------------------------------------------->
 						i(class="material-icons") place
 					.mdl-cell.mdl-cell--3-col(id="fromDiv")
 					.mdl-cell.mdl-cell--6-col(id="resultDiv")
@@ -59,7 +61,7 @@ block content
 							ul.mdl-mini-footer__link-list
 								li
 									a(href='/faq') FAQ
-		dialog(class="mdl-dialog")
+		dialog(class="mdl-dialog") 
 			h4(class="mdl-dialog__title") Settings
 			.mdl-dialog__content
 				.radio
