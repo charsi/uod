@@ -221,6 +221,8 @@ function fillFromAddress() {
 	currentLocationInfo.start_latitude = place.geometry.location.lat();
 	currentLocationInfo.start_longitude = place.geometry.location.lng();
 	refreshMap();	// show marker for 'from' address
+	var country_code = getCountry(place.address_components);
+	LocaliseUnits(country_code);
 }
 
 // populate lat, lng of destination address
@@ -313,6 +315,16 @@ function refreshMap() {
 		map.setZoom(13);
 	}
 	map.panTo(tmpLatLang);	// re-centre the map
+	
+	localLatLang.lat = tmpLatLang.lat;
+	localLatLang.lng = tmpLatLang.lng;
+	var circle = new google.maps.Circle({
+					center: tmpLatLang,
+					//radius: position.coords.accuracy
+					radius: 33
+				});
+	autocompleteFrom.setBounds(circle.getBounds());
+	autocompleteTo.setBounds(circle.getBounds());
 }
 
 
@@ -325,33 +337,27 @@ function geolocate() {
 				lat: position.coords.latitude,
 				lng: position.coords.longitude
 			};
-			var circle = new google.maps.Circle({
-				center: geolocation,
-				radius: position.coords.accuracy
-			});
-			console.log(circle);
-			autocompleteFrom.setBounds(circle.getBounds());
-			autocompleteTo.setBounds(circle.getBounds());
-			localLatLang.lat = geolocation.lat;
-			localLatLang.lng = geolocation.lng;
-			refreshMap();
-			//console.log(circle.center);
-			//console.log(2222222222222);
+			// log lat, lng coordinates reported by the browser
+			console.log(geolocation);
+			// reverse-geocode to get full address
+			var geocoder = new google.maps.Geocoder; 
+			geocoder.geocode({'location': geolocation}, function(results, status) {
+				if (status == 'OK') {
+					if (results[0]) {
+						console.log(results);
+						// update text in the input field
+						$('#locationFromInput').val(results[0].formatted_address);
+						currentLocationInfo.start_latitude = geolocation.lat;
+						currentLocationInfo.start_longitude = geolocation.lng;
+						refreshMap();	// show marker for 'from' address
+						var country_code = getCountry(results[0].address_components);
+						LocaliseUnits(country_code);
+					}
+				}
+      		});
 		});
 	}
-	//else console.log("kbhhjbjh");
 }
-
-function geolocateIp() {
-	var circle = new google.maps.Circle({
-		center: localLatLang,
-		radius: 33
-	});
-	autocompleteFrom.setBounds(circle.getBounds());
-	autocompleteTo.setBounds(circle.getBounds());
-	refreshMap();
-}
-
 
 
 
@@ -463,20 +469,19 @@ function initAutocomplete() {
 	// populate 'to' when user selects an address from the list
 	autocompleteTo.addListener('place_changed', fillToAddress);
 	
-	//geolocate();		// get user's geographical location
+	
 	
 	resetEverything();	// reset incase the browser caches form entries
+	$(':input').removeAttr('placeholder');
 }
 
 //-----------------------
-// run after jquery loads
-$(function(){
+
+
+
+function LocaliseUnits(country_code){
 	// set map to visitor's location, and local units if (US or UK)
-	$.get('http://freegeoip.net/json/', function(ipGeo){
-		localLatLang = {lat: ipGeo.latitude, lng: ipGeo.longitude};
-		map.panTo(localLatLang);
-		geolocateIp();
-		if (ipGeo.country_code == 'GB'){
+		if (country_code == 'GB'){
 			g2l = 4.5;		// change the multiplier for UK gallons
 			$("#unit_system").text("Imperial");		// make display in miles, gallons by default
 			$('input[name=units]#units-2').attr('checked', true);	// in the modal select the correct unit
@@ -484,15 +489,13 @@ $(function(){
 			changeDisplayUnits();	// change unit strings, convert values for milage, petrol cost etc
 			refreshDriveInfo();		// make the calculations again
 		} else 
-		if (ipGeo.country_code == 'US'){
-			//ipGeo.country_code = 'US';
+		if (country_code == 'US'){
 			$('input[name=units]#units-2').attr('checked', true);
 			units = 'imperial';
 			changeDisplayUnits();		// change unit strings
 			refreshDriveInfo();
 		} 
-		country = ipGeo.country_code;
-		$.get("/api/fuelprice/", {countrycode:country},function(fuelInfo){
+		$.get("/api/fuelprice/", {countrycode:country_code},function(fuelInfo){
 			di.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
 			di.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
 			console.log(di.petrolCost);
@@ -512,14 +515,23 @@ $(function(){
 			// console.log(Math.round(di.getFuelCost()*100)/100);
 			// document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
 			// $modal_fuel_cost_slider[0].MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
-			
 		});
-	});
-});
+}
+
+// Extrats the two letter country code from address
+function getCountry(addrComponents) {
+    for (var i = 0; i < addrComponents.length; i++) {
+        if (addrComponents[i].types[0] == "country") {
+            return addrComponents[i].short_name;
+        }
+    }
+    return false;
+}
 
 
 // SUBMIT button
 $("#submitButton").click(function () {
+	//console.log(currentLocationInfo);
 	if (!fromLocationValid() || !toLocationValid()){
 		// TO-DO: notify user something is wrong with the input
 		return;
@@ -617,10 +629,16 @@ $modal_fuel_type_radio.change(function(){
 	refreshMilageTextInModal();
 });
 
+$("#locateme").click(function () {
+	geolocate();		// get user's geographical location
+});
+
+
 
 (function onload(){
 	$resultGrid.hide();
 	changeDisplayUnits();
+	
 	// dialog.showModal();
 })();
 

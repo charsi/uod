@@ -1,11 +1,9 @@
 dialog-polyfill.js is a polyfill for `<dialog>`.
+Check out [some demos](http://demo.agektmr.com/dialog/)!
 
-#### [Demo](http://demo.agektmr.com/dialog/)
-
-`<dialog>` is an element for a popup box in a web page, including a modal option. See
-[more information and demos](http://falken-testing.appspot.com/dialog/index.html)
-and the
-[HTML spec](http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element).
+`<dialog>` is an element for a popup box in a web page, including a modal option which will make the rest of the page inert during use.
+This could be useful to block a user's interaction until they give you a response, or to confirm an action.
+See the [HTML spec](https://html.spec.whatwg.org/multipage/forms.html#the-dialog-element).
 
 ## Usage
 
@@ -52,42 +50,38 @@ This polyfill works on modern versions of all major browsers. It also supports I
 
 ### ::backdrop
 
-In native `<dialog>`, the backdrop is a pseudo-element:
-
-```css
-#mydialog::backdrop {
-  background-color: green;
-}
-```
-
+In native `<dialog>`, the backdrop is a pseudo-element.
 When using the polyfill, the backdrop will be an adjacent element:
 
 ```css
-#mydialog + .backdrop {
+dialog::backdrop { /* native */
   background-color: green;
 }
-
-#mydialog::backdrop {
+dialog + .backdrop { /* polyfill */
   background-color: green;
 }
 ```
 
 ## Limitations
 
-- Modal dialogs have limitations-
-  - They should be a child of `<body>` or have parents without layout (aka, no position `absolute` or `relative` elements), see below for more
-  - The browser's chrome may not be accessible via the tab key
-  - Stacking can be ruined by playing with z-index
-  - Changes to the CSS top/bottom values while open aren't retained
+In the polyfill, modal dialogs have limitations-
 
-- Anchored positioning is not implemented, but the native `<dialog>` in Chrome doesn't have it either
+- They should not be contained by parents that create a stacking context, see below
+- The browser's chrome may not always be accessible via the tab key
+- Changes to the CSS top/bottom values while open aren't retained
 
-### Position
+### Stacking Context
 
-One major limitation of the polyfill is that dialogs must have parents without layout.
-This is required as the spec positions dialogs as part of the page layout _where they are opened_, and not positioned at a fixed position in the user's browser.
+The major limitation of the polyfill is that dialogs should not have parents that create [a stacking context](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context).
+The easiest way to solve this is to move your `<dialog>` element to be a child of `<body>`.
 
-You can use a fixed layout, which allows the dialog to be positioned anywhere, by specifying the following CSS (works for both native and polyfill)-
+If this isn't possible you may still be able to use the dialog.
+However, you may want to resolve it for two major reasons-
+
+1. The polyfill can't guarantee that the dialog will be the top-most element of your page
+2. The dialog may be positioned incorrectly as they are positioned as part of the page layout _where they are opened_ (defined by spec), and not at a fixed position in the user's browser.
+
+To position a dialog in the center (regardless of user scroll position or stacking context), you can specify the following CSS-
 
 ```css
 dialog {

@@ -20,7 +20,7 @@ gulp.task('compile', () => {
 				presets: ['es2015']
 			}))
 		.pipe(uglify())
-		.pipe(sourcemaps.write('maps',{includeContent: false, sourceRoot: 'file:///C:/Users/Nishil/projects/uod/js-src/'}))
+		.pipe(sourcemaps.write('maps',{includeContent: false, sourceRoot: '/usr/src/app/js-src/'}))
 		.pipe(gulp.dest(publicDir))
 });
 

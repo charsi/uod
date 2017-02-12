@@ -152,7 +152,7 @@ Use of MDL layout principles simplifies the creation of scalable pages by provid
   <div class="mdl-layout__drawer">
     <span class="mdl-layout__title">Simple Layout</span>
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link" href="#">Nav link 2</a>
+      <a class="mdl-navigation__link" href="#">Nav link 1</a>
       <a class="mdl-navigation__link" href="#">Nav link 2</a>
       <a class="mdl-navigation__link" href="#">Nav link 3</a>
     </nav>
@@ -178,7 +178,7 @@ Use of MDL layout principles simplifies the creation of scalable pages by provid
   <div class="mdl-layout__drawer">
     <span class="mdl-layout__title">Simple Layout</span>
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link" href="#">Nav link 2</a>
+      <a class="mdl-navigation__link" href="#">Nav link 1</a>
       <a class="mdl-navigation__link" href="#">Nav link 2</a>
       <a class="mdl-navigation__link" href="#">Nav link 3</a>
     </nav>
@@ -336,4 +336,5 @@ The MDL CSS classes apply various predefined visual and behavioral enhancements 
 | `mdl-layout__tab` | Defines anchor as MDL tab link | Required on tab bar anchor elements |
 | `is-active` | Defines tab as default active tab | Optional; goes on tab bar anchor element and associated tab section element|
 | `mdl-layout__tab-panel` | Defines container as tab content panel | Required on tab section elements |
+| `mdl-layout__tab-manual-switch` | Disables tab switching when clicking on tab separators. Useful for disabling default behavior and setting up your own event listeners. | Optional; goes on tab bar element |
 | `mdl-layout--fixed-tabs` | Uses fixed tabs instead of the default scrollable tabs | Optional; goes on outer div element (not div inside header) |

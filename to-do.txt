@@ -5,7 +5,7 @@ to do--
 -	system for asking  visitors from new
 	countries the cost of fuel and saving it in the db  -- pending
 -	on-map picking of to, from address (switch to js
-	API instead of iframe) -- pending
+	API instead of iframe) -- done
 -	settings panel on the result car with following
 	options --
 		- units switch -- done

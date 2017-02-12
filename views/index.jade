@@ -9,20 +9,24 @@ block content
 					h6= "Cost of driving compared with realtime fare estimates from Uber"
 				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv")
 					//form(action= '/result', method='POST')
-					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
-						input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from")
-						label(class="mdl-textfield__label", for="locationFromInput") From
-					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
-						input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to")
-						label(class="mdl-textfield__label", for="locationToInput") To
-					.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell--12-col
-					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-cell--12-col", id="submitButton") Submit
+					.mdl-cell.mdl-cell--12-col
+						span(class="mdl-tooltip", for="locateme") share location
+						.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+							button(class="mdl-button mdl-js-button mdl-button--icon", id="locateme")
+								i(class="material-icons") my_location
+							input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from", placeholder="")
+							label(class="mdl-textfield__label", for="locationFromInput") From
+					.mdl-cell.mdl-cell--12-col
+						.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+							input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to", placeholder="")
+							label(class="mdl-textfield__label", for="locationToInput") To
+					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect", id="submitButton") Submit
 					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar") 
 				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp.mdl-grid--no-spacing(id="resultGrid")
-					div(id="settings-icon")
+					.mdl-cell
 						button(id="settings_icon", class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored")
-							i(class="material-icons", href="#") settings
-					.mdl-tooltip(data-mdl-for="settings-icon") settings
+							i(class="material-icons", href="#") tune
+						span(class="mdl-tooltip", for="settings_icon") settings
 					//.mdl-tooltip(for="settings_icon") settings
 					.mdl-cell.mdl-cell--12-col(id="resultHeader")
 						i(class="material-icons") place
@@ -56,8 +60,8 @@ block content
 				.mdl-cell.mdl-cell--12-col
 					footer(class="mdl-mini-footer")
 						.mdl-mini-footer__left-section
-							.mdl-logo
-								a(href='/') uberordrive.com
+							//.mdl-logo
+								//a(href='/') uberordrive.com
 							ul.mdl-mini-footer__link-list
 								li
 									a(href='/faq') FAQ

@@ -82,7 +82,9 @@
       var button = radios[i].querySelector('.' + this.CssClasses_.RADIO_BTN);
       // Different name == different group, so no point updating those.
       if (button.getAttribute('name') === this.btnElement_.getAttribute('name')) {
-        radios[i]['MaterialRadio'].updateClasses_();
+        if (typeof radios[i]['MaterialRadio'] !== 'undefined') {
+          radios[i]['MaterialRadio'].updateClasses_();
+        }
       }
     }
   };
@@ -202,7 +204,7 @@
    */
   MaterialRadio.prototype.check = function() {
     this.btnElement_.checked = true;
-    this.updateClasses_();
+    this.onChange_(null);
   };
   MaterialRadio.prototype['check'] = MaterialRadio.prototype.check;
 
@@ -213,7 +215,7 @@
    */
   MaterialRadio.prototype.uncheck = function() {
     this.btnElement_.checked = false;
-    this.updateClasses_();
+    this.onChange_(null);
   };
   MaterialRadio.prototype['uncheck'] = MaterialRadio.prototype.uncheck;
 
