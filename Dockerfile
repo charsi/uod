@@ -20,8 +20,3 @@ RUN npm install -g bower --save
 
 # Bundle app source
 # COPY . /usr/src/app
-
-EXPOSE 3000
-
-CMD [ "gulp", "start" ]
-
