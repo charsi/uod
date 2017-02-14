@@ -1,5 +1,9 @@
 FROM node:boron
 
+# Should be using a non root user but currently causing problems
+RUN groupadd -r nodejs \
+     && useradd -m -r -g nodejs nodejs
+
 # Create app directory
 RUN mkdir -p /usr/src/app/
 WORKDIR /usr/src/app/
@@ -10,10 +14,8 @@ RUN npm install
 RUN npm install -g gulp --save
 RUN npm install -g bower --save
 
-
-# Should be using a non root user but currently causing problems
-RUN groupadd -r nodejs \
-     && useradd -m -r -g nodejs nodejs
+# Using root user to avoid permissions issues in th mounted volume
+# USER nodejs
 
 # Bundle app source
 # COPY . /usr/src/app
