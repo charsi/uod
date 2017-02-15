@@ -4,56 +4,108 @@ block content
 	body(class="mdl-color--grey-100")
 		.mdl-layout.mdl-js-layout
 			.mdl-grid(id="main_grid")
+				// Title
 				.mdl-cell.mdl-cell--12-col
 					h2= title
 					h6= "Cost of driving compared with realtime fare estimates from Uber"
-				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv")
-					//form(action= '/result', method='POST')
-					.mdl-cell.mdl-cell--12-col
-						span(class="mdl-tooltip", for="locateme") share location
-						.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-							button(class="mdl-button mdl-js-button mdl-button--icon", id="locateme")
-								i(class="material-icons") my_location
-							input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from", placeholder="")
-							label(class="mdl-textfield__label", for="locationFromInput") From
-					.mdl-cell.mdl-cell--12-col
-						.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-							input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to", placeholder="")
-							label(class="mdl-textfield__label", for="locationToInput") To
-					button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect", id="submitButton") Submit
-					.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar") 
-				.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp.mdl-grid--no-spacing(id="resultGrid")
-					.mdl-cell
-						button(id="settings_icon", class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored")
+				// Tabs
+				.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+					// Tab List					
+					.mdl-tabs__tab-bar
+						a(href="#single-journey", class="mdl-tabs__tab is-active") Single Journey
+						a(href="#long-term", class="mdl-tabs__tab") Long term
+						a(href="#settings", class="mdl-tabs__tab")
 							i(class="material-icons", href="#") tune
-						span(class="mdl-tooltip", for="settings_icon") settings
-					//.mdl-tooltip(for="settings_icon") settings
-					.mdl-cell.mdl-cell--12-col(id="resultHeader")
-						i(class="material-icons") place
-						a --------------------------------------------------------->
-						i(class="material-icons") place
-					.mdl-cell.mdl-cell--3-col(id="fromDiv")
-					.mdl-cell.mdl-cell--6-col(id="resultDiv")
-					.mdl-cell.mdl-cell--3-col(id="toDiv")
-					.mdl-cell.mdl-cell--12-col
-						hr
-					.mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(id="uberResultFrame")
-						//h6(style="text-align:center;") 
-							//strong UBER
-						img(id="uberIcon", src="images/uber_Icon.png")
-						div(id="uberResultSubDiv")
-					.mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(id="driveResultFrame")
-						//h6(style="text-align:center;")
-							//strong Driving
-						img(id="driveIcon", src="images/driving_Icon.png")
-						div(id="driveResultSubDiv")
-						i(class="material-icons") local_gas_station
-						span(id="fuel")
-					.mdl-cell.mdl-cell--12-col
-						p(style="text-align:center;") <small>* Based on current traffic conditions.</small>
-						button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id="backButton")
-							i(class="material-icons") arrow_back
-							| Back
+							|  Settings
+										
+					.mdl-tabs__panel.is-active(id="single-journey")
+						// Main Input Panel
+						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv")
+							//form(action= '/result', method='POST')
+							.mdl-cell.mdl-cell--12-col
+								span(class="mdl-tooltip", for="locateme") share location
+								.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+									button(class="mdl-button mdl-js-button mdl-button--icon", id="locateme")
+										i(class="material-icons") my_location
+									input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from", placeholder="")
+									label(class="mdl-textfield__label", for="locationFromInput") From
+							.mdl-cell.mdl-cell--12-col
+								.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+									input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to", placeholder="")
+									label(class="mdl-textfield__label", for="locationToInput") To
+							button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect", id="submitButton") Submit
+							.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar")
+						// Result Panel						
+						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp.mdl-grid--no-spacing(id="resultGrid")
+							.mdl-cell.mdl-cell--12-col(id="resultHeader")
+								i(class="material-icons") place
+								a --------------------------------------------------------->
+								i(class="material-icons") place
+							.mdl-cell.mdl-cell--3-col(id="fromDiv")
+							.mdl-cell.mdl-cell--6-col(id="resultDiv")
+							.mdl-cell.mdl-cell--3-col(id="toDiv")
+							.mdl-cell.mdl-cell--12-col
+								hr
+							.mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(id="uberResultFrame")
+								//h6(style="text-align:center;") 
+									//strong UBER
+								img(id="uberIcon", src="images/uber_Icon.png")
+								div(id="uberResultSubDiv")
+							.mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(id="driveResultFrame")
+								//h6(style="text-align:center;")
+									//strong Driving
+								img(id="driveIcon", src="images/driving_Icon.png")
+								div(id="driveResultSubDiv")
+								i(class="material-icons") local_gas_station
+								span(id="fuel")
+							.mdl-cell.mdl-cell--12-col
+								p(style="text-align:center;") <small>* In current traffic conditions.</small>
+								button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id="backButton")
+									i(class="material-icons") arrow_back
+									| Back
+					.mdl-tabs__panel.is-active(id="long-term") 
+						
+					.mdl-tabs__panel(id="settings")
+						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp
+							.mdl-cell.mdl-cell--12-col
+								.radio
+									p Units<br>
+										label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-1")
+											input(type="radio", id="units-1", class="mdl-radio__button", name="units", value="metric", checked)
+											span(class="mdl-radio__label") <strong>Metric</strong> - Kilometres, litres
+										label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-2")
+											input(type="radio", id="units-2", class="mdl-radio__button", name="units", value="imperial")
+											span(class="mdl-radio__label") <strong><span id="unit_system">US</span></strong> - Miles, Gallons
+								.radio
+								p What does your car run on?<br>
+									label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-1")
+										input(type="radio", id="fuel-1", class="mdl-radio__button", name="fuel", value="petrol", checked)
+										span(class="mdl-radio__label") <strong>Petrol</strong>
+									label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-2")
+										input(type="radio", id="fuel-2", class="mdl-radio__button", name="fuel", value="diesel")
+										span(class="mdl-radio__label") <strong>Diesel</strong>
+								span Car Size
+								.mdl-grid(id="car_select", style="padding:0px;margin-bottom:50px;")
+									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
+										label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-small", style="margin-top:2px;")
+											input(type="checkbox", id="car-toggle-small", class="mdl-icon-toggle__input", value="small", checked)
+											i(class="mdl-icon-toggle__label material-icons", id="small-car-icon") directions_car
+											| <br>small<br><small><span id="modal-milage-small">15 kmpl</span></small>
+									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
+										label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-medium")
+											input(type="checkbox", id="car-toggle-medium", class="mdl-icon-toggle__input", value="medium")
+											i(class="mdl-icon-toggle__label material-icons", id="medium-car-icon") directions_car
+											| <br>medium<br><small><span id="modal-milage-medium">12 kmpl</span></small>
+									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
+										label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-large")
+											input(type="checkbox", id="car-toggle-large", class="mdl-icon-toggle__input", value="large")
+											i(class="mdl-icon-toggle__label material-icons", id="large-car-icon") directions_car
+											| <br>large<br><small><span id="modal-milage-large">8 kmpl</span></small>
+								.slider_fuel
+									p How much do you pay for <span id="modal-fuel-name">petrol</span> ?<br>
+									p 
+										input(class="mdl-slider mdl-js-slider", id="fuel_cost_slider", type="range", step="any", min="0", max="100", value="0", tabindex="0")
+									p(style="text-align:center;") <span id="modal-fuel-cost"></span>
 				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(style="height:400px; width:100%;", id="mgbrgbr")
 					div(style="height:100%; width:100%;",id="map")
 					//iframe(id="routeMap", width="100%", height="400", src="", frameborder="0")
@@ -64,52 +116,15 @@ block content
 								//a(href='/') uberordrive.com
 							ul.mdl-mini-footer__link-list
 								li
+									a(href='#') <strong>Get the app</strong> 
+								li
 									a(href='/faq') FAQ
 		dialog(class="mdl-dialog") 
 			h4(class="mdl-dialog__title") Settings
 			.mdl-dialog__content
-				.radio
-					p Units<br>
-						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-1")
-							input(type="radio" id="units-1", class="mdl-radio__button", name="units", value="metric", checked)
-							span(class="mdl-radio__label") <strong>Metric</strong> - km, litres
-						label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="units-2")
-							input(type="radio" id="units-2", class="mdl-radio__button", name="units", value="imperial")
-							span(class="mdl-radio__label") <strong><span id="unit_system">US</span></strong> - miles, gallons
-				.radio
-				p What does your car run on?<br>
-					label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-1")
-						input(type="radio" id="fuel-1", class="mdl-radio__button", name="fuel", value="petrol", checked)
-						span(class="mdl-radio__label") <strong>Petrol</strong>
-					label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="fuel-2")
-						input(type="radio" id="fuel-2", class="mdl-radio__button", name="fuel", value="diesel")
-						span(class="mdl-radio__label") <strong>Diesel</strong>
-				span Car Size
-				.mdl-grid(id="car_select", style="padding:0px;margin-bottom:50px;")
-					.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
-						label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-small", style="margin-top:2px;")
-							input(type="checkbox", id="car-toggle-small", class="mdl-icon-toggle__input", value="small", checked)
-							i(class="mdl-icon-toggle__label material-icons", id="small-car-icon") directions_car
-							| <br>small<br><small><span id="modal-milage-small">15 kmpl</span></small>
-					.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
-						label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-medium")
-							input(type="checkbox", id="car-toggle-medium", class="mdl-icon-toggle__input", value="medium")
-							i(class="mdl-icon-toggle__label material-icons", id="medium-car-icon") directions_car
-							| <br>medium<br><small><span id="modal-milage-medium">12 kmpl</span></small>
-					.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
-						label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-large")
-							input(type="checkbox", id="car-toggle-large", class="mdl-icon-toggle__input", value="large")
-							i(class="mdl-icon-toggle__label material-icons", id="large-car-icon") directions_car
-							| <br>large<br><small><span id="modal-milage-large">8 kmpl</span></small>
-				.slider_fuel
-					p How much do you pay for <span id="modal-fuel-name">petrol</span> ?<br>
-					p 
-						input(class="mdl-slider mdl-js-slider", id="fuel_cost_slider", type="range", step="any", min="0", max="100", value="0", tabindex="0")
-					p(style="text-align:center;") <span id="modal-fuel-cost"></span>
-					
 			.mdl-dialog__actions
 				button(type="button", class="mdl-button close") OK
 				//button(type="button", class="mdl-button close") Disagree
 		script(type='text/javascript', src='/js/client.js')
-		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete&sensor=true", async, defer)
+		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
 		

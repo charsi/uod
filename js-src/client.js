@@ -145,7 +145,8 @@ class DriveInfo {
 		var milageMultiplier = (dispUnits ==='metric')? 1.0 : g2l / m2k ;
 		var distanceMultiplier = (dispUnits ==='metric')? 1.0 : 1/m2k ;
 		var dFuelUsed = (this.getFuelUsed() * fuelUsedMultiplier).toFixed(2)+ ' ' + unitStrings.fuelUnits ;
-		var dDriveCost = currency+''+Math.ceil((this.getDriveCost()*0.9))+'-'+Math.ceil((this.getDriveCost()*1.1));
+		//var dDriveCost = currency+''+Math.ceil((this.getDriveCost()*0.9))+'-'+Math.ceil((this.getDriveCost()*1.1));
+		var dDriveCost = '~'+currency+''+Math.ceil(this.getDriveCost());
 		var dMilage = (this.fuel==='petrol') ? this.petrolMilage : this.dieselMilage;
 		dMilage = (dMilage * milageMultiplier).toFixed(2) + ' ' + unitStrings.milageUnits ;
 		var dDistance = (this.distance * distanceMultiplier).toFixed(2)+ ' ' + unitStrings.distUnits;
@@ -161,6 +162,69 @@ class DriveInfo {
 		return displayValues;
 	}
 	
+}
+
+
+// show only to/from location or a route between them 
+// if both locations have been entered
+function refreshMap() {
+	var tmpLatLang = localLatLang;
+	map.setZoom(10);
+	fromStr = $("#locationFromInput").val();
+	toStr = $("#locationToInput").val();
+	//if both locations are valid, create a route
+	if (fromLocationValid() && toLocationValid()){
+		clearMarkers();
+		directionsDisplay.setMap(map);
+        directionsService.route({
+			origin: fromStr,
+			destination: toStr,
+			travelMode: 'DRIVING'
+        }, function(response, status) {
+			if (status === 'OK') {
+				directionsDisplay.setDirections(response);
+			} else {
+				console.log('Directions request failed due to ' + status);
+			}
+        });
+	}
+	else if (fromLocationValid()) {		// if only 'from' address is valid
+		tmpLatLang = {
+			lat : currentLocationInfo.start_latitude,
+			lng: currentLocationInfo.start_longitude
+		};
+		let marker = new google.maps.Marker({
+			position: tmpLatLang,
+			map: map,
+			title: fromStr
+		});
+		markersArray.push(marker);
+		map.setZoom(13);
+	}
+	else if (toLocationValid()) {		// if only 'to' address is valid
+		tmpLatLang = {
+			lat : currentLocationInfo.end_latitude,
+			lng: currentLocationInfo.end_longitude
+		};
+		let marker = new google.maps.Marker({
+			position: tmpLatLang,
+			map: map,
+			title: toStr
+		});
+		markersArray.push(marker);
+		map.setZoom(13);
+	}
+	map.panTo(tmpLatLang);	// re-centre the map
+	
+	localLatLang.lat = tmpLatLang.lat;
+	localLatLang.lng = tmpLatLang.lng;
+	var circle = new google.maps.Circle({
+					center: tmpLatLang,
+					//radius: position.coords.accuracy
+					radius: 33
+				});
+	autocompleteFrom.setBounds(circle.getBounds());
+	autocompleteTo.setBounds(circle.getBounds());
 }
 
 // holder for factors involved in drive cost calculation
@@ -188,7 +252,7 @@ function resetMap(){
 
 
 
-
+// reset map back to original state
 function resetEverything(){
 	// initialise google map
 	$("#progressBar").hide();
@@ -265,67 +329,6 @@ function clearMarkers() {
   markersArray.length = 0;
 }
 
-// show only to/from location or a route between them 
-// if both locations have been entered
-function refreshMap() {
-	var tmpLatLang = localLatLang;
-	map.setZoom(10);
-	fromStr = $("#locationFromInput").val();
-	toStr = $("#locationToInput").val();
-	//if both locations are valid, create a route
-	if (fromLocationValid() && toLocationValid()){
-		clearMarkers();
-		directionsDisplay.setMap(map);
-        directionsService.route({
-			origin: fromStr,
-			destination: toStr,
-			travelMode: 'DRIVING'
-        }, function(response, status) {
-			if (status === 'OK') {
-				directionsDisplay.setDirections(response);
-			} else {
-				console.log('Directions request failed due to ' + status);
-			}
-        });
-	}
-	else if (fromLocationValid()) {		// if only 'from' address is valid
-		tmpLatLang = {
-			lat : currentLocationInfo.start_latitude,
-			lng: currentLocationInfo.start_longitude
-		};
-		let marker = new google.maps.Marker({
-			position: tmpLatLang,
-			map: map,
-			title: fromStr
-		});
-		markersArray.push(marker);
-		map.setZoom(13);
-	}
-	else if (toLocationValid()) {		// if only 'to' address is valid
-		tmpLatLang = {
-			lat : currentLocationInfo.end_latitude,
-			lng: currentLocationInfo.end_longitude
-		};
-		let marker = new google.maps.Marker({
-			position: tmpLatLang,
-			map: map,
-			title: toStr
-		});
-		markersArray.push(marker);
-		map.setZoom(13);
-	}
-	map.panTo(tmpLatLang);	// re-centre the map
-	
-	localLatLang.lat = tmpLatLang.lat;
-	localLatLang.lng = tmpLatLang.lng;
-	var circle = new google.maps.Circle({
-					center: tmpLatLang,
-					//radius: position.coords.accuracy
-					radius: 33
-				});
-	autocompleteFrom.setBounds(circle.getBounds());
-	autocompleteTo.setBounds(circle.getBounds());
-}
 
 
 // Bias the autocomplete object to the user's geographical location,
@@ -337,8 +340,6 @@ function geolocate() {
 				lat: position.coords.latitude,
 				lng: position.coords.longitude
 			};
-			// log lat, lng coordinates reported by the browser
-			console.log(geolocation);
 			// reverse-geocode to get full address
 			var geocoder = new google.maps.Geocoder; 
 			geocoder.geocode({'location': geolocation}, function(results, status) {
@@ -389,7 +390,7 @@ function changeDisplayUnits(){
 		us.fuelCostUnits = 'per litre';
 	}
 	else if (units === 'imperial'){
-		us.fuelUnits = 'GL';
+		us.fuelUnits = 'gal';
 		us.milageUnits = 'mpg';
 		us.distUnits = 'miles';
 		us.fuelCostUnits = 'per gallon';
@@ -574,10 +575,7 @@ if (! dialog.showModal) {
   dialogPolyfill.registerDialog(dialog);
 }
 
-// Open Settings
-showDialogButton.addEventListener('click', function() {
-	dialog.showModal(); 
-});
+
 
 // OK button
 dialog.querySelector('.close').addEventListener('click', function() {
