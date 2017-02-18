@@ -7,6 +7,7 @@
 // google autocomplete objects
 var autocompleteFrom;
 var autocompleteTo;
+var autocompleteCoCity;
 
 // google map object and markers array
 var map;
@@ -39,6 +40,8 @@ var $smallMilage = $('#modal-milage-small');
 var $mediumMilage = $('#modal-milage-medium');
 var $largeMilage = $('#modal-milage-large');
 var $modal_fuel_cost_slider = $('#fuel_cost_slider');
+var $sj_from = $('#locationFromInput');
+var $sj_to = $("#locationToInput");
 
 var currentLocationInfo;
 var g2l = 3.785 ;	// x gallons = g2l * x litres
@@ -125,9 +128,9 @@ class DriveInfo {
 	
 	getDriveCost(){
 		var fuelCost = (this.fuel==='petrol') ? this.petrolCost : this.dieselCost ;
-		console.log('fuelcost = '+fuelCost);
+		// console.log('fuelcost = '+fuelCost);
 		var cost = fuelCost*this.getFuelUsed();
-		console.log('cost = '+cost);
+		// console.log('cost = '+cost);
 		return cost;
 	}
 
@@ -168,10 +171,12 @@ class DriveInfo {
 // show only to/from location or a route between them 
 // if both locations have been entered
 function refreshMap() {
+	// copy london coordinates
 	var tmpLatLang = localLatLang;
 	map.setZoom(10);
-	fromStr = $("#locationFromInput").val();
-	toStr = $("#locationToInput").val();
+	// from address	
+	fromStr = $sj_from.val();
+	toStr = $sj_to.val();
 	//if both locations are valid, create a route
 	if (fromLocationValid() && toLocationValid()){
 		clearMarkers();
@@ -210,6 +215,19 @@ function refreshMap() {
 			position: tmpLatLang,
 			map: map,
 			title: toStr
+		});
+		markersArray.push(marker);
+		map.setZoom(13);
+	}
+	else if (coCityLocationValid()) {		// only city info is valif fom car ownership
+		tmpLatLang = {
+			lat : localLatLang.lat,
+			lng: localLatLang.lng
+		};
+		let marker = new google.maps.Marker({
+			position: tmpLatLang,
+			map: map,
+			title: $('#co_city').val()
 		});
 		markersArray.push(marker);
 		map.setZoom(13);
@@ -256,11 +274,11 @@ function resetMap(){
 function resetEverything(){
 	// initialise google map
 	$("#progressBar").hide();
-	$("#locationToInput").val("");
-	$("#locationFromInput").val("");
+	$sj_to.val("");
+	$sj_from.val("");
 	$("#submitButton").prop('disabled', false);
-	$("#locationToInput").prop('disabled', false);
-	$("#locationFromInput").prop('disabled', false);
+	$sj_to.prop('disabled', false);
+	$sj_from.prop('disabled', false);
 	currentLocationInfo = new LocationInfo();
 	clearDriveFactors();
 	resetMap();
@@ -286,7 +304,7 @@ function fillFromAddress() {
 	currentLocationInfo.start_longitude = place.geometry.location.lng();
 	refreshMap();	// show marker for 'from' address
 	var country_code = getCountry(place.address_components);
-	LocaliseUnits(country_code);
+	localiseUnits(country_code);
 }
 
 // populate lat, lng of destination address
@@ -297,11 +315,31 @@ function fillToAddress() {
 	refreshMap();	// show marker for 'to' address
 }
 
+// populate lat, lng of destination address
+function fillCoCity() {
+	var place = autocompleteCoCity.getPlace();
+	localLatLang.lat = place.geometry.location.lat();
+	localLatLang.lng = place.geometry.location.lng();
+	refreshMap();	// show marker for 'to' address
+}
+
+
+function coCityLocationValid(){
+	if ( localLatLang.lat!=="" &&
+		localLatLang.lng!=="" &&
+		$('#co_city').val() !==""
+		){
+		return true;
+	} else {
+		return false;
+	}	
+}
+
 // has a 'from' location been entered? is it valid?
 function fromLocationValid(){
 	if ( currentLocationInfo.start_latitude!=="" &&
 		currentLocationInfo.start_longitude!=="" &&
-		$('#locationFromInput').val() !==""
+		$sj_from.val() !==""
 		){
 		return true;
 	} else {
@@ -347,12 +385,12 @@ function geolocate() {
 					if (results[0]) {
 						console.log(results);
 						// update text in the input field
-						$('#locationFromInput').val(results[0].formatted_address);
+						$sj_from.val(results[0].formatted_address);
 						currentLocationInfo.start_latitude = geolocation.lat;
 						currentLocationInfo.start_longitude = geolocation.lng;
 						refreshMap();	// show marker for 'from' address
 						var country_code = getCountry(results[0].address_components);
-						LocaliseUnits(country_code);
+						localiseUnits(country_code);
 					}
 				}
       		});
@@ -366,8 +404,8 @@ function geolocate() {
 // while processing
 function freezeControls(){
 	$("#submitButton").prop('disabled', true);
-	$("#locationToInput").prop('disabled', true);
-	$("#locationFromInput").prop('disabled', true);	
+	$sj_to.prop('disabled', true);
+	$sj_from.prop('disabled', true);	
 }
 
 function clearDiv(div){
@@ -463,24 +501,36 @@ function initAutocomplete() {
 	/** @type {!HTMLInputElement} */document.getElementById('locationFromInput'), { types: ['geocode'] });
 	// populate 'from' when user selects an address from the list 
 	autocompleteFrom.addListener('place_changed', fillFromAddress);
+	$sj_from.attr('placeholder', '');
 	
 	// 'to' autocomplete object
 	autocompleteTo = new google.maps.places.Autocomplete(
 	/** @type {!HTMLInputElement} */document.getElementById('locationToInput'), { types: ['geocode'] });
 	// populate 'to' when user selects an address from the list
 	autocompleteTo.addListener('place_changed', fillToAddress);
-	
-	
-	
-	resetEverything();	// reset incase the browser caches form entries
-	$(':input').removeAttr('placeholder');
+		
+
+	// 'from' autocomplete object
+	autocompleteCoCity = new google.maps.places.Autocomplete(
+	/** @type {!HTMLInputElement} */document.getElementById('co_city'), { types: ['geocode'] });
+	// populate 'from' when user selects an address from the list 
+	autocompleteCoCity.addListener('place_changed', fillCoCity);
+
+	resetEverything();
+	// reset incase the browser caches form entries
 }
+
+
+
+
+
+
 
 //-----------------------
 
+localiseUnits('GB');
 
-
-function LocaliseUnits(country_code){
+function localiseUnits(country_code){
 	// set map to visitor's location, and local units if (US or UK)
 		if (country_code == 'GB'){
 			g2l = 4.5;		// change the multiplier for UK gallons
@@ -545,7 +595,7 @@ $("#submitButton").click(function () {
 			di.trafficMultiplier = reply.multiplier;
 			$.post("/api/uber", currentLocationInfo)	// get price estimates from uber
 			.then(function (uberInfo) {	
-				//console.log(data);
+				console.log(uberInfo);
 				$fromDiv.append(fromStr);				// display 'from' location
 				$toDiv.append(toStr);					// display 'to' location
 				di.duration= uberInfo.prices[0].duration/60;	// convert to mins
@@ -567,33 +617,29 @@ $("#backButton").click(function () {
 	resetEverything();
 });
 
-var dialog = document.querySelector('dialog');
-var showDialogButton = document.querySelector('#settings_icon');
+// var dialog = document.querySelector('dialog');
+// var showDialogButton = document.querySelector('#settings_icon');
 
 
-if (! dialog.showModal) {
-  dialogPolyfill.registerDialog(dialog);
-}
+// if (! dialog.showModal) {
+//   dialogPolyfill.registerDialog(dialog);
+// }
 
 
 
 // OK button
-dialog.querySelector('.close').addEventListener('click', function() {
-	refreshDriveInfo();
-	dialog.close();
-});
+// dialog.querySelector('.close').addEventListener('click', function() {
+// 	refreshDriveInfo();
+// 	dialog.close();
+// });
 
 
 
 // fine tune fuel cost 
 // fires as the slider is being slid
-$modal_fuel_cost_slider[0].addEventListener("input", function() {
+$modal_fuel_cost_slider.on('input',function(){
 	di.setFuelCost($modal_fuel_cost_slider.val());		// update the fuel cost in litres
 	$modal_fuel_cost.text(di.display().fuelCost);         // display the cost in local units 
-});
-
-$modal_fuel_cost_slider.change(function() { 
-	console.log(this.value);
 });
 
 
@@ -632,12 +678,22 @@ $("#locateme").click(function () {
 });
 
 
+$('#co_weekly_distance').on('input',function(){
+   $("#co_dist_disp").html(this.value);
+});
+
+$('#co_car_age').on('input',function(){
+   $("#co_car_age_disp").html(this.value);
+});
+
+$('#co_car_value').on('input',function(){
+   $("#co_car_value_disp").html(this.value);
+});
+
 
 (function onload(){
 	$resultGrid.hide();
 	changeDisplayUnits();
-	
-	// dialog.showModal();
 })();
 
 // $(window).load(function () {

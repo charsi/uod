@@ -3,7 +3,9 @@ body {
   /* background: linear-gradient(90deg, #696969 10%, #ADADAD 90%); */
 }
 
-
+h2, h3 {
+	font-family: "Roboto";
+}
 a {
   color: #00B7FF;
 }
