@@ -48,14 +48,25 @@ var g2l = 3.785 ;	// x gallons = g2l * x litres
 var m2k = 1.609 ;	// x miles = m2k * x kms
 
 var country = 'IN';		// two letter country code
-var currency = '';		// local currency symbol or abbr.
+var currency = 'INR';		// local currency symbol or abbr.
 var units = 'metric' ;	// or 'imperial'
-var unitStrings = {		
-		distUnits : "kms",				// or "miles"
-		milageUnits : "kmpl",			// or "mpg"
-		fuelUnits : "L",				// or "GL"
-		fuelCostUnits : "per litre"		// or 'per gallon'
-	};
+
+var imperialUnitStrings = {
+		fuelUnits : 'L',
+		milageUnits : 'kmpl',
+		distUnits : 'km',
+		fuelCostUnits : 'per litre'
+	}
+
+var metricUnitStrings = {
+		fuelUnits : 'L', // or "miles"
+		milageUnits : 'kmpl', // or "mpg"
+		distUnits : 'km', // or "GL"
+		fuelCostUnits : 'per litre' // or 'per gallon'
+	}
+
+var unitStrings = metricUnitStrings;
+
 var milageRange = {
 		petrol:{small:15, medium:12, large:8}, 
 		diesel:{small:20, medium:15, large:10}
@@ -168,6 +179,28 @@ class DriveInfo {
 }
 
 
+function mapSetLocation(location, addressStr){
+	if (addressStr == undefined) {
+		addressStr = '';
+		console.log('no location string provided')
+	}
+	map.setZoom(10);
+	// from address	
+	if (location.lat!==''&&location.lng!=='') {		// if only 'to' address is valid
+		let marker = new google.maps.Marker({
+			position: location,
+			map: map,
+			title: addressStr
+		});
+		markersArray.push(marker);
+		map.setZoom(13);
+		map.panTo(location);	// re-centre the map
+		localLatLang.lat = location.lat;
+		localLatLang.lng = location.lng;
+	}
+}
+
+
 // show only to/from location or a route between them 
 // if both locations have been entered
 function refreshMap() {
@@ -198,42 +231,16 @@ function refreshMap() {
 			lat : currentLocationInfo.start_latitude,
 			lng: currentLocationInfo.start_longitude
 		};
-		let marker = new google.maps.Marker({
-			position: tmpLatLang,
-			map: map,
-			title: fromStr
-		});
-		markersArray.push(marker);
-		map.setZoom(13);
+		mapSetLocation(tmpLatLang, fromStr)
 	}
 	else if (toLocationValid()) {		// if only 'to' address is valid
 		tmpLatLang = {
 			lat : currentLocationInfo.end_latitude,
 			lng: currentLocationInfo.end_longitude
 		};
-		let marker = new google.maps.Marker({
-			position: tmpLatLang,
-			map: map,
-			title: toStr
-		});
-		markersArray.push(marker);
-		map.setZoom(13);
-	}
-	else if (coCityLocationValid()) {		// only city info is valif fom car ownership
-		tmpLatLang = {
-			lat : localLatLang.lat,
-			lng: localLatLang.lng
-		};
-		let marker = new google.maps.Marker({
-			position: tmpLatLang,
-			map: map,
-			title: $('#co_city').val()
-		});
-		markersArray.push(marker);
-		map.setZoom(13);
+		mapSetLocation(tmpLatLang, toStr)
 	}
 	map.panTo(tmpLatLang);	// re-centre the map
-	
 	localLatLang.lat = tmpLatLang.lat;
 	localLatLang.lng = tmpLatLang.lng;
 	var circle = new google.maps.Circle({
@@ -320,7 +327,8 @@ function fillCoCity() {
 	var place = autocompleteCoCity.getPlace();
 	localLatLang.lat = place.geometry.location.lat();
 	localLatLang.lng = place.geometry.location.lng();
-	refreshMap();	// show marker for 'to' address
+	//refreshMap();	// show marker for 'to' address
+	mapSetLocation(localLatLang, $('#co_city').val());
 }
 
 
@@ -418,20 +426,14 @@ function clearDiv(div){
 // update unit strings when units change
 // change drive factor units
 function changeDisplayUnits(){
-	units = $modal_units_radio.filter(':checked').val();	// set the units
-	// console.log(units);
-	var us = unitStrings;	
-	if (units === 'metric'){
-		us.fuelUnits = 'L';
-		us.milageUnits = 'kmpl';
-		us.distUnits = 'km';
-		us.fuelCostUnits = 'per litre';
+	var newunits = $modal_units_radio.filter(':checked').val();	// set the units
+	units = newunits;
+	console.log(newunits);	
+	if (newunits === 'metric'){
+		unitStrings = metricUnitStrings;
 	}
-	else if (units === 'imperial'){
-		us.fuelUnits = 'gal';
-		us.milageUnits = 'mpg';
-		us.distUnits = 'miles';
-		us.fuelCostUnits = 'per gallon';
+	else if (newunits === 'imperial'){
+		unitStrings = imperialUnitStrings;
 	}
 	refreshMilageTextInModal();		// change text under car sizes in settings
 	$modal_fuel_cost.text(di.display().fuelCost);	// update the text under fuel cost slider
@@ -512,7 +514,7 @@ function initAutocomplete() {
 
 	// 'from' autocomplete object
 	autocompleteCoCity = new google.maps.places.Autocomplete(
-	/** @type {!HTMLInputElement} */document.getElementById('co_city'), { types: ['geocode'] });
+	/** @type {!HTMLInputElement} */document.getElementById('co_city'), { types: ['geocode'], types: ['(cities)'] });
 	// populate 'from' when user selects an address from the list 
 	autocompleteCoCity.addListener('place_changed', fillCoCity);
 
@@ -528,24 +530,26 @@ function initAutocomplete() {
 
 //-----------------------
 
-localiseUnits('GB');
+
 
 function localiseUnits(country_code){
+	console.log(country_code);
 	// set map to visitor's location, and local units if (US or UK)
 		if (country_code == 'GB'){
-			g2l = 4.5;		// change the multiplier for UK gallons
-			$("#unit_system").text("Imperial");		// make display in miles, gallons by default
-			$('input[name=units]#units-2').attr('checked', true);	// in the modal select the correct unit
+			g2l = 4.546;		// change the multiplier for UK gallons
+			$("#unit_system").text("Imperial");		//  rename unit system
 			units = 'imperial';
-			changeDisplayUnits();	// change unit strings, convert values for milage, petrol cost etc
-			refreshDriveInfo();		// make the calculations again
 		} else 
 		if (country_code == 'US'){
-			$('input[name=units]#units-2').attr('checked', true);
+			g2l = 3.785;
+			$("#unit_system").text("US");		// rename unit system 
 			units = 'imperial';
-			changeDisplayUnits();		// change unit strings
-			refreshDriveInfo();
-		} 
+		} else {
+			units = 'metric';
+		}
+		$('input[name="units"]').filter('[value="'+units+'"]').parent()[0].MaterialRadio.check();
+		changeDisplayUnits();
+		refreshDriveInfo();	// make the calculations again
 		$.get("/api/fuelprice/", {countrycode:country_code},function(fuelInfo){
 			di.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
 			di.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
@@ -693,8 +697,15 @@ $('#co_car_value').on('input',function(){
 
 (function onload(){
 	$resultGrid.hide();
-	changeDisplayUnits();
 })();
+
+
+$( document ).ready(function() {
+	 //$('#units-1').get(0).parentNode.on('mdl-componentupgraded', function() {
+		//localiseUnits('GB');
+	///	console.log('initial setup done');
+	//});
+});
 
 // $(window).load(function () {
 // 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost());
