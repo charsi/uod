@@ -2,6 +2,6 @@
 {
 
     "editor.renderIndentGuides": true,
-    
+    "editor.fontSize": 14,
     "editor.folding": true
 }

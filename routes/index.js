@@ -10,10 +10,59 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Uber Or Drive?' });
 });
 
-/* GET about page. */
+/* GET faq page. */
 router.get('/faq', function(req, res, next) {
       res.render('faq', { title: 'FAQ' });
 });
+
+// Listen for lat, long data. Pass the same to uber and return the response.
+router.post('/api/v1/uber-price', (req, res) => {
+	console.log('Dialing Uber!');
+	//console.log(req.body);
+	getPriceFromUber(req.body, res);
+	//res.send(priceInfo);
+})
+
+// Listen for lat, long data. Pass the same to uber and return the response.
+router.post('/api/v1/uber-rates', (req, res) => {
+	console.log('Dialing Uber!');
+	//console.log(req.body);
+	getRatesFromUber(req.body, res);
+	//res.send(priceInfo);
+})
+
+
+// Listen for for, to addresses to be sent to google for traffic info
+router.post('/api/v1/traffic', (req, res) => {
+	console.log('traffic check!');
+	//console.log(req.body);
+	getTrafficInfoFromGoogle(req.body, res);
+	//res.send(priceInfo);
+})    
+
+// Listen for country name and return fuel price
+router.get('/api/v1/fuelprice', (req, res) => {
+	console.log('fuel price check!');
+	//console.log(req.body);
+	fuelpricecheck(req.query, res);
+	//res.send(priceInfo);
+})    
+
+router.get('*', function(req, res, next) {
+  var err = new Error();
+  err.status = 404;
+  next(err);
+});
+ 
+// handling 404 errors
+router.use(function(err, req, res, next) {
+  if(err.status !== 404) {
+    return next();
+  }
+  res.render('404', { title: err.status });
+  //res.send(err.message || '<img src="16508271_1279255958827834_3457299742764680455_n.jpg"></img>');
+});
+
 
 // gets price info from uber. Takes an object containing lat,lng info for start and stop of trip
 function getPriceFromUber(locations, response){
@@ -41,6 +90,46 @@ function getPriceFromUber(locations, response){
 		console.log('something went wrong with the uber API call');
 		console.log(err);
 	})
+}
+
+// Get standard city rates
+function getRatesFromUber(location, response){
+	var options = {
+		//baseUrl : 'https://api.uber.com/v1/estimates/products',
+		url: 'https://api.uber.com/v1/products',
+		qs: {
+			latitude: location.lat,
+			longitude: location.lng
+		  },
+		headers: {
+			'Authorization': 'Token ***REMOVED***',
+		},
+		method: 'GET'
+	};
+	request(options)
+	.then((body)=>{
+		var info = JSON.parse(body);
+		var uberXProducts = []
+		var uberBlackProducts = []		
+		for (product_number in info.products){
+			var product = info.products[product_number];
+			if (product.product_group == 'uberx' && product.display_name!=='AIRPORT'){
+				uberXProducts.push(product);			
+			} else 
+			if (product.product_group == 'uberblack' && product.display_name!=='AIRPORT'){
+				uberBlackProducts.push(product);			
+			}
+		} 
+		if (uberXProducts.length !== 0) {
+			response.send({status:'ok', content:uberXProducts[0], code:'xx01', info:''});
+		} else {
+			response.send({status:'error', code:'xx01', info:'No uberXs available in the area', content:uberBlackProducts[0]})
+		}
+	})
+	.catch((err)=>{
+		console.log('something went wrong with the uber API call');
+		console.log(err);
+	});
 }
 
 
@@ -86,28 +175,5 @@ function fuelpricecheck(query, response) {
 	response.send(petrolprices[countryCode]);
 }
 
-// Listen for lat, long data. Pass the same to uber and return the response.
-router.post('/api/uber', (req, res) => {
-	console.log('Dialing Uber!');
-	//console.log(req.body);
-	getPriceFromUber(req.body, res);
-	//res.send(priceInfo);
-})
-
-// Listen for for, to addresses to be sent to google for traffic info
-router.post('/api/traffic', (req, res) => {
-	console.log('traffic check!');
-	//console.log(req.body);
-	getTrafficInfoFromGoogle(req.body, res);
-	//res.send(priceInfo);
-})    
-
-// Listen for country name and return fuel price
-router.get('/api/fuelprice', (req, res) => {
-	console.log('fuel price check!');
-	//console.log(req.body);
-	fuelpricecheck(req.query, res);
-	//res.send(priceInfo);
-})    
 
 module.exports = router;

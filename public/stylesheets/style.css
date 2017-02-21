@@ -3,9 +3,8 @@ body {
   /* background: linear-gradient(90deg, #696969 10%, #ADADAD 90%); */
 }
 
-h2, h3 {
-	font-family: "Roboto";
-}
+
+
 a {
   color: #00B7FF;
 }
@@ -14,7 +13,7 @@ a {
 	max-width:600px;
 }
 
-#inputDiv, #resultGrid, #mgbrgbr{
+#inputDiv, #resultGrid, #mgbrgbr, #co_resultGrid{
 	padding:10px;
 }
 
@@ -46,7 +45,7 @@ a {
 	text-align:center;
 }
 
-#driveIcon, #uberIcon{
+#driveIcon, #uberIcon, #co_driveIcon, #co_uberIcon{
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -82,6 +81,10 @@ a {
 }
 
 #resultGrid{
+  position:relative;
+}
+
+#co_resultGrid{
   position:relative;
 }
 
@@ -143,4 +146,10 @@ a {
     /* Disclaimer: not needed to show 'powered by Google' if also a Google Map is shown */
     background-image: none !important;
     height: 0px;
+}
+
+.subheading{
+    position: relative;
+	display:block;	
+	opacity:0.7;
 }

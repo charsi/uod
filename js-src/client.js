@@ -21,6 +21,8 @@ var directionsDisplay;
 var fromStr;
 var toStr;
 
+var coCalcFactors;
+
 // DOM variables
 var $uberResultSubDiv = $('#uberResultSubDiv');
 var $driveResultSubDiv = $('#driveResultSubDiv');
@@ -42,6 +44,10 @@ var $largeMilage = $('#modal-milage-large');
 var $modal_fuel_cost_slider = $('#fuel_cost_slider');
 var $sj_from = $('#locationFromInput');
 var $sj_to = $("#locationToInput");
+
+
+var $coResultGrid = $('#co_resultGrid');
+var $coInputGrid = $('#co_inputDiv');
 
 var currentLocationInfo;
 var g2l = 3.785 ;	// x gallons = g2l * x litres
@@ -283,9 +289,7 @@ function resetEverything(){
 	$("#progressBar").hide();
 	$sj_to.val("");
 	$sj_from.val("");
-	$("#submitButton").prop('disabled', false);
-	$sj_to.prop('disabled', false);
-	$sj_from.prop('disabled', false);
+	unFreezeControls();
 	currentLocationInfo = new LocationInfo();
 	clearDriveFactors();
 	resetMap();
@@ -332,22 +336,11 @@ function fillCoCity() {
 }
 
 
-function coCityLocationValid(){
-	if ( localLatLang.lat!=="" &&
-		localLatLang.lng!=="" &&
-		$('#co_city').val() !==""
-		){
-		return true;
-	} else {
-		return false;
-	}	
-}
-
 // has a 'from' location been entered? is it valid?
 function fromLocationValid(){
-	if ( currentLocationInfo.start_latitude!=="" &&
-		currentLocationInfo.start_longitude!=="" &&
-		$sj_from.val() !==""
+	if ( currentLocationInfo.start_latitude &&
+		currentLocationInfo.start_longitude &&
+		$sj_from.val()
 		){
 		return true;
 	} else {
@@ -357,15 +350,26 @@ function fromLocationValid(){
 
 // has a 'to' location been entered? is it valid?
 function toLocationValid(){
-	if (currentLocationInfo.end_latitude!=="" &&
-		currentLocationInfo.end_longitude!==""&&
-		$('#locationToInput').val() !==""
+	if (currentLocationInfo.end_latitude &&
+		currentLocationInfo.end_longitude &&
+		$('#locationToInput').val()
 		){
 		return true;
 	} else {
 		return false;
 	}	
 }
+
+function co_cityValid(){
+	if (localLatLang.lat && localLatLang.lng && $('#co_city').val()){
+		console.log(localLatLang.lat + localLatLang.lng + $('#co_city').val());
+		return true
+	} else {
+		console.log('false');
+		return false;
+	}
+}
+
 
 // remove all markers from map
 function clearMarkers() {
@@ -401,8 +405,10 @@ function geolocate() {
 						localiseUnits(country_code);
 					}
 				}
-      		});
-		});
+      		})
+		}, function(error){
+			console.log('ERROR: geoloca did not work');
+		}, {enableHighAccuracy: true, maximumAge: 10000});
 	}
 }
 
@@ -416,6 +422,12 @@ function freezeControls(){
 	$sj_from.prop('disabled', true);	
 }
 
+function unFreezeControls(){
+	$("#submitButton").prop('disabled', false);
+	$sj_to.prop('disabled', false);
+	$sj_from.prop('disabled', false);
+}
+
 function clearDiv(div){
 	div.empty();
 	//div.prop('disabled', false);
@@ -425,14 +437,17 @@ function clearDiv(div){
 
 // update unit strings when units change
 // change drive factor units
-function changeDisplayUnits(){
-	var newunits = $modal_units_radio.filter(':checked').val();	// set the units
-	units = newunits;
-	console.log(newunits);	
-	if (newunits === 'metric'){
+function changeDisplayUnits(ee){
+	console.log(ee);
+	if (!ee){
+		ee = $modal_units_radio.filter(':checked').val();	// set the units
+	}
+	units = ee;
+	console.log(ee);	
+	if (ee === 'metric'){
 		unitStrings = metricUnitStrings;
 	}
-	else if (newunits === 'imperial'){
+	else if (ee === 'imperial'){
 		unitStrings = imperialUnitStrings;
 	}
 	refreshMilageTextInModal();		// change text under car sizes in settings
@@ -471,30 +486,20 @@ function createUberHtml(uberInfo){
 	return html;
 }
 
-// helper func for refreshMilageTextInModal
-function convertedMilage(size){
-	var multiplier = (units=='metric') ? 1 : g2l / m2k;
-	return Math.round(milageRange[di.fuel][size] * multiplier)+ ' ' + unitStrings.milageUnits;
-}
 
 // refreshes the text under car size selector in settings
 // takes into account the fuel type and units selected
 function refreshMilageTextInModal(){
-	$smallMilage.text(convertedMilage('small'));
-	$mediumMilage.text(convertedMilage('medium'));
-	$largeMilage.text(convertedMilage('large'));
+	var multiplier = (units=='metric') ? 1 : g2l / m2k;
+	var sizes = ['small','medium', 'large'];
+	var uiElements = [$smallMilage,$mediumMilage,$largeMilage];
+	for (var i=0;i<sizes.length;i++){
+		var range = milageRange[di.fuel][sizes[i]];
+		var value = Math.round(range * multiplier)
+		uiElements[i].text(value+ ' ' + unitStrings.milageUnits);
+	}
 }
 	 
-
-// google analytics---------------
-(function(i,s,o,g,r,a,m){i.GoogleAnalyticsObject=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-82207430-1', 'auto');
-ga('send', 'pageview');
-
-//------------------------------------
 
 // callback function for google maps api. Fired when it finishes loading. 
 function initAutocomplete() {
@@ -535,42 +540,38 @@ function initAutocomplete() {
 function localiseUnits(country_code){
 	console.log(country_code);
 	// set map to visitor's location, and local units if (US or UK)
-		if (country_code == 'GB'){
-			g2l = 4.546;		// change the multiplier for UK gallons
-			$("#unit_system").text("Imperial");		//  rename unit system
-			units = 'imperial';
-		} else 
-		if (country_code == 'US'){
-			g2l = 3.785;
-			$("#unit_system").text("US");		// rename unit system 
-			units = 'imperial';
+	if (country_code == 'GB'){
+		g2l = 4.546;		// change the multiplier for UK gallons
+		$("#unit_system").text("Imperial");		//  rename unit system
+		units = 'imperial';
+	} else 
+	if (country_code == 'US'){
+		g2l = 3.785;
+		$("#unit_system").text("US");		// rename unit system 
+		units = 'imperial';
+	} else {
+		units = 'metric';
+	}
+	$('input[name="units"]').filter('[value="'+units+'"]').parent()[0].MaterialRadio.check();
+	changeDisplayUnits(units);
+	refreshDriveInfo();	// make the calculations again
+	$.get("/api/v1/fuelprice/", {countrycode:country_code},function(fuelInfo){
+		di.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
+		di.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
+		console.log(fuelInfo);
+		if (currency_symbols.hasOwnProperty(fuelInfo.currency_code)){
+			currency = currency_symbols[fuelInfo.currency_code];
 		} else {
-			units = 'metric';
+			currency = fuelInfo.currency_code;
 		}
-		$('input[name="units"]').filter('[value="'+units+'"]').parent()[0].MaterialRadio.check();
-		changeDisplayUnits();
-		refreshDriveInfo();	// make the calculations again
-		$.get("/api/fuelprice/", {countrycode:country_code},function(fuelInfo){
-			di.petrolCost=fuelInfo.petrol_price_local;	// set cost of petrol
-			di.dieselCost=fuelInfo.diesel_price_local;	// set cost of diesel
-			console.log(di.petrolCost);
-			console.log(di.dieselCost);
-			console.log(di.fuel);
-			console.log((di.getFuelCost()*0.9).toFixed(2));
-			console.log(('max', di.getFuelCost()*1.1).toFixed(2));
-			if (currency_symbols.hasOwnProperty(fuelInfo.currency_code)){
-				currency = currency_symbols[fuelInfo.currency_code];
-			} else {
-				currency = fuelInfo.currency_code;
-			}
-			$modal_fuel_cost.text(di.display().fuelCost);
-			$modal_fuel_cost_slider.attr('min', (di.getFuelCost()*0.9));	// set min 10% below di.petrolCost or di.dieselCost
-			$modal_fuel_cost_slider.attr('max', (di.getFuelCost()*1.1));	// set max 10% above di.petrolCost or di.dieselCost
-			$modal_fuel_cost_slider.val(Math.round(di.getFuelCost()*100)/100);
-			// console.log(Math.round(di.getFuelCost()*100)/100);
-			// document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
-			// $modal_fuel_cost_slider[0].MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
-		});
+		$modal_fuel_cost.text(di.display().fuelCost);
+		$modal_fuel_cost_slider.attr('min', (di.getFuelCost()*0.9));	// set min 10% below di.petrolCost or di.dieselCost
+		$modal_fuel_cost_slider.attr('max', (di.getFuelCost()*1.1));	// set max 10% above di.petrolCost or di.dieselCost
+		$modal_fuel_cost_slider.val(Math.round(di.getFuelCost()*100)/100);
+		// console.log(Math.round(di.getFuelCost()*100)/100);
+		// document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
+		// $modal_fuel_cost_slider[0].MaterialSlider.change(di.getFuelCost()); // causes jquery errors for some reason
+	});
 }
 
 // Extrats the two letter country code from address
@@ -585,19 +586,20 @@ function getCountry(addrComponents) {
 
 
 // SUBMIT button
-$("#submitButton").click(function () {
+$("#submitButton").on('click',function () {
 	//console.log(currentLocationInfo);
 	if (!fromLocationValid() || !toLocationValid()){
 		// TO-DO: notify user something is wrong with the input
+		console.log("One or both the locations are oninvalid.");
 		return;
 	}
 	freezeControls();		// freeze inputs
 	$progressBar.show();	// show a progress bar while processing
-		$.post("/api/traffic", currentLocationInfo)		// get traffic multiplier from google
+		$.post("/api/v1/traffic", currentLocationInfo)		// get traffic multiplier from google
 		.then(function(reply){
 			console.log(reply.multiplier);
 			di.trafficMultiplier = reply.multiplier;
-			$.post("/api/uber", currentLocationInfo)	// get price estimates from uber
+			$.post("/api/v1/uber-price", currentLocationInfo)	// get price estimates from uber
 			.then(function (uberInfo) {	
 				console.log(uberInfo);
 				$fromDiv.append(fromStr);				// display 'from' location
@@ -612,12 +614,18 @@ $("#submitButton").click(function () {
 					var trafficLayer = new google.maps.TrafficLayer();	// create traffic layer
 					trafficLayer.setMap(map);			// show traffic layer on map
 				});
+			}, function(response) {
+				console.log('ERROR: Could not communicate with the server');
+				console.log(response.status+' : '+response.statusText);
 			});
-		});
+		}, function(response) {
+    	console.log('ERROR: Could not communicate with the server');
+    	console.log(response.status+' : '+response.statusText);
+	});
 });
 
 // BACK button
-$("#backButton").click(function () {
+$("#backButton").on('click',function () {
 	resetEverything();
 });
 
@@ -646,7 +654,7 @@ $modal_fuel_cost_slider.on('input',function(){
 	$modal_fuel_cost.text(di.display().fuelCost);         // display the cost in local units 
 });
 
-
+resetEverything
 // Milage selector
 $modal_car_size_radio.change(function() {
 	// this is how you use mdl icon toggles as radio boxes
@@ -677,26 +685,114 @@ $modal_fuel_type_radio.change(function(){
 	refreshMilageTextInModal();
 });
 
-$("#locateme").click(function () {
+$("#locateme").on('click',function () {
 	geolocate();		// get user's geographical location
 });
 
-
 $('#co_weekly_distance').on('input',function(){
    $("#co_dist_disp").html(this.value);
-});
-
-$('#co_car_age').on('input',function(){
-   $("#co_car_age_disp").html(this.value);
 });
 
 $('#co_car_value').on('input',function(){
    $("#co_car_value_disp").html(this.value);
 });
 
+$('#co_calc_period').on('input',function(){
+	var text;
+	if (this.value < 2) {
+		text = '1 Year'
+	} else {
+		text = this.value+' Years';
+	}
+   $("#co_calc_period_disp").html(text);
+    coCalcFactors.calcPeriod = this.value;
+	coUpdateResult();
+});
+
+
+function getDepreciation(startingValue, age, period){
+    var depreceationRate = {new:0.85, medium:0.9, old:0.94};
+    var finalValue = startingValue*Math.pow(depreceationRate[age], period);
+	return startingValue - finalValue;
+}
+
+
+function coCalculate(){
+	var ccf = coCalcFactors;
+	var totalUberCost = ccf.weeklyDist*52*ccf.uberRate*ccf.calcPeriod;
+	var carDepreceation = getDepreciation(ccf.carValue, ccf.carAge, ccf.calcPeriod);
+	var carFuelCost = ccf.weeklyDist*52*ccf.calcPeriod;
+	var totalCarCost = carDepreceation + carFuelCost;
+	var returnData = {
+		totalUberCost:totalUberCost, 
+		totalCarCost:totalCarCost,
+		carFuelCost:carFuelCost,
+		carDepreceation:carDepreceation
+	}
+	return returnData;
+}
+
+function coUpdateResult(){
+	var newValues = coCalculate();
+	$('#co_uberResultSubDiv').html(makeStrong(Math.round(newValues.totalUberCost)));
+	$('#co_carResultSubDiv').html(makeStrong(Math.round(newValues.totalCarCost)));
+}
+
+function makeStrong(str){
+	var s = '<strong>'; 
+	return 	s+str+s;
+}
+
+$('#co_submitButton').on('click',function(){
+	if (!co_cityValid()){
+		console.log('city not valid or not entered');
+		return;
+	}
+	$.post("/api/v1/uber-rates", localLatLang)	// get price estimates from uber
+	.then(function (reply) {
+		if (reply.status==='ok'){
+			// set all variables in the global object
+			coCalcFactors = {
+				uberDistUnit : reply.content.price_details.distance_unit,
+				uberDistUnit : reply.content.price_details.distance_unit,
+				uberRate : reply.content.price_details.cost_per_distance,
+				weeklyDist : $('#co_weekly_distance').val(),
+				carValue : $('#co_car_value').val(),
+				carAge : $('input[name=co_car_age]:checked').val(),
+				calcPeriod : $('#co_calc_period').val()
+			}
+			var coCalcData = coCalculate();
+			coUpdateResult();
+			console.log('car cost = '+coCalcData.totalCarCost);
+			console.log('uber cost = ' + coCalcData.totalUberCost);
+			$coInputGrid.hide();
+			$coResultGrid.show();
+		} else {
+			console.log(reply.info);
+			console.log(reply.content);
+		}
+	}, function(response) {
+    	console.log('ERROR: Could not communicate with the server');
+    	console.log(response.status+' : '+response.statusText);
+	});
+});
+
+$('#co_backButton').on('click',function(){
+	coResetEverything();
+});
+
+
+function coResetEverything(){
+	$coInputGrid.show();
+	$coResultGrid.hide();
+}
+
+
+
 
 (function onload(){
 	$resultGrid.hide();
+	$coResultGrid.hide();
 })();
 
 
@@ -706,6 +802,16 @@ $( document ).ready(function() {
 	///	console.log('initial setup done');
 	//});
 });
+
+// google analytics---------------
+(function(i,s,o,g,r,a,m){i.GoogleAnalyticsObject=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-82207430-1', 'auto');
+ga('send', 'pageview');
+
+//------------------------------------
 
 // $(window).load(function () {
 // 	document.querySelector('#fuel_cost_slider').MaterialSlider.change(di.getFuelCost());
