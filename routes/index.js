@@ -7,7 +7,7 @@ var petrolprices = JSON.parse(fs.readFileSync('./db/pricelist.json', 'utf8'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Uber Or Drive?' });
+  res.render('index', { title: 'Uber Or Drive?' }, {geoip_country_code: req.headers.geoip_country_code});
 });
 
 /* GET faq page. */

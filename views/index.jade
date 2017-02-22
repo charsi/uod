@@ -7,20 +7,21 @@ block content
 				//- Title
 				.mdl-cell.mdl-cell--12-col
 					h2= title
-					h6= "Cost of driving compared with realtime fare estimates from Uber"
+					h2= geoip_country_code
+					//-h6= "Cost of driving compared with realtime fare estimates from Uber"
 				//- Tabs
 				.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
 					//- Tab List			------------------------------		
 					.mdl-tabs__tab-bar
 						a(href="#single-journey", class="mdl-tabs__tab mdl-cell--2-col-phone is-active") 
 							i(class="material-icons", href="#") looks_one
-							| <span class="mdl-cell--hide-phone", style="white-space:nowrap;", href="#">  Single Journey</span>
+							| <span class="mdl-cell--hide-phone" style="white-space:nowrap;" href="#">  Single Journey</span>
 						a(href="#long-term", class="mdl-tabs__tab mdl-cell--2-col-phone")
 							i(class="material-icons", href="#") date_range
-							| <span class="mdl-cell--hide-phone", style="white-space:nowrap;", href="#">  Car Ownership</span>
+							| <span class="mdl-cell--hide-phone" style="white-space:nowrap;" href="#">  Car Ownership</span>
 						a(href="#settings", class="mdl-tabs__tab mdl-cell--2-col-phone")
 							i(class="material-icons", href="#") tune
-							| <span class="mdl-cell--hide-phone", style="white-space:nowrap;", href="#">  Settings</span>
+							| <span class="mdl-cell--hide-phone" style="white-space:nowrap;" href="#">  Settings</span>
 					.mdl-grid
 						.mdl-cell.mdl-cell--1-col-phone.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:-5px;")
 							span(class="subheading",style="margin-left:-10px") <strong>SINGLE JOURNEY</strong>
@@ -29,11 +30,10 @@ block content
 						.mdl-cell.mdl-cell--1-col-phone.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:-5px;")
 							span(class="subheading") <strong>SETTINGS</strong> 
 					.mdl-tabs__panel.is-active(id="single-journey")
-						//-.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
-							span(class="subheading", style="margin-left:10px") <strong>SINGLE JOURNEY</strong>
-						//- Main Input Panel -------------------------------------------
+						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-grid--no-spacing(id="singleInfo")
+							span Cost of driving compared with realtime fare estimates from Uber
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv")
-							//form(action= '/result', method='POST')
+							//- form(action= '/result', method='POST')
 							.mdl-cell.mdl-cell--12-col
 								span(class="mdl-tooltip", for="locateme") share location
 								.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell.mdl-cell--6-col
@@ -74,8 +74,8 @@ block content
 									i(class="material-icons") arrow_back
 									| Back
 					.mdl-tabs__panel(id="long-term")
-						//-.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
-							span(class="subheading", style="text-align:center") <strong>CAR OWNERSHIP</strong> 
+						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-grid--no-spacing(id="co_info")
+								span Compare long-term cost of owning a car vs taking an Uber everyday.   
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="co_inputDiv")
 							.mdl-cell.mdl-cell--8-col.mdl-cell--6-col-tablet
 								p 
@@ -129,21 +129,24 @@ block content
 								img(id="co_driveIcon", src="images/driving_Icon.png")
 								div(id="co_carResultSubDiv")
 								.center-stuff(style="text-align:center;")
-									i(class="material-icons") local_gas_station
+									i(class="material-icons", id="co_fuel_icon") local_gas_station
 									| <span id="co_fuel"></span>
+									.mdl-tooltip(data-mdl-for="co_fuel_icon") Fuel
 								.center-stuff(style="text-align:center;")
-									i(class="material-icons icon-flipped") show_chart
+									i(class="material-icons icon-flipped", id="co_depreciation_icon") show_chart
 									| <span id="co_depreciation"></span>
+									.mdl-tooltip(data-mdl-for="co_depreciation_icon") Depreciation
 								.center-stuff(style="text-align:center;")
-									i(class="material-icons icon-flipped") security
+									i(class="material-icons icon-flipped", id="co_insurance_icon") security
 									| <span id="co_insurance"></span>
+									.mdl-tooltip(data-mdl-for="co_insurance_icon") Insurance + maintenance
 							.mdl-cell.mdl-cell--12-col
 								button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id="co_backButton")
 									i(class="material-icons") arrow_back
 									| Back
 					.mdl-tabs__panel(id="settings")
-						//-.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
-							span(class="subheading", style="text-align:right; margin-right:40px;") <strong>SETTINGS</strong>
+						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-grid--no-spacing(id="settings_info")
+								span Tweak things around. Applies to both single journey and car ownership tabs.
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp
 							//-Settings ---------------------------------------------------
 							.mdl-cell.mdl-cell--8-col
