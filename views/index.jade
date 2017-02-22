@@ -14,41 +14,50 @@ block content
 					.mdl-tabs__tab-bar
 						a(href="#single-journey", class="mdl-tabs__tab mdl-cell--2-col-phone is-active") 
 							i(class="material-icons", href="#") looks_one
-							| <span class="mdl-cell--hide-phone", href="#">  Single Journey</span>
+							| <span class="mdl-cell--hide-phone", style="white-space:nowrap;", href="#">  Single Journey</span>
 						a(href="#long-term", class="mdl-tabs__tab mdl-cell--2-col-phone")
 							i(class="material-icons", href="#") date_range
-							| <span class="mdl-cell--hide-phone", href="#">  Car Ownership</span>
+							| <span class="mdl-cell--hide-phone", style="white-space:nowrap;", href="#">  Car Ownership</span>
 						a(href="#settings", class="mdl-tabs__tab mdl-cell--2-col-phone")
 							i(class="material-icons", href="#") tune
-							| <span class="mdl-cell--hide-phone" href="#">  Settings</span>
+							| <span class="mdl-cell--hide-phone", style="white-space:nowrap;", href="#">  Settings</span>
+					.mdl-grid
+						.mdl-cell.mdl-cell--1-col-phone.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:-5px;")
+							span(class="subheading",style="margin-left:-10px") <strong>SINGLE JOURNEY</strong>
+						.mdl-cell.mdl-cell--2-col-phone.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:-5px;")
+							span(class="subheading", style="text-align:center") <strong>CAR OWNERSHIP</strong>
+						.mdl-cell.mdl-cell--1-col-phone.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:-5px;")
+							span(class="subheading") <strong>SETTINGS</strong> 
 					.mdl-tabs__panel.is-active(id="single-journey")
-						.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
+						//-.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
 							span(class="subheading", style="margin-left:10px") <strong>SINGLE JOURNEY</strong>
 						//- Main Input Panel -------------------------------------------
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="inputDiv")
 							//form(action= '/result', method='POST')
 							.mdl-cell.mdl-cell--12-col
 								span(class="mdl-tooltip", for="locateme") share location
-								.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell.mdl-cell--12-col
+								.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell.mdl-cell--6-col
 									button(class="mdl-button mdl-js-button mdl-button--icon", id="locateme")
 										i(class="material-icons") my_location
 									input(class="mdl-textfield__input", type="text",  id="locationFromInput", name="from", placeholder="")
 									label(class="mdl-textfield__label", for="locationFromInput") From
 							.mdl-cell.mdl-cell--12-col
-								.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell.mdl-cell--12-col
+								.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.mdl-cell.mdl-cell--6-col
 									input(class="mdl-textfield__input", type="text",  id="locationToInput", name="to", placeholder="")
 									label(class="mdl-textfield__label", for="locationToInput") To
 							button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect", id="submitButton") Submit
-							.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--8-col(id="progressBar")
+							.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="progressBar")
 						//- Result Panel		---------------------------------				
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp.mdl-grid--no-spacing(id="resultGrid")
 							.mdl-cell.mdl-cell--12-col(id="resultHeader")
+								//-a --------------------------------------------------------->
+							.mdl-cell.mdl-cell--4-col.mdl-cell--3-col-tablet
 								i(class="material-icons") place
-								a --------------------------------------------------------->
+								.mdl-cell.mdl-cell--12-col(id="fromDiv")
+							.mdl-cell.mdl-cell--4-col.mdl-cell--2-col-tablet(id="resultDiv")
+							.mdl-cell.mdl-cell--4-col.mdl-cell--3-col-tablet
 								i(class="material-icons") place
-							.mdl-cell.mdl-cell--3-col(id="fromDiv")
-							.mdl-cell.mdl-cell--6-col(id="resultDiv")
-							.mdl-cell.mdl-cell--3-col(id="toDiv")
+								.mdl-cell.mdl-cell--12-col(id="toDiv")
 							.mdl-cell.mdl-cell--12-col
 								hr
 							.mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(id="uberResultFrame")
@@ -65,55 +74,75 @@ block content
 									i(class="material-icons") arrow_back
 									| Back
 					.mdl-tabs__panel(id="long-term")
-						.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
+						//-.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
 							span(class="subheading", style="text-align:center") <strong>CAR OWNERSHIP</strong> 
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(id="co_inputDiv")
-							.mdl-cell.mdl-cell--8-col
-								p Which city are you in?
-								.mdl-cell.mdl-cell--8-col.mdl-textfield.mdl-js-textfield.mdl-cell--3-col-phone(style="margin-top:-30px;")										
+							.mdl-cell.mdl-cell--8-col.mdl-cell--6-col-tablet
+								p 
+								| Which city are you in?
+								.mdl-cell.mdl-cell--8-col.mdl-textfield.mdl-js-textfield.mdl-cell--6-col-tablet.mdl-cell--3-col-phone(style="margin-top:-15px;")										
 									input(class="mdl-textfield__input", type="text", id="co_city", placeholder="")
 									label(class="mdl-textfield__label", for="co_city") Which city are you in ?						
-								p How many miles do you travel each week?
+								p How many <span id="co_input_dis_units_disp_full">kilometers</span> do you travel each week?
 								input(class="mdl-slider mdl-js-slider", type="range" min="5", max="300", value="90", tabindex="0", id="co_weekly_distance")
-								p(style="text-align:center;") <span id="co_dist_disp">90</span> kms								
+								p(style="text-align:center;") <span id="co_dist_disp">90</span> <span id="co_input_dis_units_disp_abbr">kms</span>								
 								p Current value of your car?
 								input(class="mdl-slider mdl-js-slider", type="range" min="0", max="60000", value="5000", tabindex="0", id="co_car_value")
-								p(style="text-align:center;") $<span id="co_car_value_disp">5000</span>
+								p(style="text-align:center;") <span id="co_car_value_currency_disp">$</span><span id="co_car_value_disp">5000</span>
 								p How old is the car?
 								.mdl-grid(style="padding:0px;margin-bottom:30px;")
 									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:-10px;")
 										label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="co_car_age-1")
 											input(type="radio", id="co_car_age-1", class="mdl-radio__button", name="co_car_age", value="new")
-											span(class="mdl-radio__label") 1-3 Years
+										span(class="mdl-radio__label") 1-3 Years
 									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:-10px;")
 										label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="co_car_age-2")
 											input(type="radio", id="co_car_age-2", class="mdl-radio__button", name="co_car_age", value="medium", checked)
-											span(class="mdl-radio__label") 4-10 Years
+										span(class="mdl-radio__label") 4-10 Years
 									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:-10px;")
 										label(class="mdl-radio mdl-js-radio mdl-js-ripple-effect", for="co_car_age-3")
 											input(type="radio", id="co_car_age-3", class="mdl-radio__button", name="co_car_age", value="old")
-											span(class="mdl-radio__label") 10+ Years
+										span(class="mdl-radio__label") 10+ Years
 								button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect", id="co_submitButton") Submit
+							.mdl-progress.mdl-js-progress.mdl-progress__indeterminate.mdl-cell--12-col(id="co_progressBar")
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp.mdl-grid--no-spacing(id="co_resultGrid")
-							.mdl-grid.mdl-cell.mdl-cell--8-col(style="justify-content: center")
-								.mdl-cell.mdl-cell--8-col(id="co_resultHeader")
-									p Calculate cost over
-										input(class="mdl-slider mdl-js-slider", type="range" min="1", max="5", value="1", tabindex="0", id="co_calc_period")
-										p(style="text-align:center;margin-top:-15px") <strong><span id="co_calc_period_disp">1 Year</span></strong>
+							.mdl-grid
+								.mdl-cell.mdl-cell--12-col.center-stuff(style="margin-top:-20px;")
+									p 
+									| Calculate cost over : <span id="co_calc_period_disp" >1 Year</span>
+									input(class="mdl-slider mdl-js-slider ", type="range", min="1", max="5", value="1", tabindex="0", id="co_calc_period")
+									//p(style="text-align:center") <span id="co_calc_period_disp" >1 Year</span>
+								.mdl-cell.mdl-cell--12-col.center-stuff		
+									p(style="text-align:center;") 
+										i(class="material-icons") place
+										| <span id="co_result_city_disp"></span>
+									p(style="text-align:center;")
+										| Distance: <span id="co_result_distance_disp"></span>
 							.mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(id="uberResultFrame")
 								img(id="co_uberIcon", src="images/uber_Icon.png")
-								div(id="co_uberResultSubDiv")
+								div(id="co_uberResultSubDiv", style="text-align:center;")
+								.center-stuff(style="text-align:center;")
+									| <span id="co_uber_service"></span>
+								.center-stuff(style="text-align:center;")
+									| <span id="co_uber_rate"></span>
 							.mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(id="driveResultFrame")
 								img(id="co_driveIcon", src="images/driving_Icon.png")
 								div(id="co_carResultSubDiv")
-								i(class="material-icons") local_gas_station
-								span(id="fuel")
-							.mdl-cell.mdl-cell--8-col
+								.center-stuff(style="text-align:center;")
+									i(class="material-icons") local_gas_station
+									| <span id="co_fuel"></span>
+								.center-stuff(style="text-align:center;")
+									i(class="material-icons icon-flipped") show_chart
+									| <span id="co_depreciation"></span>
+								.center-stuff(style="text-align:center;")
+									i(class="material-icons icon-flipped") security
+									| <span id="co_insurance"></span>
+							.mdl-cell.mdl-cell--12-col
 								button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id="co_backButton")
 									i(class="material-icons") arrow_back
 									| Back
 					.mdl-tabs__panel(id="settings")
-						.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
+						//-.mdl-cell--hide-desktop.mdl-cell--hide-tablet(style="margin-top:10px;")
 							span(class="subheading", style="text-align:right; margin-right:40px;") <strong>SETTINGS</strong>
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp
 							//-Settings ---------------------------------------------------
@@ -141,22 +170,22 @@ block content
 										label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-small", style="margin-top:2px;")
 											input(type="checkbox", id="car-toggle-small", class="mdl-icon-toggle__input", value="small", checked)
 											i(class="mdl-icon-toggle__label material-icons", id="small-car-icon") directions_car
-											| <br>small<br><small><span id="modal-milage-small">15 kmpl</span></small>
+											| <br>small<br><small><span id="modal-mileage-small">15 kmpl</span></small>
 									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
 										label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-medium")
 											input(type="checkbox", id="car-toggle-medium", class="mdl-icon-toggle__input", value="medium")
 											i(class="mdl-icon-toggle__label material-icons", id="medium-car-icon") directions_car
-											| <br>medium<br><small><span id="modal-milage-medium">12 kmpl</span></small>
+											| <br>medium<br><small><span id="modal-mileage-medium">12 kmpl</span></small>
 									.mdl-cell.mdl-cell--4-col.mdl-cell--1-col-phone.mdl-cell--2-col-tablet(style="margin-top:0px;")
 										label(class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect carsizeradio", for="car-toggle-large")
 											input(type="checkbox", id="car-toggle-large", class="mdl-icon-toggle__input", value="large")
 											i(class="mdl-icon-toggle__label material-icons", id="large-car-icon") directions_car
-											| <br>large<br><small><span id="modal-milage-large">8 kmpl</span></small>
+											| <br>large<br><small><span id="modal-mileage-large">8 kmpl</span></small>
 								.slider_fuel
 									p How much do you pay for <span id="modal-fuel-name">petrol</span> ?<br>
 										input(class="mdl-slider mdl-js-slider", id="fuel_cost_slider", type="range", step="any", min="0", max="100", value="0", tabindex="0")
 									p(style="text-align:center;") <span id="modal-fuel-cost"></span>
-				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(style="height:400px; width:100%;", id="mgbrgbr")
+				.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp(style="height:400px;", id="map_container")
 					div(style="height:100%; width:100%;",id="map")
 					//-iframe(id="routeMap", width="100%", height="400", src="", frameborder="0")
 				.mdl-cell.mdl-cell--12-col
