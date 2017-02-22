@@ -884,7 +884,7 @@ function convertCoCarValue(country_code){
 	var currency_code = currrencyByCountry[country_code];
 	currency = currency_code;
 	$('#co_car_value').prop('disabled', true);
-	$.get('http://api.fixer.io/latest?base=USD',function(data){
+	$.get('//api.fixer.io/latest?base=USD',function(data){
 		console.log(data);
 		if(data.rates.hasOwnProperty(currency_code)){ // exchange rate available for currency
 			coCurrencyMultiplier = data.rates[currency_code]; // exchange rate
