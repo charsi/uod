@@ -764,7 +764,7 @@ function getCurrencySymbol(currencyCode){
 	if (currency_symbols.hasOwnProperty(currencyCode)){
 		return currency_symbols[currencyCode];
 	} else {
-		return currencyCode;
+		return currencyCode+' ';
 	}
 }
 
