@@ -7,7 +7,11 @@ var petrolprices = JSON.parse(fs.readFileSync('./db/pricelist.json', 'utf8'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Uber Or Drive?' }, {geoip_country_code: req.headers.geoip_country_code});
+  res.locals.geoip_country_code = req.headers.geoip_country_code;
+  res.locals.geoip_city = req.headers.geoip_city;
+  res.locals.geoip_latitude = req.headers.geoip_latitude;
+  res.locals.geoip_longitude = req.headers.geoip_longitude;
+  res.render('index', { title: 'Uber Or Drive?' });
 });
 
 /* GET faq page. */

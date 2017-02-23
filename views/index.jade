@@ -7,7 +7,6 @@ block content
 				//- Title
 				.mdl-cell.mdl-cell--12-col
 					h2= title
-					h2= geoip_country_code
 					//-h6= "Cost of driving compared with realtime fare estimates from Uber"
 				//- Tabs
 				.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
@@ -146,7 +145,7 @@ block content
 									| Back
 					.mdl-tabs__panel(id="settings")
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-grid--no-spacing(id="settings_info")
-								span Tweak things around. Applies to both single journey and car ownership tabs.
+								span Tweak things around. SEttings apply to both single journey and car ownership tabs.
 						.mdl-grid.mdl-cell.mdl-cell--12-col.mdl-color--white.mdl-shadow--2dp
 							//-Settings ---------------------------------------------------
 							.mdl-cell.mdl-cell--8-col
@@ -208,6 +207,11 @@ block content
 				.mdl-dialog__actions
 					button(type="button", class="mdl-button close") OK
 					//button(type="button", class="mdl-button close") Disagree
+		script(type='text/javascript').
+			var geoip_country_code = !{JSON.stringify(geoip_country_code)}
+			var geoip_city =!{JSON.stringify(geoip_city)}
+			var geoip_latitude = !{JSON.stringify(geoip_latitude)}
+			var geoip_longitude = !{JSON.stringify(geoip_longitude)}
 		script(type='text/javascript', src='/js/client.js')
 		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
 		
