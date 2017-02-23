@@ -569,8 +569,8 @@ function initAutocomplete() {
 	// populate 'from' when user selects an address from the list 
 	autocompleteCoCity.addListener('place_changed', fillCoCity);
 
-	if (geoip_latitude&&geoip_longitude){
-		localLatLang = {lat:parseFloat(geoip_latitude), lng: parseFloat(geoip_longitude)};
+	if (local_geoip_latitude&&local_geoip_longitude){
+		localLatLang = {lat:parseFloat(local_geoip_latitude), lng: parseFloat(local_geoip_longitude)};
 		console.log(localLatLang);
 	}
 	else {
@@ -984,11 +984,11 @@ function coResetEverything(){
 
 
 $( document ).ready(function() {
-	console.log(geoip_country_code);
+	console.log(local_geoip_country_code);
 	
 	componentHandler.upgradeAllRegistered();
 	// resetEverything();
-	var initCOuntry = (geoip_country_code)?geoip_country_code :'GB';
+	var initCOuntry = (local_geoip_country_code)?local_geoip_country_code :'GB';
 	localiseUnits(initCOuntry);
 	// $('#co_city').val('London, United Kingdom');
 	convertCoCarValue(initCOuntry);

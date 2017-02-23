@@ -208,10 +208,10 @@ block content
 					button(type="button", class="mdl-button close") OK
 					//button(type="button", class="mdl-button close") Disagree
 		script(type='text/javascript').
-			var geoip_country_code = !{JSON.stringify(geoip_country_code)}
-			var geoip_city =!{JSON.stringify(geoip_city)}
-			var geoip_latitude = !{JSON.stringify(geoip_latitude)}
-			var geoip_longitude = !{JSON.stringify(geoip_longitude)}
+			var local_geoip_country_code = !{JSON.stringify(geoip_country_code)}
+			var local_geoip_city = !{JSON.stringify(geoip_city)}
+			var local_geoip_latitude = !{JSON.stringify(geoip_latitude)}
+			var local_geoip_longitude = !{JSON.stringify(geoip_longitude)}
 		script(type='text/javascript', src='/js/client.js')
 		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
 		
