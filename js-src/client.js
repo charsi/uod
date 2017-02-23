@@ -120,7 +120,7 @@ const key = "AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs";
 
 // set default map coordinates (to London)
 // will be overriden by local coordinates if user shares location
-var localLatLang;
+var localLatLang ;
 
 // holder for geolocation coordinates returned by google
 class LocationInfo {
@@ -569,6 +569,15 @@ function initAutocomplete() {
 	// populate 'from' when user selects an address from the list 
 	autocompleteCoCity.addListener('place_changed', fillCoCity);
 
+	if (geoip_latitude&&geoip_longitude){
+		localLatLang = {lat:parseFloat(geoip_latitude), lng: parseFloat(geoip_longitude)};
+		console.log(localLatLang);
+	}
+	else {
+		localLatLang = {lat: 51.5089254, lng: -0.107437};
+		console.log('sdsc')
+	}
+	
 	resetEverything();
 	// reset incase the browser caches form entries
 }
@@ -967,16 +976,16 @@ function coResetEverything(){
 (function onload(){
 	$resultGrid.hide();
 	$coResultGrid.hide();
+
+
+
+	
 })();
 
 
 $( document ).ready(function() {
-	if (geoip_latitude&&geoip_longitude){
-		localLatLang = {lat:geoip_latitude, lng: geoip_longitude};
-	}
-	else {
-		localLatLang = {lat: 51.5089254, lng: -0.107437};
-	}
+	console.log(geoip_country_code);
+	
 	componentHandler.upgradeAllRegistered();
 	// resetEverything();
 	var initCOuntry = (geoip_country_code)?geoip_country_code :'GB';
