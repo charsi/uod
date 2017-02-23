@@ -971,8 +971,8 @@ function coResetEverything(){
 
 
 $( document ).ready(function() {
-	if (geoip_latitude&&geoip_latitude){
-		localLatLang = {lat:geoip_latitude, lng: geoip_latitude};
+	if (geoip_latitude&&geoip_longitude){
+		localLatLang = {lat:geoip_latitude, lng: geoip_longitude};
 	}
 	else {
 		localLatLang = {lat: 51.5089254, lng: -0.107437};
