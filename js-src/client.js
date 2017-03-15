@@ -339,6 +339,7 @@ function fillFromAddress() {
 	console.log(place.address_components);
 	// customise units according to the country of the location entered
 	var country_code = getCountry(place.address_components);
+	country = country_code;
 	localiseUnits(country_code);
 	// fill in city on the co tab and et local location cordinates
 	var cityStr = getCity(place.address_components);
