@@ -658,7 +658,8 @@ $("#submitButton").on('click',function () {
 	}
 	freezeControls();		// freeze inputs
 	$progressBar.show();	// show a progress bar while processing
-		$.post("/api/v1/traffic", currentLocationInfo)		// get traffic multiplier from google
+	console.log(currentLocationInfo);
+	$.post("/api/v1/traffic", currentLocationInfo)		// get traffic multiplier from google
 		.then(function(reply){
 			console.log(reply.multiplier);
 			di.trafficMultiplier = reply.multiplier;

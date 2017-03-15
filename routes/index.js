@@ -148,6 +148,7 @@ function getRatesFromUber(location, response){
 function getTrafficInfoFromGoogle(locations, response){
 	var fromStr = locations.start_latitude+','+locations.start_longitude;
 	var toStr = locations.end_latitude+','+locations.end_longitude;
+	console.log(fromStr+'   '+toStr);
 	var options = {
 		url: 'https://maps.googleapis.com/maps/api/distancematrix/json',
 		qs: {
