@@ -434,6 +434,7 @@ function geolocate() {
 						currentLocationInfo.start_longitude = geolocation.lng;
 						refreshMap();	// show marker for 'from' address
 						var country_code = getCountry(place.address_components);
+						country = country_code;
 						localiseUnits(country_code);
 						// fill in city on the co tab and et local location cordinates
 						var cityStr = getCity(place.address_components);
@@ -989,6 +990,7 @@ $( document ).ready(function() {
 	componentHandler.upgradeAllRegistered();
 	// resetEverything();
 	var initCOuntry = (local_geoip_country_code)?local_geoip_country_code :'GB';
+	country = initCOuntry;
 	localiseUnits(initCOuntry);
 	// $('#co_city').val('London, United Kingdom');
 	convertCoCarValue(initCOuntry);

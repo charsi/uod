@@ -30,7 +30,7 @@ gulp.task('watch', () => {
 	return gulp.watch(assetsDir, ['compile']);
 });
 
-gulp.task('start',['watch'], function(){
+gulp.task('start-dev',['watch'], function(){
 	return nodemon({ 
 		"verbose": true,
 		ignore : ['public/js/*','js-src/*']
@@ -41,4 +41,18 @@ gulp.task('start',['watch'], function(){
   })
   .on('start', ['compile']);
 });
+
+gulp.task('start-live',['watch'], function(){
+	return nodemon({ 
+		"verbose": true,
+		ignore : ['public/js/*','js-src/*']
+	})
+  //have nodemon run watch on start
+  .on('restart', function(){
+    console.log(' -----------        Server restarted      ------------ ');
+  })
+  .on('start', ['compile']);
+});
+
+
 
