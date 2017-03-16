@@ -8,15 +8,15 @@ var petrolprices = JSON.parse(fs.readFileSync('./db/pricelist.json', 'utf8'));
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-//res.locals.geoip_country_code = req.headers.geoip_country_code;
-//res.locals.geoip_city = req.headers.geoip_city;
-//res.locals.geoip_latitude = req.headers.geoip_latitude;
-//res.locals.geoip_longitude = req.headers.geoip_longitude;
+ res.locals.geoip_country_code = req.headers.geoip_country_code;
+ res.locals.geoip_city = req.headers.geoip_city;
+ res.locals.geoip_latitude = req.headers.geoip_latitude;
+ res.locals.geoip_longitude = req.headers.geoip_longitude;
  
-  res.locals.geoip_country_code = 'IN';
- // res.locals.geoip_city = 'Delhi';
-  res.locals.geoip_latitude = '28.6466773';
-  res.locals.geoip_longitude = '76.813073';
+  //res.locals.geoip_country_code = 'IN';
+// res.locals.geoip_city = 'Delhi';
+  //res.locals.geoip_latitude = '28.6466773';
+  //res.locals.geoip_longitude = '76.813073';
 
   res.render('index', { title: 'Uber Or Drive?' });
   console.log(req.headers);
