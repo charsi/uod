@@ -991,7 +991,7 @@ $( document ).ready(function() {
 	
 	componentHandler.upgradeAllRegistered();
 	// resetEverything();
-	var initCOuntry = (local_geoip_country_code)?local_geoip_country_code :'GB';
+	var initCOuntry = (local_geoip_country_code&&local_geoip_country_code!=='nil')?local_geoip_country_code :'GB';
 	country = initCOuntry;
 	localiseUnits(initCOuntry);
 	// $('#co_city').val('London, United Kingdom');
