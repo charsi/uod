@@ -7,6 +7,8 @@ var concat = require('gulp-concat');
 var obfuscate = require('gulp-obfuscate');
 var sourcemaps = require('gulp-sourcemaps');
 var babel = require('gulp-babel');
+var stripDebug = require('gulp-strip-debug');
+
 
 var assetsDir = './js-src/*.js';
 var publicDir = './public/js/';
@@ -19,6 +21,7 @@ gulp.task('compile', () => {
 		.pipe(babel({
 				presets: ['es2015']
 			}))
+		.pipe(stripDebug())
 		.pipe(uglify())
 		.pipe(sourcemaps.write('maps',{includeContent: false, sourceRoot: '/usr/src/app/js-src/'}))
 		.pipe(gulp.dest(publicDir))

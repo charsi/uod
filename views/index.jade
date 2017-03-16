@@ -215,9 +215,9 @@ block content
 		script(src='/bower_components/jquery/dist/jquery.min.js')
 		script(src='/bower_components/material-design-lite/material.min.js')
 		script(type='text/javascript').
-			var local_geoip_country_code = !{JSON.stringify(geoip_country_code)}
+			var local_geoip_country_code = !{(JSON.stringify(geoip_country_code))?JSON.stringify(geoip_country_code): '"nil"'}
 		script(type='text/javascript').
-			var local_geoip_city = !{JSON.stringify(geoip_city)}
+			var local_geoip_city = !{(JSON.stringify(geoip_city))?JSON.stringify(geoip_city) : '"nil"'}
 		script(type='text/javascript').
 			var local_geoip_latitude = !{JSON.stringify(geoip_latitude)}
 		script(type='text/javascript').
