@@ -571,7 +571,7 @@ function initAutocomplete() {
 	// populate 'from' when user selects an address from the list 
 	autocompleteCoCity.addListener('place_changed', fillCoCity);
 
-	if (local_geoip_latitude&&local_geoip_longitude){
+	if (local_geoip_latitude&&local_geoip_longitude&&local_geoip_latitude!=='nil'&&local_geoip_longitude!=='nil'){
 		localLatLang = {lat:parseFloat(local_geoip_latitude), lng: parseFloat(local_geoip_longitude)};
 		console.log(localLatLang);
 	}

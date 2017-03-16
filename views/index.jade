@@ -217,9 +217,9 @@ block content
 		script(type='text/javascript').
 			var local_geoip_city = !{(JSON.stringify(geoip_city))?JSON.stringify(geoip_city):'"nil"'}
 		script(type='text/javascript').
-			var local_geoip_latitude = !{JSON.stringify(geoip_latitude)}
+			var local_geoip_latitude = !{(JSON.stringify(geoip_latitude))?JSON.stringify(geoip_latitude): '"nil"'}
 		script(type='text/javascript').
-			var local_geoip_longitude = !{JSON.stringify(geoip_longitude)}
+			var local_geoip_longitude = !{(JSON.stringify(geoip_longitude))?JSON.stringify(geoip_longitude):'"nil"'}
 		script(type='text/javascript', src='/js/client.js')
 		script(type='text/javascript', src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnfJIBZj1_q75mLz20h-tSft1gl5SeXFs&libraries=places&callback=initAutocomplete", async, defer)
 		
