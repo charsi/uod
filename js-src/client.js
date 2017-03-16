@@ -979,10 +979,6 @@ function coResetEverything(){
 (function onload(){
 	$resultGrid.hide();
 	$coResultGrid.hide();
-
-
-
-	
 })();
 
 
