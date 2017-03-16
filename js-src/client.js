@@ -366,6 +366,8 @@ function fillCoCity() {
 	mapSetLocation(localLatLang, $('#co_city').val());
 	// get country code from google autocomplete
 	var country_code = (getCountry(place.address_components));
+	country = country_code;
+	localiseUnits(country_code);
 	// convert slider text to local currency
 	convertCoCarValue(country_code);	
 }
