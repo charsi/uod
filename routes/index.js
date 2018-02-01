@@ -3,6 +3,9 @@ var router = express.Router();
 var request = require('request-promise');
 require('request').debug = true;
 var fs = require('fs');
+require('dotenv').config()
+
+
 var petrolprices = JSON.parse(fs.readFileSync('./db/pricelist.json', 'utf8'));
 
 /* GET home page. */
@@ -88,7 +91,7 @@ function getPriceFromUber(locations, response){
 			end_longitude: locations.end_longitude
 		  },
 		headers: {
-			'Authorization': 'Token ***REMOVED***',
+			'Authorization': 'Token '+process.env.UBER_API_KEY,
 		},
 		method: 'GET'
 	};
@@ -114,7 +117,7 @@ function getRatesFromUber(location, response){
 			longitude: location.lng
 		  },
 		headers: {
-			'Authorization': 'Token ***REMOVED***',
+			'Authorization': 'Token '+process.env.UBER_API_KEY,
 		},
 		method: 'GET'
 	};
@@ -156,7 +159,7 @@ function getTrafficInfoFromGoogle(locations, response){
 			destinations : toStr,
 			traffic_model: "best_guess",
 			departure_time : "now",
-			key: "***REMOVED***" // server key	
+			key: process.env.GOOGLE_MAPS_API_KEY // server key	
 			},
 		method: 'GET'
 	};
