@@ -9,8 +9,10 @@ This was still a great learning exercise but not something I would recommend oth
 The project uses the following --
 
 * [Nodejs](https://nodejs.org/)
-* [Express](https://www.docker.com/)
+* [Express](https://www.docker.com/) 
 * [Docker](https://www.docker.com/)
+* [Gulp](https://gulpjs.com/)
+* [Bower](https://bower.io/)
 * [Google-MDL](https://getmdl.io/)
 * API's from Google Maps and Uber
 
