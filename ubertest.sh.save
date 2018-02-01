@@ -1,4 +1,4 @@
 curl -H 'Authorization: Bearer <TOKEN>' \
      -H 'Accept-Language: en_US' \
      -H 'Content-Type: application/json' \
-     'https://api.uber.com/v1.2/products?latitude=37.7752315&longitude=-122.418075'***REMOVED***
+     'https://api.uber.com/v1.2/products?latitude=37.7752315&longitude=-122.418075'
