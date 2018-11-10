@@ -19,7 +19,7 @@ gulp.task('compile', () => {
 		.pipe(sourcemaps.init({identityMap:true, debug:true }))
 		//.pipe(obfuscate())
 		.pipe(babel({
-				presets: ['es2015']
+				presets: ['babel-preset-env']
 			}))
 		.pipe(stripDebug())
 		.pipe(uglify())

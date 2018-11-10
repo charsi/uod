@@ -11,8 +11,8 @@ WORKDIR /usr/src/app/
 # Install app dependencies
 COPY package.json /usr/src/app/
 RUN npm install
-RUN npm install -g gulp --save
-RUN npm install -g bower --save
+#RUN npm install -g gulp --save
+#RUN npm install -g bower --save
 
 # Using root user to avoid permissions issues in th mounted volume
 # USER nodejs

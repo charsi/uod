@@ -4,12 +4,15 @@ var request = require('request-promise');
 require('request').debug = true;
 var fs = require('fs');
 require('dotenv').config()
+const pug = require('pug');
 
 
 var petrolprices = JSON.parse(fs.readFileSync('./db/pricelist.json', 'utf8'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
+	console.log("sdaaaaaaaaaa");
 
  res.locals.geoip_country_code = req.headers.geoip_country_code;
  res.locals.geoip_city = req.headers.geoip_city;
@@ -21,7 +24,7 @@ router.get('/', function(req, res, next) {
   //res.locals.geoip_latitude = '28.6466773';
   //res.locals.geoip_longitude = '76.813073';
 
-  res.render('index', { title: 'Uber Or Drive?' });
+  res.render('index');
   console.log(req.headers);
 });
 
