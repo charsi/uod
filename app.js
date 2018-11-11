@@ -16,9 +16,6 @@ app.set('view engine', 'jade');
 //app.set('views', './views');
 //app.use('/', index);
 
-
-app.set('port', process.env.PORT || 8000);
-
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use(logger('dev'));
