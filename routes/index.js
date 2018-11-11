@@ -4,7 +4,6 @@ var request = require('request-promise');
 require('request').debug = true;
 var fs = require('fs');
 require('dotenv').config()
-const pug = require('pug');
 
 
 var petrolprices = JSON.parse(fs.readFileSync('./db/pricelist.json', 'utf8'));
