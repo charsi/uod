@@ -5,12 +5,14 @@ FROM node:9.11.1-alpine
 #     && useradd -m -r -g nodejs nodejs
 
 # Create app directory
-RUN mkdir -p /usr/src/app/
-WORKDIR /usr/src/app/
+
+WORKDIR /src
 
 # Install app dependencies
-COPY package.json /usr/src/app/
+COPY package.json .
 RUN npm install
+
+COPY . .
 #RUN npm install -g gulp --save
 #RUN npm install -g bower --save
 
