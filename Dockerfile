@@ -12,14 +12,18 @@ WORKDIR /src
 COPY package.json .
 RUN npm install
 
+# Bundle app source
 COPY . .
-#RUN npm install -g gulp --save
-#RUN npm install -g bower --save
 
 # Using root user to avoid permissions issues in th mounted volume
 # USER nodejs
 
-# Bundle app source
 # COPY . /usr/src/app
 
+# runs *after* the container is created (not during build)
+#CMD [ "npm", "start" ]
+CMD ["npm", "run", "gulp", "start-live"]
+
 # EXPOSE 8000
+
+
