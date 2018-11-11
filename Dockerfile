@@ -19,3 +19,5 @@ RUN npm install
 
 # Bundle app source
 # COPY . /usr/src/app
+
+EXPOSE 8000
