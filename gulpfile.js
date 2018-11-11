@@ -22,7 +22,7 @@ gulp.task('compile', () => {
 				presets: ['babel-preset-env']
 			}))
 		.pipe(stripDebug())
-		.pipe(uglify())
+		//.pipe(uglify())
 		.pipe(sourcemaps.write('maps',{includeContent: false, sourceRoot: '/usr/src/app/js-src/'}))
 		.pipe(gulp.dest(publicDir))
 });
