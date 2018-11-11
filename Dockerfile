@@ -21,7 +21,7 @@ COPY . .
 # COPY . /usr/src/app
 
 # runs *after* the container is created (not during build)
-#CMD [ "npm", "start" ]
+# CMD [ "npm", "start" ]
 CMD ["npm", "run", "gulp", "start-live"]
 
 # EXPOSE 8000
